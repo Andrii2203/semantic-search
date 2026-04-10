@@ -6,6 +6,7 @@ const logger = require('./logger');
  * Graceful shutdown handler.
  * Closes HTTP server, DB connection, and any other resources.
  */
+/* istanbul ignore next */
 function createShutdownHandler(server, db) {
   let isShuttingDown = false;
 

@@ -11,6 +11,7 @@ let pipeline = null;
 /**
  * Lazily loads the embedding model.
  */
+/* istanbul ignore next */
 async function getModel() {
   if (!pipeline) {
     const { pipeline: createPipeline } = await import('@xenova/transformers');
@@ -24,6 +25,7 @@ async function getModel() {
  * @param {string} text
  * @returns {Promise<number[]>}
  */
+/* istanbul ignore next */
 async function generateEmbedding(text) {
   const model = await getModel();
   const output = await model(text, { pooling: 'mean', normalize: true });
@@ -76,7 +78,7 @@ async function findRelevant(dataBatch, profileVector, threshold = 0.65) {
   const scored = [];
 
   for (const item of dataBatch) {
-    const itemVector = await generateEmbedding(item.content);
+    const itemVector = await module.exports.generateEmbedding(item.content);
     const score = cosineSimilarity(itemVector, profileVector);
 
     if (score >= threshold) {

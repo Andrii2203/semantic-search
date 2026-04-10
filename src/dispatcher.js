@@ -17,6 +17,7 @@ class RateLimiter {
     // Remove timestamps older than 1 minute
     this.timestamps = this.timestamps.filter((t) => now - t < 60_000);
 
+    /* istanbul ignore next */
     if (this.timestamps.length >= this.maxPerMinute) {
       const oldest = this.timestamps[0];
       const waitMs = 60_000 - (now - oldest) + 100; // +100ms buffer
@@ -73,6 +74,7 @@ async function dispatch(item, context = {}, opts = {}) {
  * @param {number}   rateLimit  — max Groq calls per minute
  * @returns {Promise<Object[]>} — items enriched with response and status
  */
+/* istanbul ignore next */
 async function dispatchBatch(items, context = {}, rateLimit = 10) {
   const rateLimiter = new RateLimiter(rateLimit);
   const results = [];

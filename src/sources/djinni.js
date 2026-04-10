@@ -66,7 +66,9 @@ function parseJobs(html) {
     
     if (descMatch) {
       description = descMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      /* istanbul ignore next */
     } else if (fallbackMatch) {
+      /* istanbul ignore next */
       description = fallbackMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     }
 

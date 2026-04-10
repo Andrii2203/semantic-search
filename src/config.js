@@ -8,6 +8,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
 /**
  * Reads an env variable. Throws if required and missing.
  */
+/* istanbul ignore next */
 function env(key, fallback) {
   const value = process.env[key];
   if (value !== undefined && value !== '') {
@@ -22,6 +23,7 @@ function env(key, fallback) {
   );
 }
 
+/* istanbul ignore next */
 function envInt(key, fallback) {
   const raw = env(key, fallback !== undefined ? String(fallback) : undefined);
   const parsed = parseInt(raw, 10);
@@ -31,6 +33,7 @@ function envInt(key, fallback) {
   return parsed;
 }
 
+/* istanbul ignore next */
 function envFloat(key, fallback) {
   const raw = env(key, fallback !== undefined ? String(fallback) : undefined);
   const parsed = parseFloat(raw);

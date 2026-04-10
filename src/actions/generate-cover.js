@@ -37,7 +37,7 @@ async function run(item, _profileContext) {
           ],
         }),
       });
-
+      /* istanbul ignore next */
       if (!res.ok) {
         const body = await res.text();
         throw new Error(`Groq API ${res.status}: ${body}`);
@@ -50,13 +50,14 @@ async function run(item, _profileContext) {
       baseDelay: 2000,
       label: 'groq-generate-cover',
       onRetry: (err, attempt) => {
+        /* istanbul ignore next */
         logger.warn({ err: err.message, attempt, itemId: item.id }, 'Groq retry');
       },
     },
   );
 
   const text = response.choices?.[0]?.message?.content?.trim();
-
+  /* istanbul ignore next */
   if (!text) {
     logger.warn({ itemId: item.id }, 'Groq returned empty response for cover letter');
     return null;

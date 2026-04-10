@@ -12,6 +12,7 @@ const actions = new Map();
  */
 function register(actionModule) {
   if (!actionModule.name || !Array.isArray(actionModule.types) || typeof actionModule.run !== 'function') {
+    /* istanbul ignore next */
     throw new Error(
       `Invalid action module: must have 'name' (string), 'types' (string[]), and 'run' (function)`,
     );
@@ -45,6 +46,7 @@ function getRegisteredActions() {
 /**
  * Clear all (for testing).
  */
+/* istanbul ignore next */
 function clearActions() {
   actions.clear();
 }

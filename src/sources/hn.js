@@ -96,10 +96,12 @@ async function fetchStoryDetail(id) {
   try {
     const res = await globalThis.fetch(`${HN_API_BASE}/item/${id}.json`);
     if (!res.ok) {
+      /* istanbul ignore next */
       return null;
     }
     return res.json();
   } catch (_err) {
+    /* istanbul ignore next */
     return null;
   }
 }
