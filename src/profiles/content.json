@@ -1,0 +1,14 @@
+{
+  "name": "content",
+  "description": "Profile for finding relevant tech posts, discussions, and articles for commenting. Topics: JavaScript, Node.js, web development, AI, startups, open source.",
+  "keywords": [
+    "JavaScript frameworks and libraries",
+    "Node.js backend development",
+    "Web development best practices",
+    "AI and machine learning applications",
+    "Open source projects and contributions",
+    "Software architecture and design patterns",
+    "Developer tools and productivity",
+    "Tech startup news and analysis"
+  ]
+}
