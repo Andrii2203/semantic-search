@@ -6,7 +6,6 @@ const logger = require('./logger');
 const db = require('./db');
 const sources = require('./sources/index');
 const searchEngine = require('./search-engine');
-const { dispatchBatch } = require('./dispatcher');
 const { validateIRBatch } = require('./validation');
 const fs = require('fs');
 
@@ -108,7 +107,7 @@ async function runCycle() {
 
     if (rawItems.length === 0) {
       logger.info('No items fetched, ending cycle');
-      return { fetched: 0, saved: 0 };
+      return { fetched: 0, validated: 0, filtered: 0, saved: 0 };
     }
 
     // 2. VALIDATE
@@ -132,7 +131,7 @@ async function runCycle() {
       '--- CYCLE END ═══',
     );
 
-    return { fetched: rawItems.length, validated: validItems.length, relevant: relevant.length, saved, duration };
+    return { fetched: rawItems.length, validated: validItems.length, filtered: relevant.length, saved, duration };
   } catch (err) {
     logger.error({ err }, 'Cycle failed');
     throw err;

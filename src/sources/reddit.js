@@ -48,9 +48,9 @@ async function fetch(options = {}) {
     .map((child) => child.data)
     .filter((post) => {
       // Skip stickied/pinned posts
-      if (post.stickied) return false;
+      if (post.stickied) { return false };
       // Skip removed/deleted
-      if (post.removed_by_category) return false;
+      if (post.removed_by_category) { return false };
       return true;
     })
     .map((post) => ({

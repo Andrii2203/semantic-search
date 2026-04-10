@@ -21,7 +21,7 @@ async function fetch(options = {}) {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         }
       });
-      if (!res.ok) throw new Error(`Djinni returned ${res.status}`);
+      if (!res.ok) { throw new Error(`Djinni returned ${res.status}`) };
       return res.text();
     }, { label: 'djinni-scrape' });
 
@@ -42,7 +42,7 @@ function parseJobs(html) {
 
     // Витягуємо посилання на вакансію
     const hrefMatch = block.match(/href="(\/jobs\/[^"]+)"/);
-    if (!hrefMatch) continue;
+    if (!hrefMatch) { continue };
 
     const relativeUrl = hrefMatch[1];
     const fullUrl = `https://djinni.co${relativeUrl}`;
@@ -54,7 +54,7 @@ function parseJobs(html) {
     if (linkStart !== -1) {
       const linkEnd = block.indexOf('</a>', linkStart);
       if (linkEnd !== -1) {
-        let linkContent = block.substring(linkStart, linkEnd);
+        const linkContent = block.substring(linkStart, linkEnd);
         title = linkContent.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/class="job_item__header-link[^>]*>/, '').trim();
       }
     }
