@@ -38,52 +38,6 @@ async function loadProfile() {
 /**
  * Run a single fetch-filter-dispatch-save cycle.
  */
-// async function runCycle() {
-//   if (isRunning) {
-//     logger.warn('Cycle already running, skipping');
-//     return { skipped: true };
-//   }
-
-//   isRunning = true;
-//   const startTime = Date.now();
-
-//   logger.info('═══ CYCLE START ═══');
-
-//   try {
-//     // 1. FETCH from all sources
-//     logger.info('Step 1: Fetching from sources...');
-//     const rawItems = await sources.fetchAll();
-//     logger.info({ count: rawItems.length }, 'Fetched items from sources');
-
-//     if (rawItems.length === 0) {
-//       logger.info('No items fetched, ending cycle');
-//       return { fetched: 0, saved: 0 };
-//     }
-
-//     // 2. VALIDATE
-//     logger.info('Step 2: Validating items...');
-//     const validItems = validateIRBatch(rawItems, logger);
-//     logger.info({ valid: validItems.length, dropped: rawItems.length - validItems.length }, 'Validation complete');
-
-//     // 3. SAVE ALL to database (user decides what to do with them)
-//     logger.info('Step 3: Saving all items to database...');
-//     const saved = db.insertItemsBatch(validItems);
-//     logger.info({ saved, duplicatesSkipped: validItems.length - saved }, 'Save complete');
-
-//     const duration = Date.now() - startTime;
-//     logger.info(
-//       { fetched: rawItems.length, validated: validItems.length, saved, duration: `${duration}ms` },
-//       '═══ CYCLE END ═══',
-//     );
-
-//     return { fetched: rawItems.length, validated: validItems.length, saved, duration };
-//   } catch (err) {
-//     logger.error({ err }, 'Cycle failed');
-//     throw err;
-//   } finally {
-//     isRunning = false;
-//   }
-// }
 async function runCycle() {
   if (isRunning) {
     logger.warn('Cycle already running, skipping');

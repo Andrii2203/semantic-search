@@ -7,11 +7,12 @@ const rateLimit = require('express-rate-limit');
 const config = require('./config');
 const logger = require('./logger');
 const db = require('./db');
-const { AppError, ErrorCodes } = require('./errors');
-const { validateItemQuery } = require('./validation');
 const { createShutdownHandler } = require('./shutdown');
-const scheduler = require('./scheduler');
-const sources = require('./sources/index');
+
+// Routes
+const itemsRouter = require('./routes/items');
+const syncRouter = require('./routes/sync');
+const { router: exportRouter } = require('./routes/export');
 
 const app = express();
 
@@ -59,221 +60,11 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
-// ─── Sources API ─────────────────────────────────────────────
+// ─── Routes ──────────────────────────────────────────────────
 
-// GET /api/sources — list registered source names
-app.get('/api/sources', (_req, res) => {
-  res.json({ sources: sources.getRegisteredSources() });
-});
-
-// ─── Items API ───────────────────────────────────────────────
-
-// GET /api/items — list items with optional filters
-app.get('/api/items', (req, res, next) => {
-  try {
-    const parsed = validateItemQuery(req.query);
-    if (!parsed.success) {
-      throw new AppError(
-        `Invalid query: ${parsed.error.issues.map((i) => i.message).join(', ')}`,
-        ErrorCodes.VALIDATION_FAILED,
-        400,
-      );
-    }
-
-    const items = db.getItems(parsed.data);
-    const total = db.getItemCount(parsed.data.status, parsed.data.source);
-
-    res.json({
-      items,
-      total,
-      limit: parsed.data.limit,
-      offset: parsed.data.offset,
-    });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// GET /api/items/stats — counts by status
-app.get('/api/items/stats', (_req, res, next) => {
-  try {
-    res.json({
-      total: db.getItemCount(),
-      new: db.getItemCount('new'),
-      approved: db.getItemCount('approved'),
-      skipped: db.getItemCount('skipped'),
-      pending: db.getItemCount('pending'),
-    });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST /api/items/:id/approve — approve an item
-app.post('/api/items/:id/approve', (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const item = db.getItemById(id);
-
-    if (!item) {
-      throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
-    }
-
-    db.updateItemStatus(id, 'approved');
-    res.json({ success: true, id, status: 'approved' });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST /api/items/:id/skip — skip an item
-app.post('/api/items/:id/skip', (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const item = db.getItemById(id);
-
-    if (!item) {
-      throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
-    }
-
-    db.updateItemStatus(id, 'skipped');
-    res.json({ success: true, id, status: 'skipped' });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST /api/sync — trigger manual fetch cycle
-app.post('/api/sync', async (_req, res, next) => {
-  try {
-    scheduler.runCycle().catch((err) => logger.error({ err }, 'Manual sync failed'));
-    res.json({ success: true, message: 'Sync started' });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST /api/items/:id/generate — on-demand AI comment generation
-app.post('/api/items/:id/generate', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const item = db.getItemById(id);
-
-    if (!item) {
-      throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
-    }
-
-    // Call Groq to generate comment
-    const { retry } = require('./retry');
-
-    const response = await retry(
-      async () => {
-        const apiRes = await globalThis.fetch('https://api.groq.com/openai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${config.groq.apiKey}`,
-          },
-          body: JSON.stringify({
-            model: config.groq.model,
-            max_tokens: config.groq.maxTokens,
-            messages: [
-              {
-                role: 'system',
-                content: 'use the same writting style as in the example and comment this. do not and empty links or not truthful information',
-              },
-              {
-                role: 'user',
-                content: `Write a comment for this post:\n\nTitle: ${item.metadata?.title || ''}\nContent: ${item.content}\nURL: ${item.metadata?.url || ''}\n\nYour comment:`,
-              },
-            ],
-          }),
-        });
-
-        if (!apiRes.ok) {
-          const body = await apiRes.text();
-          throw new Error(`Groq API ${apiRes.status}: ${body}`);
-        }
-        return apiRes.json();
-      },
-      { maxRetries: 2, baseDelay: 1000, label: 'groq-on-demand' },
-    );
-
-    const comment = response.choices?.[0]?.message?.content?.trim();
-
-    if (!comment) {
-      throw new AppError('AI returned empty response', 'GENERATION_FAILED', 500);
-    }
-
-    // Save to DB
-    db.updateItemResponse(id, comment, null);
-
-    // Save to JSON export file
-    saveToExportFile(id, item, comment);
-
-    logger.info({ itemId: id, responseLength: comment.length }, 'Comment generated on demand');
-    res.json({ success: true, id, comment });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// GET /api/export — download all items with comments as JSON
-app.get('/api/export', (_req, res, next) => {
-  try {
-    const fs = require('fs');
-    const path = require('path');
-    const exportPath = path.join(__dirname, '..', 'data', 'export.json');
-
-    if (fs.existsSync(exportPath)) {
-      res.download(exportPath, 'semantic-search-export.json');
-    } else {
-      res.json({ items: [] });
-    }
-  } catch (err) {
-    next(err);
-  }
-});
-
-/**
- * Append item+comment to the JSON export file.
- */
-function saveToExportFile(id, item, comment) {
-  const fs = require('fs');
-  const path = require('path');
-  const exportPath = path.join(__dirname, '..', 'data', 'export.json');
-
-  let data = { items: [] };
-  if (fs.existsSync(exportPath)) {
-    try {
-      data = JSON.parse(fs.readFileSync(exportPath, 'utf-8'));
-    } catch (_) {
-      data = { items: [] };
-    }
-  }
-
-  // Update if exists, add if new
-  const idx = data.items.findIndex((i) => i.id === id);
-  const entry = {
-    id,
-    title: item.metadata?.title || '',
-    url: item.metadata?.url || '',
-    source: item.source,
-    type: item.type,
-    content: item.content,
-    comment,
-    generatedAt: new Date().toISOString(),
-  };
-
-  if (idx >= 0) {
-    data.items[idx] = entry;
-  } else {
-    data.items.push(entry);
-  }
-
-  fs.writeFileSync(exportPath, JSON.stringify(data, null, 2), 'utf-8');
-  logger.info({ exportPath, totalExported: data.items.length }, 'Exported to JSON');
-}
+app.use('/api/items', itemsRouter);
+app.use('/api', syncRouter);
+app.use('/api/export', exportRouter);
 
 // ─── 404 for unknown routes ──────────────────────────────────
 

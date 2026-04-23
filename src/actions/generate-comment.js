@@ -8,7 +8,7 @@ const { retry } = require('../retry');
  * Action: Generate Comment
  * Takes a post IR item and generates a relevant comment via Groq LLM.
  */
-async function run(item, _profileContext) {
+async function run(item) {
   logger.info({ itemId: item.id, type: item.type }, 'Generating comment');
 
   const prompt = buildPrompt(item);
@@ -28,7 +28,7 @@ async function run(item, _profileContext) {
             {
               role: 'system',
               content:
-                'You are a thoughtful developer who writes insightful, concise comments on tech posts. Be genuine, add value, and keep it under 3 sentences.',
+                'use the same writting style as in the example and comment this. do not and empty links or not truthful information',
             },
             {
               role: 'user',
@@ -46,8 +46,8 @@ async function run(item, _profileContext) {
       return res.json();
     },
     {
-      maxRetries: 3,
-      baseDelay: 2000,
+      maxRetries: 2,
+      baseDelay: 1000,
       label: 'groq-generate-comment',
       onRetry: (err, attempt) => {
         logger.warn({ err: err.message, attempt, itemId: item.id }, 'Groq retry');

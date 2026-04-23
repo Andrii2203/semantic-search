@@ -70,7 +70,7 @@ function cosineSimilarity(a, b) {
  * @param {number}    threshold     — minimum cosine similarity (0.0 – 1.0)
  * @returns {Promise<Object[]>} — items that pass the threshold, sorted by score desc
  */
-async function findRelevant(dataBatch, profileVector, threshold = 0.65) {
+async function findRelevant(dataBatch, profileVector, threshold = 0.35) {
   if (!dataBatch || dataBatch.length === 0) {
     return [];
   }

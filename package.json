@@ -11,6 +11,7 @@
     "dev": "node --watch src/server.js",
     "test": "jest --forceExit --detectOpenHandles",
     "test:coverage": "jest --forceExit --detectOpenHandles --coverage",
+    "test:smoke": "jest --config jest.smoke.config.js --no-coverage",
     "lint": "eslint src/ __tests__/",
     "lint:fix": "eslint src/ __tests__/ --fix",
     "format": "prettier --write \"src/**/*.js\" \"__tests__/**/*.js\"",

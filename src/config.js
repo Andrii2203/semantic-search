@@ -84,7 +84,7 @@ const config = Object.freeze({
   }),
 
   // Search
-  similarityThreshold: envFloat('SIMILARITY_THRESHOLD', 0.65),
+  similarityThreshold: envFloat('SIMILARITY_THRESHOLD', 0.35),
 
   // Scheduler
   cronSchedule: env('CRON_SCHEDULE', '*/30 * * * *'),
