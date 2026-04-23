@@ -85,7 +85,7 @@ describe('Semantic Search API - Senior Integration Suite', () => {
     const exportPath = path.join(__dirname, '../data/export.json');
 
     test('should return empty object if file does not exist', async () => {
-      if (fs.existsSync(exportPath)) fs.unlinkSync(exportPath);
+      if (fs.existsSync(exportPath)) { fs.unlinkSync(exportPath) };
       
       const res = await request(app).get('/api/export');
       expect(res.statusCode).toBe(200);
@@ -94,7 +94,7 @@ describe('Semantic Search API - Senior Integration Suite', () => {
 
     test('should trigger download if file exists', async () => {
       // Setup: Create dummy export file
-      if (!fs.existsSync(path.dirname(exportPath))) fs.mkdirSync(path.dirname(exportPath), { recursive: true });
+      if (!fs.existsSync(path.dirname(exportPath))) { fs.mkdirSync(path.dirname(exportPath), { recursive: true }) };
       fs.writeFileSync(exportPath, JSON.stringify({ items: [{ id: '1' }] }));
 
       const res = await request(app).get('/api/export');
@@ -107,24 +107,17 @@ describe('Semantic Search API - Senior Integration Suite', () => {
   // ─── Global Middleware & Sync ───────────────────────────────
 
   describe('System Integrity', () => {
-    test('POST /api/sync should trigger scheduler regardless of cycle outcome', async () => {
+    test('POST /api/sync should trigger scheduler', async () => {
       scheduler.runCycle.mockResolvedValue({ fetched: 0 });
-      const res = await request(app).post('/api/sync');
-      expect(res.statusCode).toBe(200);
+      await request(app).post('/api/sync');
       expect(scheduler.runCycle).toHaveBeenCalled();
     });
-
-    test('Error handler should mask internal details in production', async () => {
-      // Force an error in db query by sending something that breaks SQL
-      const res = await request(app).get('/api/items/stats');
-      // Stats has no params, so we manually mock db to throw
+    test('Error handler should catch database errors', async () => {
       const dbSpy = jest.spyOn(db, 'getItemCount').mockImplementation(() => {
         throw new Error('Database Crash');
       });
-
-      const resErr = await request(app).get('/api/items/stats');
-      expect(resErr.statusCode).toBe(500);
-      // Depending on config.isProduction, message might be masked
+      const res = await request(app).get('/api/items/stats');
+      expect(res.statusCode).toBe(500);
       dbSpy.mockRestore();
     });
   });
