@@ -185,6 +185,12 @@ describe('getItems', () => {
     const items = db.getItems({ limit: 1, offset: 2 });
     expect(items).toHaveLength(1);
   });
+
+  test('filters by multiple sources (comma separated)', () => {
+    const items = db.getItems({ source: 'hn,reddit' });
+    expect(items).toHaveLength(3); // 2 hn + 1 reddit з beforeEach
+  });
+
 });
 
 // ─── Get by ID ───────────────────────────────────────────────
@@ -247,7 +253,6 @@ describe('getItemCount', () => {
     db.insertItem(makeItem({ id: '1', content: 'A' }));
     db.updateItemStatus('1', 'approved');
     db.insertItem(makeItem({ id: '2', content: 'B' }));
-
     expect(db.getItemCount('new')).toBe(1);
     expect(db.getItemCount('approved')).toBe(1);
   });
@@ -272,6 +277,17 @@ describe('fingerprint', () => {
     const fp = db.fingerprint(makeItem());
     expect(fp).toMatch(/^[a-f0-9]{16}$/);
   });
+
+  test('getItemById returns undefined for ghost ID', () => {
+    const item = db.getItemById('non-existent-uuid');
+    expect(item).toBeNull();
+  });
+
+  test('updateItemStatus returns false if no rows updated', () => {
+    const result = db.updateItemStatus('ghost-id', 'approved');
+    expect(result).toBe(false);
+  });
+
 });
 
 // ─── Close ───────────────────────────────────────────────────

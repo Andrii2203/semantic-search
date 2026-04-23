@@ -24,7 +24,7 @@ jest.mock('../src/search-engine', () => ({
     const mag = Math.sqrt(magA) * Math.sqrt(magB);
     return mag === 0 ? 0 : dot / mag;
   }),
-  findRelevant: jest.fn(async (items, _pv, threshold = 0.65) => {
+  findRelevant: jest.fn(async (items, _pv) => {
     // In tests: return all items with a fake score above threshold
     return items.map((item) => ({ ...item, score: 0.9 }));
   }),
@@ -147,6 +147,14 @@ describe('scheduler.runCycle', () => {
     const skipped = results.filter((r) => r.skipped);
     expect(skipped.length).toBe(1);
   });
+
+  test('logs error and rethrows if cycle fails', async () => {
+    const sources = require('../src/sources/index');
+    jest.spyOn(sources, 'fetchAll').mockRejectedValue(new Error('Network Fail'));
+    
+    await expect(scheduler.runCycle()).rejects.toThrow('Network Fail');
+  });
+
 });
 
 describe('scheduler.loadProfile', () => {

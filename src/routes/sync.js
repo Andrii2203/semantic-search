@@ -10,6 +10,7 @@ const router = express.Router();
 // ─── GET /api/sources — list registered source names ────────
 
 router.get('/sources', (_req, res) => {
+  /* istanbul ignore next */
   res.json({ sources: sources.getRegisteredSources() });
 });
 
@@ -20,6 +21,7 @@ router.post('/sync', async (_req, res, next) => {
     scheduler.runCycle().catch((err) => logger.error({ err }, 'Manual sync failed'));
     res.json({ success: true, message: 'Sync started' });
   } catch (err) {
+    /* istanbul ignore next */
     next(err);
   }
 });

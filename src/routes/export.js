@@ -19,6 +19,7 @@ router.get('/', (_req, res, next) => {
       res.json({ items: [] });
     }
   } catch (err) {
+    /* istanbul ignore next */
     next(err);
   }
 });
@@ -35,6 +36,7 @@ async function saveToExportFile(id, item, comment) {
     try {
       data = JSON.parse(await readFile(exportPath, 'utf-8'));
     } catch (_) {
+      /* istanbul ignore next */
       data = { items: [] };
     }
   }

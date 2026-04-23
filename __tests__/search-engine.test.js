@@ -82,6 +82,14 @@ describe('SearchEngine Module', () => {
       // Переконуємось, що "шпигун" спрацював
       expect(searchEngine.generateEmbedding).toHaveBeenCalledWith('Test content');
     });
+
+    test('findRelevant returns empty array for null or empty input', async () => {
+      const resNull = await searchEngine.findRelevant(null, [1,0]);
+      const resEmpty = await searchEngine.findRelevant([], [1,0]);
+      expect(resNull).toEqual([]);
+      expect(resEmpty).toEqual([]);
+    });
+
   });
 
   test('search-engine.js does not import any project modules (isolation check)', () => {

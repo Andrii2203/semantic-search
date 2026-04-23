@@ -64,6 +64,19 @@ describe('Semantic Search API - Senior Integration Suite', () => {
       const item = db.getItemById('hn-1');
       expect(item.response).toBe('Expert AI comment');
     });
+        
+    test('should update existing entry in export file if generated twice', async () => {
+      const generateComment = require('../src/actions/generate-comment');
+      generateComment.run.mockResolvedValue('Comment Version 2');
+      
+      await request(app).post('/api/items/hn-1/generate');
+      
+      const exportPath = path.join(__dirname, '../data/export.json');
+      const data = JSON.parse(fs.readFileSync(exportPath, 'utf-8'));
+      const entry = data.items.find(i => i.id === 'hn-1');
+      expect(entry.comment).toBe('Comment Version 2');
+    });
+
 
     test('should handle AI return null (failure branch)', async () => {
       generateComment.run.mockResolvedValue(null);
