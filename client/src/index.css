@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme {
+  /* Фон стає трохи темнішим, коли немає місяця */
+  --color-background: hsl(320, 40%, calc(4% + var(--moon-intensity, 0) * 2%));
+  --color-foreground: #f8fafc;
+  --color-ubuntu-aubergine: #300a24;
+  --color-ubuntu-header: #5e2750;
+
+  /* ДИНАМІЧНИЙ КОЛІР ТА СЕРЕДОВИЩЕ */
+  --color-ubuntu-orange: hsl(var(--dynamic-accent-hue, 20), calc(var(--weather-saturation, 1) * 80%), calc(var(--daylight, 1) * 55%));
+  --color-ubuntu-orange-hover: hsl(var(--dynamic-accent-hue, 20), 90%, 45%);
+
+  --color-border: #4d1d3d;
+}
+
+@layer base {
+  .light-theme {
+    --color-background: hsl(320, 15%, calc(98% - var(--moon-intensity, 0) * 2%));
+    --color-foreground: #1e1b4b;
+    --color-ubuntu-aubergine: #ffffff;
+    --color-ubuntu-header: #f1f5f9;
+    --color-ubuntu-orange: hsl(var(--dynamic-accent-hue, 20), calc(var(--weather-saturation, 1) * 85%), 50%);
+    --color-ubuntu-orange-hover: hsl(var(--dynamic-accent-hue, 20), 95%, 45%);
+    --color-border: #e2e8f0;
+  }
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  filter: saturate(var(--weather-saturation, 1));
+  /* Тільки насиченість для всього тіла */
+  font-size: var(--font-size-base, 14px);
+  letter-spacing: var(--letter-spacing, 0px);
+  transition: filter 1s ease, letter-spacing 1s ease;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 0.95em;
+}
+
+/* Ефект розмиття при сильному вітрі - Тільки для фонових шарів */
+.weather-blur {
+  filter: blur(calc(150px + var(--weather-blur, 0px)));
+}
+
+/* Місячне сяйво, що залежить від фази */
+.moon-glow {
+  /* Тепер використовуємо готову інтенсивність з JS */
+  box-shadow: 0 0 calc(var(--moon-intensity, 0) * 50px) rgba(255, 255, 255, 0.15);
+  transition: box-shadow 2s ease-in-out;
+}
