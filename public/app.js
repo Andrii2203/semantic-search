@@ -334,6 +334,41 @@
       }
     }
 
+    // ─── Upload Resumes ────────────────────────
+    document.getElementById('file-upload').addEventListener('change', async (e) => {
+      const files = e.target.files;
+      if (files.length === 0) return;
+
+      const btn = document.getElementById('btn-upload');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '⏳ Uploading...';
+      btn.disabled = true;
+
+      const formData = new FormData();
+      for (const file of files) {
+        formData.append('files', file);
+      }
+
+      try {
+        const res = await fetch(`${API}/upload`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error?.message || 'Upload failed');
+        
+        showToast(`Uploaded! Processed: ${data.processed}, Failed: ${data.failed}`);
+        e.target.value = ''; // Reset
+        await refresh();
+      } catch (err) {
+        showToast(`Error: ${err.message}`);
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    });
+
     // ─── Init ──────────────────────────────────
     checkHealth();
     loadSources();

@@ -587,6 +587,10 @@
       <button class="filter-btn" data-status="approved" id="filter-approved">Commented</button>
       <button class="filter-btn" data-status="skipped" id="filter-skipped">Skipped</button>
     </div>
+    
+    <input type="file" id="file-upload" multiple accept=".pdf" style="display: none;" />
+    <button class="action-btn" id="btn-upload" onclick="document.getElementById('file-upload').click()">📄 Upload Resumes</button>
+    
     <button class="action-btn primary" id="btn-sync">🚀 Fetch Posts</button>
     <button class="action-btn" id="btn-refresh"><span class="icon">⟳</span> Refresh</button>
   </div>

@@ -4,3 +4,4 @@ data/
 *.db
 coverage/
 .DS_Store
+docs/
