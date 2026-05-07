@@ -7,7 +7,7 @@ const { AppError, ErrorCodes } = require('../errors');
  * Cleans the raw text extracted from PDF
  */
 function cleanText(text) {
-  if (!text) return '';
+  if (!text) { return '' };
   return text
     .replace(/\r\n/g, '\n')
     .replace(/\r/g, '\n')

@@ -5,8 +5,10 @@ const djinni = require('../../src/sources/djinni');
 test('Djinni returns real jobs (smoke)', async () => {
   const items = await djinni.fetch({ limit: 5 });
   
+  // eslint-disable-next-line no-console
   console.log(`Djinni returned ${items.length} jobs`);
   items.forEach(item => {
+    // eslint-disable-next-line no-console
     console.log(`  - ${item.metadata.title} (${item.metadata.url})`);
   });
 

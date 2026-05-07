@@ -66,7 +66,8 @@ describe('Semantic Search API - Senior Integration Suite', () => {
         
         // Якщо тут 500, давай подивимось на помилку в логах СІ
         if (res.statusCode === 500) {
-            console.error('CI error details:', res.body.error);
+          // eslint-disable-next-line no-console
+          console.error('CI error details:', res.body.error);
         }
         
         expect(res.statusCode).toBe(200);

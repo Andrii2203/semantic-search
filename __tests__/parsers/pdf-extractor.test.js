@@ -1,7 +1,7 @@
 'use strict';
 
 const pdfParse = require('pdf-parse');
-const { AppError, ErrorCodes } = require('../../src/errors');
+const { AppError } = require('../../src/errors');
 const { extractTextFromPDF, cleanText } = require('../../src/parsers/pdf-extractor');
 
 jest.mock('pdf-parse', () => jest.fn());

@@ -26,7 +26,7 @@ const KNOWN_TECH = [
  * @returns {string[]} Array of extracted skills
  */
 function extractSkills(skillsSectionLines) {
-  if (!skillsSectionLines || skillsSectionLines.length === 0) return [];
+  if (!skillsSectionLines || skillsSectionLines.length === 0) { return [] };
 
   const text = skillsSectionLines.join(' ');
   const foundSkills = new Set();

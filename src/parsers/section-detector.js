@@ -40,16 +40,16 @@ const SECTION_MARKERS = {
  */
 function looksLikeHeader(line) {
   const trimmed = line.trim();
-  if (!trimmed) return false;
+  if (!trimmed) { return false };
   
   // Section headers are short
-  if (trimmed.length > 50) return false;
+  if (trimmed.length > 50) { return false };
   
   // Section headers don't contain common sentence words
   const sentenceIndicators = /\b(the|and|for|was|with|have|been|this|that|from|your|our)\b/i;
   if (sentenceIndicators.test(trimmed) && trimmed.split(/\s+/).length > 3) {
     return false;
-  }
+  };
   
   return true;
 }
@@ -68,14 +68,14 @@ function detectSections(text) {
     contacts: [],
   };
 
-  if (!text) return sections;
+  if (!text) { return sections };
 
   let currentSection = 'header';
   const lines = text.split('\n');
 
   for (const line of lines) {
     const trimmed = line.trim();
-    if (!trimmed) continue;
+    if (!trimmed) { continue };
 
     const normalized = trimmed.toLowerCase();
     const cleanForMatch = normalized.replace(/[:\-•·]/g, '').trim();
