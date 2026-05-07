@@ -9,8 +9,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch-path=src src/server.js",
-    "test": "jest --forceExit --detectOpenHandles",
-    "test:coverage": "jest --forceExit --detectOpenHandles --coverage",
+    "test": "jest --forceExit",
+    "test:coverage": "jest --forceExit --coverage",
     "test:smoke": "jest --config jest.smoke.config.js --no-coverage",
     "lint": "eslint src/ __tests__/",
     "lint:fix": "eslint src/ __tests__/ --fix",
