@@ -12,7 +12,7 @@ FROM node:20-slim
 WORKDIR /app
 
 # Security: run as non-root
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 
 # Copy dependencies from builder
 COPY --from=builder /app/node_modules ./node_modules
