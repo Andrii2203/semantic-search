@@ -1,5 +1,5 @@
 # ── Stage 1: Build ──────────────────────────
-FROM node:20-alpine AS builder
+FROM node:20-slim AS builder
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm ci --only=production
 
 # ── Stage 2: Production ─────────────────────
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
 

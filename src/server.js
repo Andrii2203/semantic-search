@@ -16,7 +16,7 @@ const { router: exportRouter } = require('./routes/export');
 const uploadRouter = require('./routes/upload');
 
 const app = express();
-
+app.set('trust proxy', 1);
 // ─── Middleware ───────────────────────────────────────────────
 
 app.use(helmet());
