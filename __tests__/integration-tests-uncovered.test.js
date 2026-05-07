@@ -9,7 +9,6 @@ const request = require('supertest');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { Readable } = require('stream');
 
 // ─── Setup test environment ──────────────────────────────────
 process.env.NODE_ENV = 'test';
@@ -61,7 +60,6 @@ function createInvalidPDFBuffer() {
 // ─── Module imports (after env setup) ────────────────────────
 let db = require('../src/db');
 const { validateIR } = require('../src/validation');
-const { AppError, ErrorCodes } = require('../src/errors');
 
 // ─── Test Data Fixtures ──────────────────────────────────────
 
@@ -724,7 +722,7 @@ describe('src/scheduler.js', () => {
         return Promise.resolve(vec.map((v) => (mag > 0 ? v / mag : 0)));
       }),
       cosineSimilarity: jest.fn((a, b) => {
-        if (a.length !== b.length || a.length === 0) return 0;
+        if (a.length !== b.length || a.length === 0) { return 0 };
         let dot = 0, magA = 0, magB = 0;
         for (let i = 0; i < a.length; i++) {
           dot += a[i] * b[i]; magA += a[i] * a[i]; magB += b[i] * b[i];
@@ -732,7 +730,7 @@ describe('src/scheduler.js', () => {
         const mag = Math.sqrt(magA) * Math.sqrt(magB);
         return mag === 0 ? 0 : dot / mag;
       }),
-      findRelevant: jest.fn(async (items, _pv, threshold) => {
+      findRelevant: jest.fn(async (items, _pv) => {
         return items.map((item) => ({ ...item, score: 0.9 }));
       }),
     }));
@@ -1044,7 +1042,7 @@ describe('src/retry.js', () => {
     let attempts = 0;
     const flakyFn = jest.fn(async () => {
       attempts++;
-      if (attempts < 3) throw new Error('Temporary failure');
+      if (attempts < 3) { throw new Error('Temporary failure') };
       return 'success';
     });
 
