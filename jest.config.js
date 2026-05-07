@@ -16,4 +16,7 @@ module.exports = {
     }
   },
   verbose: true,
+  moduleNameMapper: {
+    '^pdf-parse$': '<rootDir>/__mocks__/pdf-parse.js',
+  },
 };
