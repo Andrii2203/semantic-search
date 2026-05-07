@@ -13,6 +13,7 @@ const { createShutdownHandler } = require('./shutdown');
 const itemsRouter = require('./routes/items');
 const syncRouter = require('./routes/sync');
 const { router: exportRouter } = require('./routes/export');
+const uploadRouter = require('./routes/upload');
 
 const app = express();
 
@@ -65,6 +66,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/items', itemsRouter);
 app.use('/api', syncRouter);
 app.use('/api/export', exportRouter);
+app.use('/api/upload', uploadRouter);
 
 // ─── 404 for unknown routes ──────────────────────────────────
 

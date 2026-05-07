@@ -65,6 +65,7 @@ function init(dbPath) {
   // Enable WAL mode for better concurrent read performance
   db.pragma('journal_mode = WAL');
   db.pragma('foreign_keys = ON');
+  db.pragma('synchronous = NORMAL');
 
   runMigrations();
 
@@ -262,6 +263,11 @@ function getItemCount(status, source) {
   return d.prepare(`SELECT COUNT(*) as count FROM items ${where}`).get(...params).count;
 }
 
+function getSources() {
+  const d = getDb();
+  return d.prepare('SELECT DISTINCT source FROM items').all().map((row) => row.source);
+}
+
 function close() {
   if (db) {
     db.close();
@@ -284,4 +290,5 @@ module.exports = {
   updateItemStatus,
   updateItemResponse,
   getItemCount,
+  getSources,
 };
