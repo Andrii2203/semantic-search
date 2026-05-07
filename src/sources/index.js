@@ -69,14 +69,6 @@ async function fetchAll(options = {}) {
 }
 
 /**
- * Get list of registered source names.
- */
-function getRegisteredSources() {
-  /* istanbul ignore next */
-  return [...sources.keys()];
-}
-
-/**
  * Clear all registered sources (for testing).
  */
 function clearSources() {
@@ -94,6 +86,5 @@ register(require('./djinni'));
 module.exports = {
   register,
   fetchAll,
-  getRegisteredSources,
   clearSources,
 };

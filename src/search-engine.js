@@ -75,11 +75,23 @@ async function findRelevant(dataBatch, profileVector, threshold = 0.35) {
     return [];
   }
 
+  const embeddings = await Promise.all(
+    dataBatch.map( async (item) => {
+      try {
+        const vector = await module.exports.generateEmbedding(item.content);
+        return { item, vector, ok: true };
+      } catch (error) {
+        return { item, vector: [0], ok: false };
+      }
+    })
+  )
+
   const scored = [];
 
-  for (const item of dataBatch) {
-    const itemVector = await module.exports.generateEmbedding(item.content);
-    const score = cosineSimilarity(itemVector, profileVector);
+  for (const { item, vector, ok } of embeddings) {
+    if(!ok) {continue;}
+
+    const score = cosineSimilarity(vector, profileVector);
 
     if (score >= threshold) {
       scored.push({ ...item, score });

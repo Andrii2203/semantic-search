@@ -97,6 +97,69 @@ async function runCycle() {
   }
 }
 
+async function runCycle() {
+  if (isRunning) {
+    logger.warn('Cycle already running, skipping');
+    return { skipped: true };
+  }
+
+  isRunning = true;
+  const cycleStart = performance.now();
+
+  logger.info('═══ CYCLE START ═══');
+
+  try {
+    // 0. LOAD profile vector
+    const t0 = performance.now();
+    if (!profileVector) {
+      await loadProfile();
+    }
+    const t0End = performance.now();
+    logger.info({ step: 'loadProfile', duration: Math.round(t0End - t0) }, 'TIMING');
+
+    // 1. FETCH from all sources
+    const t1 = performance.now();
+    const rawItems = await sources.fetchAll();
+    const t1End = performance.now();
+    logger.info({ step: 'fetch', duration: Math.round(t1End - t1), count: rawItems.length }, 'TIMING');
+
+    if (rawItems.length === 0) {
+      logger.info('No items fetched, ending cycle');
+      return { fetched: 0, validated: 0, filtered: 0, saved: 0, duration: Math.round(performance.now() - cycleStart) };
+    }
+
+    // 2. VALIDATE
+    const t2 = performance.now();
+    const validItems = validateIRBatch(rawItems, logger);
+    const t2End = performance.now();
+    logger.info({ step: 'validate', duration: Math.round(t2End - t2), valid: validItems.length, dropped: rawItems.length - validItems.length }, 'TIMING');
+
+    // 3. FILTER by semantic similarity
+    const t3 = performance.now();
+    const relevant = await searchEngine.findRelevant(validItems, profileVector, config.similarityThreshold);
+    const t3End = performance.now();
+    logger.info({ step: 'search', duration: Math.round(t3End - t3), relevant: relevant.length, filtered: validItems.length - relevant.length }, 'TIMING');
+
+    // 4. SAVE to database
+    const t4 = performance.now();
+    const saved = db.insertItemsBatch(relevant);
+    const t4End = performance.now();
+    logger.info({ step: 'dbSave', duration: Math.round(t4End - t4), saved, duplicatesSkipped: relevant.length - saved }, 'TIMING');
+
+    const total = Math.round(performance.now() - cycleStart);
+    logger.info(
+      { fetched: rawItems.length, validated: validItems.length, relevant: relevant.length, saved, duration: `${total}ms` },
+      '═══ CYCLE END ═══',
+    );
+
+    return { fetched: rawItems.length, validated: validItems.length, filtered: relevant.length, saved, duration: total };
+  } catch (err) {
+    logger.error({ err }, 'Cycle failed');
+    throw err;
+  } finally {
+    isRunning = false;
+  }
+}
 /**
  * Start the scheduler.
  */

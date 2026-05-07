@@ -3,7 +3,7 @@
 const express = require('express');
 const logger = require('../logger');
 const scheduler = require('../scheduler');
-const sources = require('../sources/index');
+const db = require('../db');
 
 const router = express.Router();
 
@@ -11,8 +11,15 @@ const router = express.Router();
 
 router.get('/sources', (_req, res) => {
   /* istanbul ignore next */
-  res.json({ sources: sources.getRegisteredSources() });
+  try {
+    const list = db.getSources();
+    res.json({ sources: list });
+  } catch (err) {
+    logger.error({ err }, 'Failed to get sources');
+    res.status(500).json({ error: 'Failed to get sources' });
+  }
 });
+
 
 // ─── POST /api/sync — trigger manual fetch cycle ────────────
 
