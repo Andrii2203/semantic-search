@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    # Запускаємо від root лише для режиму розробки, щоб npm міг писати в кеш
+    user: "root"
+    # Встановлюємо пакети (якщо треба) і запускаємо сервер в режимі watch
+    command: sh -c "[ ! -d node_modules ] && npm install || true && npm run dev"
+    volumes:
+      # Прокидаємо весь код бекенду
+      - ./:/app
+      # Захищаємо node_modules, щоб він жив лише в контейнері
+      - /app/node_modules
+      # МОНТУЄМО БАЗУ НА ХОСТ
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=development
+      - LOG_LEVEL=debug
+
+  client:
+    # Використовуємо той самий базовий образ Node
+    image: node:20-slim
+    working_dir: /app/client
+    # Встановлюємо пакети клієнта і запускаємо Vite
+    command: sh -c "[ ! -d node_modules ] && npm install || true && npm run dev -- --host"
+    ports:
+      - "5173:5173"
+    volumes:
+      # Прокидаємо код клієнта
+      - ./client:/app/client
+      # Захищаємо node_modules клієнта
+      - /app/client/node_modules
+    environment:
+      # Vite проксі має знати, де знаходиться бекенд в мережі Docker
+      - API_URL=http://app:3000
+    depends_on:
+      - app
+

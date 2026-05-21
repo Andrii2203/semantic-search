@@ -45,6 +45,71 @@ const migrations = [
       );
     `,
   },
+  {
+    name: '003_create_chunks',
+    up: `
+      CREATE TABLE IF NOT EXISTS chunks (
+        id          TEXT PRIMARY KEY,
+        parent_id   TEXT NOT NULL,
+        content     TEXT NOT NULL,
+        chunk_index INTEGER NOT NULL,
+        level       TEXT DEFAULT 'section',
+        strategy    TEXT NOT NULL,
+        vector      BLOB,
+        metadata    TEXT,
+        created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+        FOREIGN KEY (parent_id) REFERENCES items(id) ON DELETE CASCADE
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_chunks_parent ON chunks(parent_id);
+      CREATE INDEX IF NOT EXISTS idx_chunks_strategy ON chunks(strategy);
+    `,
+  },
+  {
+    name: '004_create_chunks_fts',
+    up: `
+      CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts
+      USING fts5(content, content='chunks', content_rowid='rowid', tokenize='porter unicode61');
+
+      CREATE TRIGGER IF NOT EXISTS chunks_fts_ai AFTER INSERT ON chunks BEGIN
+        INSERT INTO chunks_fts(rowid, content) VALUES (new.rowid, new.content);
+      END;
+
+      CREATE TRIGGER IF NOT EXISTS chunks_fts_ad AFTER DELETE ON chunks BEGIN
+        INSERT INTO chunks_fts(chunks_fts, rowid, content) VALUES('delete', old.rowid, old.content);
+      END;
+
+      CREATE TRIGGER IF NOT EXISTS chunks_fts_au AFTER UPDATE ON chunks BEGIN
+        INSERT INTO chunks_fts(chunks_fts, rowid, content) VALUES('delete', old.rowid, old.content);
+        INSERT INTO chunks_fts(rowid, content) VALUES (new.rowid, new.content);
+      END;
+    `,
+  },
+  {
+    name: '005_create_profiles',
+    up: `
+      CREATE TABLE IF NOT EXISTS profiles (
+        id          TEXT PRIMARY KEY,
+        keywords    TEXT,
+        vector      BLOB,
+        raw_input   TEXT,
+        created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+      );
+    `,
+  },
+  {
+    name: '006_create_chunking_config',
+    up: `
+      CREATE TABLE IF NOT EXISTS chunking_config (
+        id          INTEGER PRIMARY KEY DEFAULT 1,
+        strategy    TEXT NOT NULL DEFAULT 'semantic',
+        chunk_size  INTEGER DEFAULT 200,
+        overlap     INTEGER DEFAULT 50,
+        updated_at  TEXT NOT NULL DEFAULT (datetime('now'))
+      );
+      INSERT OR IGNORE INTO chunking_config (id) VALUES (1);
+    `,
+  },
 ];
 
 // ─── Initialization ──────────────────────────────────────────
@@ -276,6 +341,174 @@ function close() {
   }
 }
 
+// ─── Chunks CRUD ─────────────────────────────────────────────
+
+function insertChunk(chunk) {
+  const d = getDb();
+  const stmt = d.prepare(`
+    INSERT OR REPLACE INTO chunks (id, parent_id, content, chunk_index, level, strategy, vector, metadata)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  return stmt.run(
+    chunk.id,
+    chunk.parentId,
+    chunk.content,
+    chunk.chunkIndex,
+    chunk.level || 'section',
+    chunk.strategy,
+    chunk.vector || null,
+    JSON.stringify(chunk.metadata || {}),
+  );
+}
+
+function insertChunksBatch(chunks) {
+  const d = getDb();
+  const insert = d.prepare(`
+    INSERT OR REPLACE INTO chunks (id, parent_id, content, chunk_index, level, strategy, vector, metadata)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  const insertMany = d.transaction((rows) => {
+    let count = 0;
+    for (const chunk of rows) {
+      insert.run(
+        chunk.id,
+        chunk.parentId,
+        chunk.content,
+        chunk.chunkIndex,
+        chunk.level || 'section',
+        chunk.strategy,
+        chunk.vector || null,
+        JSON.stringify(chunk.metadata || {}),
+      );
+      count++;
+    }
+    return count;
+  });
+
+  return insertMany(chunks);
+}
+
+function getChunksByParent(parentId) {
+  const d = getDb();
+  return d
+    .prepare('SELECT * FROM chunks WHERE parent_id = ? ORDER BY chunk_index')
+    .all(parentId)
+    .map((row) => ({
+      ...row,
+      metadata: row.metadata ? JSON.parse(row.metadata) : {},
+    }));
+}
+
+function deleteChunksByParent(parentId) {
+  const d = getDb();
+  return d.prepare('DELETE FROM chunks WHERE parent_id = ?').run(parentId).changes;
+}
+
+function chunksSearch(keywords, options = {}) {
+  const d = getDb();
+  const limit = options.limit || 100;
+  const query = keywords
+    .filter(Boolean)
+    .map((k) => `"${k.replace(/"/g, '""')}"`)
+    .join(' OR ');
+
+  if (!query.trim()) return [];
+
+  try {
+    return d
+      .prepare(
+        `SELECT c.*, chunks_fts.rank
+         FROM chunks_fts
+         JOIN chunks c ON c.rowid = chunks_fts.rowid
+         WHERE chunks_fts MATCH ?
+         ORDER BY rank
+         LIMIT ?`,
+      )
+      .all(query, limit)
+      .map((row) => ({
+        ...row,
+        metadata: row.metadata ? JSON.parse(row.metadata) : {},
+      }));
+  } catch (err) {
+    logger.warn({ err, query }, 'FTS5 search failed, returning empty');
+    return [];
+  }
+}
+
+// ─── Profiles CRUD ───────────────────────────────────────────
+
+function saveProfile(profile) {
+  const d = getDb();
+  d.prepare(`
+    INSERT OR REPLACE INTO profiles (id, keywords, vector, raw_input)
+    VALUES (?, ?, ?, ?)
+  `).run(
+    profile.id,
+    JSON.stringify(profile.keywords || []),
+    profile.vector || null,
+    profile.rawInput || '',
+  );
+  return profile.id;
+}
+
+function getProfile(id) {
+  const d = getDb();
+  const row = d.prepare('SELECT * FROM profiles WHERE id = ?').get(id);
+  if (!row) return null;
+  return {
+    ...row,
+    keywords: row.keywords ? JSON.parse(row.keywords) : [],
+  };
+}
+
+function getAllProfiles() {
+  const d = getDb();
+  return d
+    .prepare('SELECT * FROM profiles ORDER BY created_at DESC')
+    .all()
+    .map((row) => ({
+      ...row,
+      keywords: row.keywords ? JSON.parse(row.keywords) : [],
+    }));
+}
+
+function deleteProfile(id) {
+  const d = getDb();
+  return d.prepare('DELETE FROM profiles WHERE id = ?').run(id).changes > 0;
+}
+
+// ─── Chunking Config ─────────────────────────────────────────
+
+function getChunkingConfig() {
+  const d = getDb();
+  const row = d.prepare('SELECT * FROM chunking_config WHERE id = 1').get();
+  return row || { strategy: 'semantic', chunk_size: 200, overlap: 50 };
+}
+
+function updateChunkingConfig({ strategy, chunkSize, overlap }) {
+  const d = getDb();
+  d.prepare(`
+    UPDATE chunking_config
+    SET strategy = COALESCE(?, strategy),
+        chunk_size = COALESCE(?, chunk_size),
+        overlap = COALESCE(?, overlap),
+        updated_at = datetime('now')
+    WHERE id = 1
+  `).run(strategy || null, chunkSize || null, overlap || null);
+}
+
+function getAllChunksWithVectors() {
+  const d = getDb();
+  return d
+    .prepare('SELECT * FROM chunks WHERE vector IS NOT NULL')
+    .all()
+    .map((row) => ({
+      ...row,
+      metadata: row.metadata ? JSON.parse(row.metadata) : {},
+    }));
+}
+
 // ─── Exports ─────────────────────────────────────────────────
 
 module.exports = {
@@ -291,4 +524,20 @@ module.exports = {
   updateItemResponse,
   getItemCount,
   getSources,
+  // Chunks
+  insertChunk,
+  insertChunksBatch,
+  getChunksByParent,
+  deleteChunksByParent,
+  chunksSearch,
+  getAllChunksWithVectors,
+  // Profiles
+  saveProfile,
+  getProfile,
+  getAllProfiles,
+  deleteProfile,
+  // Config
+  getChunkingConfig,
+  updateChunkingConfig,
 };
+

@@ -97,6 +97,22 @@ const config = Object.freeze({
 
   // Logging
   logLevel: env('LOG_LEVEL', 'info'),
+
+  // Chunking
+  chunking: Object.freeze({
+    defaultStrategy: env('CHUNKING_STRATEGY', 'semantic'),
+    chunkSize: envInt('CHUNK_SIZE', 200),
+    overlap: envInt('CHUNK_OVERLAP', 50),
+  }),
+
+  // Search
+  search: Object.freeze({
+    defaultMode: env('SEARCH_MODE', 'sequential'),
+    bm25Weight: envFloat('BM25_WEIGHT', 0.4),
+    semanticWeight: envFloat('SEMANTIC_WEIGHT', 0.6),
+    batchSize: envInt('EMBEDDING_BATCH_SIZE', 20),
+    maxBm25Results: envInt('MAX_BM25_RESULTS', 100),
+  }),
 });
 
 module.exports = config;

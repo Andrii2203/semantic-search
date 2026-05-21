@@ -14,6 +14,8 @@ const itemsRouter = require('./routes/items');
 const syncRouter = require('./routes/sync');
 const { router: exportRouter } = require('./routes/export');
 const uploadRouter = require('./routes/upload');
+const searchRouter = require('./routes/search');
+const configRouter = require('./routes/config-routes');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -67,6 +69,8 @@ app.use('/api/items', itemsRouter);
 app.use('/api', syncRouter);
 app.use('/api/export', exportRouter);
 app.use('/api/upload', uploadRouter);
+app.use('/api/search', searchRouter);
+app.use('/api/config', configRouter);
 
 // ─── 404 for unknown routes ──────────────────────────────────
 
