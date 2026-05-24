@@ -110,6 +110,14 @@ const migrations = [
       INSERT OR IGNORE INTO chunking_config (id) VALUES (1);
     `,
   },
+  {
+    name: '007_add_collection_id_to_items',
+    up: `
+      ALTER TABLE items ADD COLUMN collection_id TEXT DEFAULT 'internet';
+      UPDATE items SET collection_id = 'internet' WHERE collection_id IS NULL;
+      CREATE INDEX IF NOT EXISTS idx_items_collection_id ON items(collection_id);
+    `,
+  },
 ];
 
 // ─── Initialization ──────────────────────────────────────────
@@ -208,8 +216,8 @@ function insertItem(item) {
 function insertItemsBatch(items) {
   const d = getDb();
   const insert = d.prepare(`
-    INSERT OR IGNORE INTO items (id, content, type, source, metadata, score, response, status, fingerprint)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT OR IGNORE INTO items (id, content, type, source, metadata, score, response, status, fingerprint, collection_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const insertMany = d.transaction((rows) => {
@@ -226,6 +234,7 @@ function insertItemsBatch(items) {
         item.response || null,
         item.status || 'new',
         fp,
+        item.collectionId || 'internet',
       );
       if (result.changes > 0) {
         inserted++;
@@ -302,7 +311,7 @@ function updateItemResponse(id, response, score) {
   return result.changes > 0;
 }
 
-function getItemCount(status, source) {
+function getItemCount(status, source, collection_id) {
   const d = getDb();
   const conditions = [];
   const params = [];
@@ -322,6 +331,10 @@ function getItemCount(status, source) {
       conditions.push(`source IN (${placeholders})`);
       params.push(...sources);
     }
+  }
+  if (collection_id) {
+    conditions.push('collection_id = ?');
+    params.push(collection_id);
   }
 
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
@@ -530,6 +543,18 @@ module.exports = {
   getChunksByParent,
   deleteChunksByParent,
   chunksSearch,
+  getAllChunksWithVectors,
+  // Profiles
+  saveProfile,
+  getProfile,
+  getAllProfiles,
+  deleteProfile,
+  // Config
+  getChunkingConfig,
+  updateChunkingConfig,
+};
+
+
   getAllChunksWithVectors,
   // Profiles
   saveProfile,
