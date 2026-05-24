@@ -46,22 +46,8 @@ app.use(express.static('public'));
 
 // ─── Health Check ────────────────────────────────────────────
 
-app.get('/api/health', (_req, res) => {
-  let dbStatus = 'disconnected';
-  try {
-    db.getDb();
-    dbStatus = 'connected';
-  } catch (_e) {
-    // DB not initialized
-  }
-
-  res.json({
-    status: 'ok',
-    uptime: Math.floor(process.uptime()),
-    db: dbStatus,
-    timestamp: new Date().toISOString(),
-  });
-});
+const healthRouter = require('./routes/health');
+app.use('/api/health', healthRouter);
 
 // ─── Routes ──────────────────────────────────────────────────
 
@@ -100,9 +86,20 @@ app.use((err, _req, res, _next) => {
 
 // ─── Start ───────────────────────────────────────────────────
 
-function start() {
+const startup = require('./startup');
+const scheduler = require('./scheduler');
+
+async function start() {
   // Initialize database
   db.init();
+  
+  // Run startup diagnostics before fully booting
+  try {
+    await startup.runStartupChecks();
+  } catch (err) {
+    logger.fatal('Failed to pass startup checks, shutting down.');
+    process.exit(1);
+  }
 
   const server = app.listen(config.port, () => {
     logger.info({ port: config.port, env: config.nodeEnv }, 'Server started');
@@ -111,8 +108,10 @@ function start() {
   createShutdownHandler(server, db);
 
   // Start scheduler (cron) + run first cycle immediately
-  // scheduler.start();
-  // scheduler.runCycle().catch((err) => logger.error({ err }, 'Initial cycle failed'));
+  scheduler.start();
+  // We can let the first cycle run asynchronously
+  scheduler.runCycle().catch((err) => logger.error({ err }, 'Initial cycle failed'));
+  
   logger.info('Server ready. Use "Fetch Posts" button to sync manually.');
   
   return server;
