@@ -1,6 +1,8 @@
 import { useLivingDesign } from './hooks/useLivingDesign'
 import { Header } from './components/Header'
 import { SearchCard } from './components/SearchCard'
+import { Inbox } from './components/Inbox'
+import { HealthFooter } from './components/HealthFooter'
 import { DebugLogger } from './components/DebugLogger'
 import { ThemeProvider } from './context/ThemeContext'
 
@@ -9,7 +11,7 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen flex flex-col relative overflow-hidden transition-colors duration-1000">
+      <div className="min-h-screen flex flex-col relative overflow-hidden transition-colors duration-1000 pb-16">
 
       {/* LUNAR ATMOSPHERE GLOW (Глобальне місячне світло) */}
       <div
@@ -33,9 +35,12 @@ function App() {
 
       <Header />
 
-      <main className="flex-1 flex flex-col items-center justify-center p-4 relative z-10">
+      <main className="flex-1 flex flex-col items-center justify-start p-4 relative z-10 space-y-12 w-full overflow-y-auto">
         <SearchCard />
+        <Inbox />
       </main>
+
+      <HealthFooter />
 
       {/* PERSISTENT DEBUG LOGGER ("EYES") */}
       <DebugLogger />
