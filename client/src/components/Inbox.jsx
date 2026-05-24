@@ -6,14 +6,15 @@ export function Inbox() {
   const [selectedItem, setSelectedItem] = useState(null)
 
   useEffect(() => {
-    fetch('/api/items')
+    fetch('/api/items?collectionId=internet')
       .then((res) => res.json())
       .then((data) => {
-        setItems(data)
+        setItems(data.items || [])
         setLoading(false)
       })
       .catch((err) => {
         console.error('Failed to fetch items', err)
+        setItems([])
         setLoading(false)
       })
   }, [])
