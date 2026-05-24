@@ -9,6 +9,8 @@ const searchEngine = require('./search-engine');
 const { validateIRBatch } = require('./validation');
 const fs = require('fs');
 
+const chunker = require('./chunker/index');
+
 let profileVector = null;
 let isRunning = false;
 let scheduledTask = null;
@@ -17,19 +19,27 @@ let scheduledTask = null;
  * Load and cache the active profile vector.
  */
 async function loadProfile() {
-  const profilePath = config.profiles[config.activeProfile];
-  if (!profilePath || !fs.existsSync(profilePath)) {
-    /* istanbul ignore next */
-    throw new Error(`Profile not found: ${config.activeProfile} at ${profilePath}`);
+  const profileId = config.activeProfile;
+  const profile = db.getProfile(profileId);
+  
+  if (!profile) {
+    throw new Error(`Profile not found in DB: ${profileId}`);
   }
 
-  const profile = JSON.parse(fs.readFileSync(profilePath, 'utf-8'));
-  const keywords = profile.keywords.join('. ');
-  profileVector = await searchEngine.generateEmbedding(keywords);
+  if (profile.vector) {
+    profileVector = searchEngine.deserializeVector(profile.vector);
+  } else {
+    const keywords = (profile.keywords || []).join('. ');
+    profileVector = await searchEngine.generateEmbedding(keywords);
+    db.saveProfile({
+      ...profile,
+      vector: searchEngine.serializeVector(profileVector)
+    });
+  }
 
   logger.info(
-    { profile: config.activeProfile, keywords: profile.keywords.length },
-    'Profile vector loaded',
+    { profile: profileId, keywords: (profile.keywords || []).length },
+    'Profile vector loaded from DB',
   );
 
   return profileVector;
@@ -62,7 +72,7 @@ async function runCycle() {
 
     if (rawItems.length === 0) {
       logger.info('No items fetched, ending cycle');
-      return { fetched: 0, validated: 0, filtered: 0, saved: 0 };
+      return { fetched: 0, validated: 0, filtered: 0, saved: 0, chunked: 0 };
     }
 
     // 2. VALIDATE
@@ -76,17 +86,54 @@ async function runCycle() {
     logger.info({ relevant: relevant.length, filtered: validItems.length - relevant.length, threshold: config.similarityThreshold }, 'Semantic filter complete');
 
     // 4. SAVE only relevant items to database
-    logger.info('Step 4: Saving relevant items to database...');
+    logger.info('Step 4: Saving relevant items to database (collection: internet)...');
+    for (const item of relevant) {
+      item.collectionId = 'internet';
+    }
     const saved = db.insertItemsBatch(relevant);
     logger.info({ saved, duplicatesSkipped: relevant.length - saved }, 'Save complete');
 
+    // 5. CHUNK AND EMBED
+    logger.info('Step 5: Chunking and embedding relevant items...');
+    const chunkingConfig = db.getChunkingConfig();
+    let totalChunks = 0;
+    
+    for (const item of relevant) {
+      const chunks = await chunker.chunk(item.content, chunkingConfig.strategy, {
+        chunkSize: chunkingConfig.chunk_size,
+        overlap: chunkingConfig.overlap
+      });
+      
+      const chunksToSave = [];
+      for (const c of chunks) {
+        const vector = await searchEngine.generateEmbedding(c.content);
+        chunksToSave.push({
+          id: `${item.id}_${c.chunkIndex}`,
+          parentId: item.id,
+          content: c.content,
+          chunkIndex: c.chunkIndex,
+          level: c.level || 'section',
+          strategy: chunkingConfig.strategy,
+          vector: searchEngine.serializeVector(vector),
+          metadata: c.metadata || {}
+        });
+      }
+      
+      if (chunksToSave.length > 0) {
+        db.insertChunksBatch(chunksToSave);
+        totalChunks += chunksToSave.length;
+      }
+    }
+    
+    logger.info({ totalChunks, itemsProcessed: relevant.length }, 'Chunking and embedding complete');
+
     const duration = Date.now() - startTime;
     logger.info(
-      { fetched: rawItems.length, validated: validItems.length, relevant: relevant.length, saved, duration: `${duration}ms` },
+      { fetched: rawItems.length, validated: validItems.length, relevant: relevant.length, saved, chunked: totalChunks, duration: `${duration}ms` },
       '--- CYCLE END ═══',
     );
 
-    return { fetched: rawItems.length, validated: validItems.length, filtered: relevant.length, saved, duration };
+    return { fetched: rawItems.length, validated: validItems.length, filtered: relevant.length, saved, chunked: totalChunks, duration };
   } catch (err) {
     /* istanbul ignore next */
     logger.error({ err }, 'Cycle failed');

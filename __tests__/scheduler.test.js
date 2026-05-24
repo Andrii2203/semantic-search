@@ -28,6 +28,15 @@ jest.mock('../src/search-engine', () => ({
     // In tests: return all items with a fake score above threshold
     return items.map((item) => ({ ...item, score: 0.9 }));
   }),
+  serializeVector: jest.fn((vec) => {
+    if (!vec) return null;
+    return Buffer.from(new Float32Array(vec).buffer);
+  }),
+  deserializeVector: jest.fn((buf) => {
+    if (!buf) return null;
+    const b = Buffer.isBuffer(buf) ? buf : Buffer.from(buf);
+    return Array.from(new Float32Array(b.buffer, b.byteOffset, b.byteLength / 4));
+  }),
 }));
 
 // Mock sources to return controlled data
@@ -45,6 +54,11 @@ const scheduler = require('../src/scheduler');
 beforeEach(() => {
   db.init(':memory:');
   jest.clearAllMocks();
+
+  // Add default profile and chunking config to in-memory DB
+  const config = require('../src/config');
+  db.saveProfile({ id: config.activeProfile, keywords: ['test', 'keyword'] });
+  // chunking_config is initialized via DB migrations, so it's already there with defaults
 
   // Mock Groq API success
   mockFetch.mockResolvedValue({
