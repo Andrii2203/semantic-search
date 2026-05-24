@@ -40,6 +40,15 @@ async function checkGroqAPI() {
   return { ok: true, status: 'ok' };
 }
 
+let lastStatus = {
+  status: 'unknown',
+  modules: { db: 'unknown', embedding: 'unknown', groq: 'unknown' }
+};
+
+function getLastStatus() {
+  return lastStatus;
+}
+
 async function runStartupChecks() {
   logger.info('Running startup diagnostics...');
   
@@ -73,7 +82,7 @@ async function runStartupChecks() {
     overall: isDegraded ? 'degraded' : 'healthy'
   }, 'Startup diagnostics complete');
   
-  return {
+  lastStatus = {
     status: isDegraded ? 'degraded' : 'healthy',
     modules: {
       db: dbCheck.status,
@@ -81,11 +90,14 @@ async function runStartupChecks() {
       groq: groqCheck.status
     }
   };
+  
+  return lastStatus;
 }
 
 module.exports = {
   checkDatabase,
   checkEmbeddingModel,
   checkGroqAPI,
-  runStartupChecks
+  runStartupChecks,
+  getLastStatus
 };

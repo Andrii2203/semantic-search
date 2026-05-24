@@ -553,16 +553,3 @@ module.exports = {
   getChunkingConfig,
   updateChunkingConfig,
 };
-
-
-  getAllChunksWithVectors,
-  // Profiles
-  saveProfile,
-  getProfile,
-  getAllProfiles,
-  deleteProfile,
-  // Config
-  getChunkingConfig,
-  updateChunkingConfig,
-};
-
