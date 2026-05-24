@@ -194,8 +194,8 @@ function insertItem(item) {
   const fp = fingerprint(item);
 
   const stmt = d.prepare(`
-    INSERT OR IGNORE INTO items (id, content, type, source, metadata, score, response, status, fingerprint)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT OR IGNORE INTO items (id, content, type, source, metadata, score, response, status, fingerprint, collection_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const result = stmt.run(
@@ -208,6 +208,7 @@ function insertItem(item) {
     item.response || null,
     item.status || 'new',
     fp,
+    item.collectionId || 'internet',
   );
 
   return result.changes > 0;
@@ -246,7 +247,7 @@ function insertItemsBatch(items) {
   return insertMany(items);
 }
 
-function getItems({ status, source, type, limit = 50, offset = 0 } = {}) {
+function getItems({ status, source, type, collectionId, limit = 50, offset = 0 } = {}) {
   const d = getDb();
   const conditions = [];
   const params = [];
@@ -271,6 +272,10 @@ function getItems({ status, source, type, limit = 50, offset = 0 } = {}) {
   if (type) {
     conditions.push('type = ?');
     params.push(type);
+  }
+  if (collectionId) {
+    conditions.push('collection_id = ?');
+    params.push(collectionId);
   }
 
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
@@ -311,7 +316,7 @@ function updateItemResponse(id, response, score) {
   return result.changes > 0;
 }
 
-function getItemCount(status, source, collection_id) {
+function getItemCount({ status, source, collectionId } = {}) {
   const d = getDb();
   const conditions = [];
   const params = [];
@@ -332,9 +337,9 @@ function getItemCount(status, source, collection_id) {
       params.push(...sources);
     }
   }
-  if (collection_id) {
+  if (collectionId) {
     conditions.push('collection_id = ?');
-    params.push(collection_id);
+    params.push(collectionId);
   }
 
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
@@ -522,6 +527,19 @@ function getAllChunksWithVectors() {
     }));
 }
 
+function getActiveProfile() {
+  const d = getDb();
+  const row = d.prepare('SELECT * FROM profiles ORDER BY created_at DESC LIMIT 1').get();
+  if (!row) {
+    throw new AppError('No active profile found. Create a profile first.', ErrorCodes.DB_ERROR);
+  }
+  return {
+    ...row,
+    keywords: row.keywords ? JSON.parse(row.keywords) : [],
+    vector: row.vector ? new Float32Array(row.vector) : null,
+  };
+}
+
 // ─── Exports ─────────────────────────────────────────────────
 
 module.exports = {
@@ -549,7 +567,9 @@ module.exports = {
   getProfile,
   getAllProfiles,
   deleteProfile,
+  getActiveProfile,
   // Config
   getChunkingConfig,
   updateChunkingConfig,
 };
+
