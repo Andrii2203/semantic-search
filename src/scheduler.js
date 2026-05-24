@@ -20,10 +20,24 @@ let scheduledTask = null;
  */
 async function loadProfile() {
   const profileId = config.activeProfile;
-  const profile = db.getProfile(profileId);
+  let profile = db.getProfile(profileId);
   
   if (!profile) {
-    throw new Error(`Profile not found in DB: ${profileId}`);
+    const profilePath = config.profiles?.[profileId];
+    if (!profilePath || !fs.existsSync(profilePath)) {
+      throw new Error(`Profile not found in DB or filesystem: ${profileId}`);
+    }
+    
+    const fileProfile = JSON.parse(fs.readFileSync(profilePath, 'utf-8'));
+    profile = {
+      id: profileId,
+      keywords: fileProfile.keywords || [],
+      rawInput: fileProfile.rawInput || fileProfile.keywords?.join('. ') || '',
+      vector: null
+    };
+    
+    db.saveProfile(profile);
+    logger.info({ profile: profileId }, 'Profile seeded from JSON to DB');
   }
 
   if (profile.vector) {
