@@ -40,9 +40,19 @@ async function checkGroqAPI() {
   return { ok: true, status: 'ok' };
 }
 
+async function checkFTS5() {
+  try {
+    const database = db.getDb();
+    database.prepare('SELECT count(*) FROM chunks_fts LIMIT 1').get();
+    return { ok: true, status: 'ok' };
+  } catch (err) {
+    return { ok: false, status: 'error', error: err.message };
+  }
+}
+
 let lastStatus = {
   status: 'unknown',
-  modules: { db: 'unknown', embedding: 'unknown', groq: 'unknown' }
+  modules: { db: 'unknown', embedding: 'unknown', groq: 'unknown', fts5: 'unknown' }
 };
 
 function getLastStatus() {
@@ -74,20 +84,29 @@ async function runStartupChecks() {
     logger.warn({ error: groqCheck.error }, 'Startup check warning: Groq API key is missing or invalid. Starting in degraded mode (no AI features).');
     isDegraded = true;
   }
-  
+
+  // 4. Check FTS5
+  const fts5Check = await checkFTS5();
+  if (!fts5Check.ok) {
+    logger.warn({ error: fts5Check.error }, 'Startup check warning: FTS5 not available. Starting in degraded mode (no full-text search).');
+    isDegraded = true;
+  }
+
   logger.info({
     database: dbCheck.status,
     embedding: embeddingCheck.status,
     groq: groqCheck.status,
+    fts5: fts5Check.status,
     overall: isDegraded ? 'degraded' : 'healthy'
   }, 'Startup diagnostics complete');
-  
+
   lastStatus = {
     status: isDegraded ? 'degraded' : 'healthy',
     modules: {
       db: dbCheck.status,
       embedding: embeddingCheck.status,
-      groq: groqCheck.status
+      groq: groqCheck.status,
+      fts5: fts5Check.status
     }
   };
   
@@ -98,6 +117,7 @@ module.exports = {
   checkDatabase,
   checkEmbeddingModel,
   checkGroqAPI,
+  checkFTS5,
   runStartupChecks,
   getLastStatus
 };

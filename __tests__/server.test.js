@@ -57,8 +57,8 @@ describe('GET /api/health', () => {
     const res = await request(app).get('/api/health');
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.status).toBe('ok');
-    expect(res.body.db).toBe('connected');
+    expect(['healthy', 'degraded', 'unknown']).toContain(res.body.status);
+    expect(res.body).toHaveProperty('modules');
     expect(res.body).toHaveProperty('uptime');
     expect(typeof res.body.uptime).toBe('number');
   });

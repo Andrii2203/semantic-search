@@ -189,9 +189,14 @@ function stop() {
   }
 }
 
+function getStatus() {
+  return { status: scheduledTask ? 'ok' : 'stopped' };
+}
+
 module.exports = {
   runCycle,
   loadProfile,
   start,
   stop,
+  getStatus,
 };

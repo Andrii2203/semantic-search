@@ -911,7 +911,7 @@ describe('src/db.js — uncovered branches', () => {
         { ...VALID_SOURCE_ITEM, id: '3', content: 'Unique 3', status: 'new' },
       ]);
 
-      const count = db.getItemCount('new');
+      const count = db.getItemCount({ status: 'new' });
       expect(count).toBe(2);
     });
 
@@ -921,7 +921,7 @@ describe('src/db.js — uncovered branches', () => {
         { ...VALID_SOURCE_ITEM, id: '2', source: 'reddit' },
       ]);
 
-      const count = db.getItemCount(null, 'hackernews');
+      const count = db.getItemCount({ source: 'hackernews' });
       expect(count).toBe(1);
     });
 
@@ -932,7 +932,7 @@ describe('src/db.js — uncovered branches', () => {
         { ...VALID_SOURCE_ITEM, id: '3', source: 'djinni' },
       ]);
 
-      const count = db.getItemCount(null, 'hackernews, reddit');
+      const count = db.getItemCount({ source: 'hackernews, reddit' });
       expect(count).toBe(2);
     });
 
@@ -943,7 +943,7 @@ describe('src/db.js — uncovered branches', () => {
         { ...VALID_SOURCE_ITEM, id: '3', source: 'reddit', status: 'new' },
       ]);
 
-      const count = db.getItemCount('new', 'hackernews');
+      const count = db.getItemCount({ status: 'new', source: 'hackernews' });
       expect(count).toBe(1);
     });
 
@@ -960,14 +960,14 @@ describe('src/db.js — uncovered branches', () => {
     test('handles empty source string', () => {
       db.insertItemsBatch([{ ...VALID_SOURCE_ITEM, id: '1' }]);
 
-      const count = db.getItemCount(null, '');
+      const count = db.getItemCount({ source: '' });
       expect(count).toBe(1); // Should ignore empty source
     });
 
     test('handles source with only whitespace', () => {
       db.insertItemsBatch([{ ...VALID_SOURCE_ITEM, id: '1' }]);
 
-      const count = db.getItemCount(null, '   ,  , ');
+      const count = db.getItemCount({ source: '   ,  , ' });
       expect(count).toBe(1); // Should ignore whitespace-only entries
     });
   });

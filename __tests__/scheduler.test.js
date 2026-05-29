@@ -182,3 +182,56 @@ describe('scheduler.loadProfile', () => {
     expect(vector.length).toBeGreaterThan(0);
   });
 });
+
+// ─── Branch coverage: loadProfile edge cases ─────────────────
+// Uses jest.resetModules() to get fresh module instances with
+// a null profileVector cache, which lets us test specific branches.
+
+describe('scheduler.loadProfile — branch: profile not in DB (JSON fallback)', () => {
+  test('falls back to JSON file when profile not found in DB (lines 26-40)', async () => {
+    jest.resetModules();
+
+    // Fresh DB with no profile saved — forces the !profile branch
+    const freshDb = require('../src/db');
+    freshDb.init(':memory:');
+
+    const freshSearchEngine = require('../src/search-engine');
+    const freshScheduler = require('../src/scheduler');
+
+    const vector = await freshScheduler.loadProfile();
+
+    // Must have generated an embedding from the JSON file keywords
+    expect(freshSearchEngine.generateEmbedding).toHaveBeenCalled();
+    expect(Array.isArray(vector)).toBe(true);
+
+    freshDb.close();
+  });
+});
+
+describe('scheduler.loadProfile — branch: profile has stored vector', () => {
+  test('deserializes stored vector without calling generateEmbedding (line 44)', async () => {
+    jest.resetModules();
+
+    const freshDb = require('../src/db');
+    freshDb.init(':memory:');
+    const freshConfig = require('../src/config');
+    const freshSearchEngine = require('../src/search-engine');
+
+    // Save profile WITH a pre-computed serialized vector
+    const mockVec = new Array(6).fill(0.5);
+    const serialized = Buffer.from(new Float32Array(mockVec).buffer);
+    freshDb.saveProfile({
+      id: freshConfig.activeProfile,
+      keywords: ['test'],
+      vector: serialized,
+    });
+
+    const freshScheduler = require('../src/scheduler');
+    await freshScheduler.loadProfile();
+
+    expect(freshSearchEngine.deserializeVector).toHaveBeenCalled();
+    expect(freshSearchEngine.generateEmbedding).not.toHaveBeenCalled();
+
+    freshDb.close();
+  });
+});

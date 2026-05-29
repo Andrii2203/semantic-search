@@ -33,6 +33,7 @@ router.post('/', async (req, res, next) => {
       maxBm25Results = 100,
       topN = 20,
       useReranker = false,
+      collectionId = null,
     } = req.body;
 
     const startTime = performance.now();
@@ -60,7 +61,7 @@ router.post('/', async (req, res, next) => {
     if (mode === 'sequential') {
       // Sequential: BM25 first → score BM25 results by cosine similarity
       const bm25Chunks = (profile.keywords && profile.keywords.length > 0)
-        ? db.chunksSearch(profile.keywords, { limit: maxBm25Results })
+        ? db.chunksSearch(profile.keywords, { limit: maxBm25Results, collectionId })
         : [];
 
       if (profileVector && bm25Chunks.length > 0) {
@@ -78,13 +79,13 @@ router.post('/', async (req, res, next) => {
     } else {
       // Parallel: BM25 + semantic independently → merge
       const bm25Chunks = (profile.keywords && profile.keywords.length > 0)
-        ? db.chunksSearch(profile.keywords, { limit: maxBm25Results })
+        ? db.chunksSearch(profile.keywords, { limit: maxBm25Results, collectionId })
         : [];
 
       let semanticChunks = [];
       if (profileVector) {
         // Get all chunks with vectors for semantic scoring
-        const allChunksRaw = db.getAllChunksWithVectors();
+        const allChunksRaw = db.getAllChunksWithVectors({ collectionId });
 
         semanticChunks = SearchEngine.scoreChunksByVector(allChunksRaw, profileVector, threshold);
       }

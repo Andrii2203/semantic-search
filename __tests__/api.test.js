@@ -15,6 +15,11 @@ beforeAll(() => {
 // Mock dependencies
 jest.mock('../src/scheduler');
 jest.mock('../src/actions/generate-comment');
+// Prevent writes to data/export.json — filesystem tests live in integration-tests-uncovered.test.js
+jest.mock('../src/routes/export', () => {
+  const actual = jest.requireActual('../src/routes/export');
+  return { ...actual, saveToExportFile: jest.fn().mockResolvedValue(undefined) };
+});
 
 describe('Semantic Search API - Senior Integration Suite', () => {
   
@@ -74,18 +79,18 @@ describe('Semantic Search API - Senior Integration Suite', () => {
         expect(res.body.comment).toBe('Expert AI comment');
     });
         
-    test('should update existing entry in export file if generated twice', async () => {
-      const exportPath = path.join(__dirname, '../data/export.json');
-  
-        // Робимо запит
-        await request(app).post('/api/items/hn-1/generate');
-        
-        // Перевірка-запобіжник
-        expect(fs.existsSync(exportPath)).toBe(true);
-        
-        const data = JSON.parse(fs.readFileSync(exportPath, 'utf-8'));
-        const entry = data.items.find(i => i.id === 'hn-1');
-        expect(entry.comment).toBe('Expert AI comment');
+    test('should call saveToExportFile with correct args when comment is generated', async () => {
+      const { saveToExportFile } = require('../src/routes/export');
+      const generateComment = require('../src/actions/generate-comment');
+      generateComment.run.mockResolvedValue('Expert AI comment');
+
+      await request(app).post('/api/items/hn-1/generate');
+
+      expect(saveToExportFile).toHaveBeenCalledWith(
+        'hn-1',
+        expect.objectContaining({ id: 'hn-1' }),
+        'Expert AI comment',
+      );
     });
 
 

@@ -30,8 +30,8 @@ COPY package*.json ./
 COPY src/ ./src/
 COPY --from=frontend-builder /app/client/dist ./public/
 
-# Create data directory with correct permissions
-RUN mkdir -p /app/data && chown -R appuser:appgroup /app
+# Create data and model cache directories with correct permissions
+RUN mkdir -p /app/data /app/.cache && chown -R appuser:appgroup /app
 
 USER appuser
 

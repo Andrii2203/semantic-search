@@ -426,6 +426,7 @@ function deleteChunksByParent(parentId) {
 function chunksSearch(keywords, options = {}) {
   const d = getDb();
   const limit = options.limit || 100;
+  const collectionId = options.collectionId || null;
   const query = keywords
     .filter(Boolean)
     .map((k) => `"${k.replace(/"/g, '""')}"`)
@@ -434,20 +435,36 @@ function chunksSearch(keywords, options = {}) {
   if (!query.trim()) return [];
 
   try {
-    return d
-      .prepare(
-        `SELECT c.*, chunks_fts.rank
-         FROM chunks_fts
-         JOIN chunks c ON c.rowid = chunks_fts.rowid
-         WHERE chunks_fts MATCH ?
-         ORDER BY rank
-         LIMIT ?`,
-      )
-      .all(query, limit)
-      .map((row) => ({
-        ...row,
-        metadata: row.metadata ? JSON.parse(row.metadata) : {},
-      }));
+    let rows;
+    if (collectionId) {
+      rows = d
+        .prepare(
+          `SELECT c.*, chunks_fts.rank
+           FROM chunks_fts
+           JOIN chunks c ON c.rowid = chunks_fts.rowid
+           JOIN items i ON c.parent_id = i.id
+           WHERE chunks_fts MATCH ?
+           AND i.collection_id = ?
+           ORDER BY rank
+           LIMIT ?`,
+        )
+        .all(query, collectionId, limit);
+    } else {
+      rows = d
+        .prepare(
+          `SELECT c.*, chunks_fts.rank
+           FROM chunks_fts
+           JOIN chunks c ON c.rowid = chunks_fts.rowid
+           WHERE chunks_fts MATCH ?
+           ORDER BY rank
+           LIMIT ?`,
+        )
+        .all(query, limit);
+    }
+    return rows.map((row) => ({
+      ...row,
+      metadata: row.metadata ? JSON.parse(row.metadata) : {},
+    }));
   } catch (err) {
     logger.warn({ err, query }, 'FTS5 search failed, returning empty');
     return [];
@@ -516,15 +533,24 @@ function updateChunkingConfig({ strategy, chunkSize, overlap }) {
   `).run(strategy || null, chunkSize || null, overlap || null);
 }
 
-function getAllChunksWithVectors() {
+function getAllChunksWithVectors(options = {}) {
   const d = getDb();
-  return d
-    .prepare('SELECT * FROM chunks WHERE vector IS NOT NULL')
-    .all()
-    .map((row) => ({
-      ...row,
-      metadata: row.metadata ? JSON.parse(row.metadata) : {},
-    }));
+  const collectionId = options.collectionId || null;
+
+  const rows = collectionId
+    ? d
+        .prepare(
+          `SELECT c.* FROM chunks c
+           JOIN items i ON c.parent_id = i.id
+           WHERE c.vector IS NOT NULL AND i.collection_id = ?`,
+        )
+        .all(collectionId)
+    : d.prepare('SELECT * FROM chunks WHERE vector IS NOT NULL').all();
+
+  return rows.map((row) => ({
+    ...row,
+    metadata: row.metadata ? JSON.parse(row.metadata) : {},
+  }));
 }
 
 function getActiveProfile() {

@@ -36,6 +36,7 @@
     "helmet": "^8.0.0",
     "multer": "^2.1.1",
     "node-cron": "^3.0.3",
+    "onnxruntime-node": "^1.26.0",
     "pdf-parse": "^2.4.5",
     "pino": "^9.5.0",
     "pino-http": "^10.3.0",

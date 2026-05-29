@@ -253,8 +253,8 @@ describe('getItemCount', () => {
     db.insertItem(makeItem({ id: '1', content: 'A' }));
     db.updateItemStatus('1', 'approved');
     db.insertItem(makeItem({ id: '2', content: 'B' }));
-    expect(db.getItemCount('new')).toBe(1);
-    expect(db.getItemCount('approved')).toBe(1);
+    expect(db.getItemCount({ status: 'new' })).toBe(1);
+    expect(db.getItemCount({ status: 'approved' })).toBe(1);
   });
 });
 

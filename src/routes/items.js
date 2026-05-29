@@ -21,7 +21,7 @@ router.get('/', (req, res, next) => {
     }
 
     const items = db.getItems(parsed.data);
-    const total = db.getItemCount(parsed.data.status, parsed.data.source);
+    const total = db.getItemCount(parsed.data);
 
     res.json({
       items,
@@ -40,10 +40,10 @@ router.get('/stats', (_req, res, next) => {
   try {
     res.json({
       total: db.getItemCount(),
-      new: db.getItemCount('new'),
-      approved: db.getItemCount('approved'),
-      skipped: db.getItemCount('skipped'),
-      pending: db.getItemCount('pending'),
+      new: db.getItemCount({ status: 'new' }),
+      approved: db.getItemCount({ status: 'approved' }),
+      skipped: db.getItemCount({ status: 'skipped' }),
+      pending: db.getItemCount({ status: 'pending' }),
     });
   } catch (err) {
     next(err);

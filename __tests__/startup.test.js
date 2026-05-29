@@ -3,7 +3,7 @@
 const db = require('../src/db');
 const searchEngine = require('../src/search-engine');
 const config = require('../src/config');
-const { checkDatabase, checkEmbeddingModel, checkGroqAPI, runStartupChecks } = require('../src/startup');
+const { checkDatabase, checkEmbeddingModel, checkGroqAPI, checkFTS5, runStartupChecks } = require('../src/startup');
 
 jest.mock('../src/db');
 jest.mock('../src/search-engine');
@@ -72,19 +72,34 @@ describe('Startup Diagnostics', () => {
     });
   });
 
-  describe('runStartupChecks', () => {
-    it('returns healthy if all pass', async () => {
-      // Mock db
+  describe('checkFTS5', () => {
+    it('returns success case', async () => {
       const mockDb = { prepare: jest.fn().mockReturnValue({ get: jest.fn() }) };
       db.getDb.mockReturnValue(mockDb);
-      // Mock searchEngine
+
+      const result = await checkFTS5();
+      expect(result).toEqual({ ok: true, status: 'ok' });
+    });
+
+    it('returns failure case (FTS5 not available)', async () => {
+      db.getDb.mockImplementation(() => { throw new Error('no such table: chunks_fts'); });
+
+      const result = await checkFTS5();
+      expect(result.ok).toBe(false);
+      expect(result.status).toBe('error');
+    });
+  });
+
+  describe('runStartupChecks', () => {
+    it('returns healthy if all pass', async () => {
+      const mockDb = { prepare: jest.fn().mockReturnValue({ get: jest.fn() }) };
+      db.getDb.mockReturnValue(mockDb);
       searchEngine.generateEmbedding.mockResolvedValue(new Array(384).fill(0));
-      // Mock Groq
       config.groq.apiKey = 'key';
-      
+
       const result = await runStartupChecks();
       expect(result.status).toBe('healthy');
-      expect(result.modules).toEqual({ db: 'ok', embedding: 'ok', groq: 'ok' });
+      expect(result.modules).toEqual({ db: 'ok', embedding: 'ok', groq: 'ok', fts5: 'ok' });
     });
 
     it('returns degraded if embedding fails (not crash)', async () => {
@@ -92,7 +107,7 @@ describe('Startup Diagnostics', () => {
       db.getDb.mockReturnValue(mockDb);
       searchEngine.generateEmbedding.mockRejectedValue(new Error('Model failed'));
       config.groq.apiKey = 'key';
-      
+
       const result = await runStartupChecks();
       expect(result.status).toBe('degraded');
       expect(result.modules.embedding).toBe('error');
@@ -100,7 +115,7 @@ describe('Startup Diagnostics', () => {
 
     it('throws critical error if DB fails (don\'t start)', async () => {
       db.getDb.mockImplementation(() => { throw new Error('DB failed'); });
-      
+
       await expect(runStartupChecks()).rejects.toThrow('Database check failed: DB failed');
     });
   });
