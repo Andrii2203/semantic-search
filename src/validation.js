@@ -31,13 +31,15 @@ const IRSchema = z.object({
 
 // ─── API Input Schemas ───────────────────────────────────────
 
-const ItemStatusSchema = z.enum(['new', 'approved', 'skipped', 'pending']);
+const ItemStatusSchema = z.enum(['new', 'approved', 'skipped', 'pending', 'starred']);
 
 const ItemQuerySchema = z.object({
   status: ItemStatusSchema.optional(),
   source: z.string().min(1).optional(),
   type: z.enum(['post', 'job', 'code_snippet', 'ui_component', 'resume']).optional(),
+  collectionId: z.string().optional(),
   limit: z.coerce.number().int().min(1).max(200).default(50),
+  cursor: z.string().optional(),
   offset: z.coerce.number().int().min(0).default(0),
 });
 

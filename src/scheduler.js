@@ -14,6 +14,9 @@ const chunker = require('./chunker/index');
 let profileVector = null;
 let isRunning = false;
 let scheduledTask = null;
+let currentStep = null;
+let cycleStartedAt = null;
+let lastResult = null;
 
 /**
  * Load and cache the active profile vector.
@@ -69,17 +72,20 @@ async function runCycle() {
   }
 
   isRunning = true;
-  const startTime = Date.now();
+  cycleStartedAt = Date.now();
+  const startTime = cycleStartedAt;
 
   logger.info('═══ CYCLE START ═══');
 
   try {
     // 0. LOAD profile vector (embeddings from your keywords)
     if (!profileVector) {
+      currentStep = 'Loading profile...';
       await loadProfile();
     }
 
     // 1. FETCH from all sources
+    currentStep = 'Fetching from HN, Reddit, Djinni...';
     logger.info('Step 1: Fetching from sources...');
     const rawItems = await sources.fetchAll();
     logger.info({ count: rawItems.length }, 'Fetched items from sources');
@@ -90,16 +96,30 @@ async function runCycle() {
     }
 
     // 2. VALIDATE
+    currentStep = `Validating ${rawItems.length} items...`;
     logger.info('Step 2: Validating items...');
     const validItems = validateIRBatch(rawItems, logger);
     logger.info({ valid: validItems.length, dropped: rawItems.length - validItems.length }, 'Validation complete');
 
+    // 2b. PRE-FILTER — deterministic, no embedding/LLM cost
+    const preFiltered = validItems.filter((item) => {
+      const content = (item.content || '').trim();
+      const title = (item.metadata?.title || '').trim();
+      if (content.length < 50) return false;
+      if (title && title === content) return false;
+      return true;
+    });
+    const preFilteredCount = validItems.length - preFiltered.length;
+    logger.info({ passed: preFiltered.length, skipped: preFilteredCount }, 'Pre-filter complete');
+
     // 3. FILTER by semantic similarity (local embeddings, NO AI calls)
+    currentStep = `Matching ${preFiltered.length} items to your profile...`;
     logger.info('Step 3: Filtering by semantic relevance...');
-    const relevant = await searchEngine.findRelevant(validItems, profileVector, config.similarityThreshold);
-    logger.info({ relevant: relevant.length, filtered: validItems.length - relevant.length, threshold: config.similarityThreshold }, 'Semantic filter complete');
+    const relevant = await searchEngine.findRelevant(preFiltered, profileVector, config.similarityThreshold);
+    logger.info({ relevant: relevant.length, filtered: preFiltered.length - relevant.length, threshold: config.similarityThreshold }, 'Semantic filter complete');
 
     // 4. SAVE only relevant items to database
+    currentStep = `Saving ${relevant.length} relevant items...`;
     logger.info('Step 4: Saving relevant items to database (collection: internet)...');
     for (const item of relevant) {
       item.collectionId = 'internet';
@@ -108,6 +128,7 @@ async function runCycle() {
     logger.info({ saved, duplicatesSkipped: relevant.length - saved }, 'Save complete');
 
     // 5. CHUNK AND EMBED
+    currentStep = `Building search index for ${saved} new items...`;
     logger.info('Step 5: Chunking and embedding relevant items...');
     const chunkingConfig = db.getChunkingConfig();
     let totalChunks = 0;
@@ -147,14 +168,19 @@ async function runCycle() {
       '--- CYCLE END ═══',
     );
 
-    return { fetched: rawItems.length, validated: validItems.length, filtered: relevant.length, saved, chunked: totalChunks, duration };
+    lastResult = { fetched: rawItems.length, saved, chunked: totalChunks, duration };
+    currentStep = null;
+
+    return { fetched: rawItems.length, validated: validItems.length, preFiltered: preFilteredCount, filtered: relevant.length, saved, chunked: totalChunks, duration };
   } catch (err) {
     /* istanbul ignore next */
     logger.error({ err }, 'Cycle failed');
     /* istanbul ignore next */
+    currentStep = null;
     throw err;
   } finally {
     isRunning = false;
+    cycleStartedAt = null;
   }
 }
 
@@ -190,7 +216,13 @@ function stop() {
 }
 
 function getStatus() {
-  return { status: scheduledTask ? 'ok' : 'stopped' };
+  return {
+    status: scheduledTask ? 'ok' : 'stopped',
+    isRunning,
+    currentStep,
+    cycleStartedAt,
+    lastResult,
+  };
 }
 
 module.exports = {

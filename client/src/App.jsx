@@ -1,52 +1,109 @@
-import { useLivingDesign } from './hooks/useLivingDesign'
-import { Header } from './components/Header'
-import { SearchCard } from './components/SearchCard'
-import { Inbox } from './components/Inbox'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { ThemeProvider, useTheme } from './context/ThemeContext'
+import { ErrorBoundary } from './components/ErrorBoundary'
+import { Sidebar } from './components/Sidebar'
+import { ItemList } from './components/ItemList'
+import { ReadingPane } from './components/ReadingPane'
+import { LockScreen } from './components/LockScreen'
 import { HealthFooter } from './components/HealthFooter'
 import { DebugLogger } from './components/DebugLogger'
-import { ThemeProvider } from './context/ThemeContext'
+import { SunIcon, MoonIcon } from './icons'
+import { useUIStore } from './stores/uiStore'
+import { useAuthStatus } from './hooks/useItems'
 
-function App() {
-  const { accentHue, orbit } = useLivingDesign()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: 1, refetchOnWindowFocus: false },
+  },
+})
 
+function ThemeToggle() {
+  const { theme, toggleTheme } = useTheme()
   return (
-    <ThemeProvider>
-      <div className="min-h-screen flex flex-col relative overflow-hidden transition-colors duration-1000 pb-16">
-
-      {/* LUNAR ATMOSPHERE GLOW (Глобальне місячне світло) */}
-      <div
-        className="absolute top-1/2 left-1/2 w-[60vw] h-[60vw] rounded-full blur-[180px] pointer-events-none transition-opacity duration-[3000ms]"
-        style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-          transform: 'translate(-50%, -50%)',
-          opacity: `var(--moon-intensity, 0)`, // Сяє тільки в повний місяць
-        }}
-      />
-
-      {/* ORBITAL GLOW (Земля) */}
-      <div
-        className="absolute top-1/2 left-1/2 w-[40vw] h-[40vw] rounded-full blur-[150px] opacity-20 pointer-events-none transition-all duration-[2000ms] ease-in-out weather-blur"
-        style={{
-          backgroundColor: `hsl(${accentHue}, 100%, 50%)`,
-          transform: `translate(calc(-50% + ${orbit.x}vw), calc(-50% + ${orbit.y}vh)) scale(${orbit.z})`,
-          zIndex: orbit.z > 1 ? 20 : 0 // Заходить за або перед карткою
-        }}
-      />
-
-      <Header />
-
-      <main className="flex-1 flex flex-col items-center justify-start p-4 relative z-10 space-y-12 w-full overflow-y-auto">
-        <SearchCard />
-        <Inbox />
-      </main>
-
-      <HealthFooter />
-
-      {/* PERSISTENT DEBUG LOGGER ("EYES") */}
-      <DebugLogger />
-      </div>
-    </ThemeProvider>
+    <button
+      onClick={toggleTheme}
+      title={theme === 'dark' ? 'Switch to light' : 'Switch to dark'}
+      className="p-1.5 rounded-sm text-fg-2 hover:text-fg hover:bg-surface-2 transition-colors"
+    >
+      {theme === 'dark' ? <SunIcon className="w-3.5 h-3.5" /> : <MoonIcon className="w-3.5 h-3.5" />}
+    </button>
   )
 }
 
-export default App
+function AuthGuard({ children }) {
+  const { data, isLoading } = useAuthStatus()
+  const { setAuth, showLockScreen, setShowLockScreen } = useUIStore()
+
+  useEffect(() => {
+    if (data) {
+      setAuth(data.authenticated, data.passwordRequired)
+      if (data.passwordRequired && !data.authenticated) {
+        setShowLockScreen(true)
+      }
+    }
+  }, [data, setAuth, setShowLockScreen])
+
+  if (isLoading) return null
+
+  return (
+    <>
+      {children}
+      {showLockScreen && (
+        <LockScreen
+          onSuccess={() => {
+            setAuth(true, true)
+            setShowLockScreen(false)
+            queryClient.invalidateQueries()
+          }}
+        />
+      )}
+    </>
+  )
+}
+
+function GmailLayout() {
+  const { selectedItemId } = useUIStore()
+
+  return (
+    <div className="h-screen flex flex-col overflow-hidden bg-bg">
+      {/* Top bar */}
+      <header className="h-11 shrink-0 border-b border-border flex items-center px-4 gap-3 bg-surface">
+        <span className="font-mono text-xs text-accent uppercase tracking-widest flex-1">
+          Universal Matching Engine
+        </span>
+        <ThemeToggle />
+      </header>
+
+      {/* Body: STATE A — no item selected → list fills width
+               STATE B — item selected   → reading pane fills width */}
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar />
+        {selectedItemId ? (
+          <ErrorBoundary>
+            <ReadingPane />
+          </ErrorBoundary>
+        ) : (
+          <ItemList />
+        )}
+      </div>
+
+      <HealthFooter />
+      <DebugLogger />
+    </div>
+  )
+}
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <ErrorBoundary>
+          <AuthGuard>
+            <GmailLayout />
+          </AuthGuard>
+        </ErrorBoundary>
+      </ThemeProvider>
+    </QueryClientProvider>
+  )
+}

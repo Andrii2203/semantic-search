@@ -16,6 +16,9 @@ const { router: exportRouter } = require('./routes/export');
 const uploadRouter = require('./routes/upload');
 const searchRouter = require('./routes/search');
 const configRouter = require('./routes/config-routes');
+const authRouter = require('./routes/auth');
+const clientErrorRouter = require('./routes/client-error');
+const { requireAuth } = require('./middleware/auth');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -49,7 +52,16 @@ app.use(express.static('public'));
 const healthRouter = require('./routes/health');
 app.use('/api/health', healthRouter);
 
-// ─── Routes ──────────────────────────────────────────────────
+// ─── Auth (public — no requireAuth) ──────────────────────────
+
+app.use('/api/auth', authRouter);
+app.use('/api/client-error', clientErrorRouter);
+
+// ─── Auth guard for all remaining /api/* routes ───────────────
+
+app.use(requireAuth);
+
+// ─── Protected Routes ─────────────────────────────────────────
 
 app.use('/api/items', itemsRouter);
 app.use('/api', syncRouter);

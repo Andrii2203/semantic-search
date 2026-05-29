@@ -95,6 +95,10 @@ const config = Object.freeze({
   // CORS
   corsOrigin: env('CORS_ORIGIN', 'http://localhost:3000'),
 
+  // Auth — Internet Mode lock
+  internetModePassword: env('INTERNET_MODE_PASSWORD', ''),
+  sessionSecret: env('SESSION_SECRET', 'change-me-in-production'),
+
   // Logging
   logLevel: env('LOG_LEVEL', 'info'),
 

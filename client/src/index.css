@@ -1,41 +1,54 @@
 @import "tailwindcss";
 
+/* ── Two clean themes ──────────────────────────────────────── */
+
+:root {
+  --bg:         #0f0f12;
+  --surface:    #18181e;
+  --surface-2:  #22222c;
+  --border:     #2c2c38;
+  --fg:         #e2e2e6;
+  --fg-2:       #6a6a72;
+  --accent:     #e95420;
+}
+
+.light-theme {
+  --bg:         #f2f2f5;
+  --surface:    #ffffff;
+  --surface-2:  #eaeaee;
+  --border:     #d8d8e0;
+  --fg:         #16161a;
+  --fg-2:       #888890;
+  --accent:     #c43b0e;
+}
+
+/* ── Tailwind colour tokens ─────────────────────────────────── */
+
 @theme {
-  /* Фон стає трохи темнішим, коли немає місяця */
-  --color-background: hsl(320, 40%, calc(4% + var(--moon-intensity, 0) * 2%));
-  --color-foreground: #f8fafc;
-  --color-ubuntu-aubergine: #300a24;
-  --color-ubuntu-header: #5e2750;
-
-  /* ДИНАМІЧНИЙ КОЛІР ТА СЕРЕДОВИЩЕ */
-  --color-ubuntu-orange: hsl(var(--dynamic-accent-hue, 20), calc(var(--weather-saturation, 1) * 80%), calc(var(--daylight, 1) * 55%));
-  --color-ubuntu-orange-hover: hsl(var(--dynamic-accent-hue, 20), 90%, 45%);
-
-  --color-border: #4d1d3d;
+  --color-bg:       var(--bg);
+  --color-surface:  var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border:   var(--border);
+  --color-fg:       var(--fg);
+  --color-fg-2:     var(--fg-2);
+  --color-accent:   var(--accent);
+  /* legacy alias kept so old classes still work */
+  --color-ubuntu-orange: var(--accent);
 }
 
-@layer base {
-  .light-theme {
-    --color-background: hsl(320, 15%, calc(98% - var(--moon-intensity, 0) * 2%));
-    --color-foreground: #1e1b4b;
-    --color-ubuntu-aubergine: #ffffff;
-    --color-ubuntu-header: #f1f5f9;
-    --color-ubuntu-orange: hsl(var(--dynamic-accent-hue, 20), calc(var(--weather-saturation, 1) * 85%), 50%);
-    --color-ubuntu-orange-hover: hsl(var(--dynamic-accent-hue, 20), 95%, 45%);
-    --color-border: #e2e8f0;
-  }
-}
+/* ── Base ───────────────────────────────────────────────────── */
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
+  background-color: var(--bg);
+  color: var(--fg);
   font-family: 'Inter', system-ui, sans-serif;
   min-height: 100vh;
-  filter: saturate(var(--weather-saturation, 1));
-  /* Тільки насиченість для всього тіла */
-  font-size: var(--font-size-base, 14px);
-  letter-spacing: var(--letter-spacing, 0px);
-  transition: filter 1s ease, letter-spacing 1s ease;
+  font-size: 14px;
+}
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
 }
 
 .font-mono {
@@ -43,14 +56,9 @@ body {
   font-size: 0.95em;
 }
 
-/* Ефект розмиття при сильному вітрі - Тільки для фонових шарів */
-.weather-blur {
-  filter: blur(calc(150px + var(--weather-blur, 0px)));
-}
+/* ── Scrollbars ─────────────────────────────────────────────── */
 
-/* Місячне сяйво, що залежить від фази */
-.moon-glow {
-  /* Тепер використовуємо готову інтенсивність з JS */
-  box-shadow: 0 0 calc(var(--moon-intensity, 0) * 50px) rgba(255, 255, 255, 0.15);
-  transition: box-shadow 2s ease-in-out;
-}
+::-webkit-scrollbar        { width: 4px; height: 4px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--fg-2); }

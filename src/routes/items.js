@@ -7,7 +7,7 @@ const { validateItemQuery } = require('../validation');
 
 const router = express.Router();
 
-// ─── GET /api/items — list items with optional filters ──────
+// ─── GET /api/items — list with cursor pagination ────────────
 
 router.get('/', (req, res, next) => {
   try {
@@ -20,14 +20,17 @@ router.get('/', (req, res, next) => {
       );
     }
 
-    const items = db.getItems(parsed.data);
-    const total = db.getItemCount(parsed.data);
+    const { cursor, limit, offset, ...filters } = parsed.data;
+    const page = db.getItemsPage({ ...filters, limit, cursor });
+    const total = db.getItemCount(filters);
 
     res.json({
-      items,
+      items: page.items,
       total,
-      limit: parsed.data.limit,
-      offset: parsed.data.offset,
+      limit,
+      offset: cursor ? undefined : offset,
+      nextCursor: page.nextCursor,
+      hasMore: page.hasMore,
     });
   } catch (err) {
     next(err);
@@ -44,13 +47,14 @@ router.get('/stats', (_req, res, next) => {
       approved: db.getItemCount({ status: 'approved' }),
       skipped: db.getItemCount({ status: 'skipped' }),
       pending: db.getItemCount({ status: 'pending' }),
+      starred: db.getItemCount({ status: 'starred' }),
     });
   } catch (err) {
     next(err);
   }
 });
 
-// ─── POST /api/items/:id/approve — approve an item ─────────
+// ─── POST /api/items/:id/approve ────────────────────────────
 
 router.post('/:id/approve', (req, res, next) => {
   try {
@@ -68,7 +72,7 @@ router.post('/:id/approve', (req, res, next) => {
   }
 });
 
-// ─── POST /api/items/:id/skip — skip an item ───────────────
+// ─── POST /api/items/:id/skip ───────────────────────────────
 
 router.post('/:id/skip', (req, res, next) => {
   try {
@@ -86,6 +90,24 @@ router.post('/:id/skip', (req, res, next) => {
   }
 });
 
+// ─── POST /api/items/:id/star ───────────────────────────────
+
+router.post('/:id/star', (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const item = db.getItemById(id);
+
+    if (!item) {
+      throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
+    }
+
+    db.updateItemStatus(id, 'starred');
+    res.json({ success: true, id, status: 'starred' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ─── POST /api/items/:id/generate — on-demand AI comment ───
 
 router.post('/:id/generate', async (req, res, next) => {
@@ -97,6 +119,11 @@ router.post('/:id/generate', async (req, res, next) => {
       throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
     }
 
+    // Return cached response without hitting Groq again
+    if (item.response) {
+      return res.json({ success: true, id, comment: item.response, cached: true });
+    }
+
     const generateComment = require('../actions/generate-comment');
     const comment = await generateComment.run(item);
 
@@ -104,16 +131,33 @@ router.post('/:id/generate', async (req, res, next) => {
       throw new AppError('AI returned empty response', 'GENERATION_FAILED', 500);
     }
 
-    // Save to DB
     db.updateItemResponse(id, comment, null);
 
-    // Save to JSON export file
     const { saveToExportFile } = require('./export');
     await saveToExportFile(id, item, comment);
 
     const logger = require('../logger');
     logger.info({ itemId: id, responseLength: comment.length }, 'Comment generated on demand');
-    res.json({ success: true, id, comment });
+    res.json({ success: true, id, comment, cached: false });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ─── DELETE /api/items/:id — remove item + its chunks ──────
+
+router.delete('/:id', (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const item = db.getItemById(id);
+
+    if (!item) {
+      throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
+    }
+
+    db.deleteChunksByParent(id);
+    db.deleteItem(id);
+    res.json({ success: true, id });
   } catch (err) {
     next(err);
   }

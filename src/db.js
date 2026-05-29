@@ -247,8 +247,7 @@ function insertItemsBatch(items) {
   return insertMany(items);
 }
 
-function getItems({ status, source, type, collectionId, limit = 50, offset = 0 } = {}) {
-  const d = getDb();
+function buildItemConditions({ status, source, type, collectionId }) {
   const conditions = [];
   const params = [];
 
@@ -257,7 +256,6 @@ function getItems({ status, source, type, collectionId, limit = 50, offset = 0 }
     params.push(status);
   }
   if (source) {
-    // Support comma-separated sources: "hn,reddit" -> IN ('hn','reddit')
     const sources = source.split(',').map((s) => s.trim()).filter(Boolean);
     /* istanbul ignore next */
     if (sources.length === 1) {
@@ -278,16 +276,60 @@ function getItems({ status, source, type, collectionId, limit = 50, offset = 0 }
     params.push(collectionId);
   }
 
+  return { conditions, params };
+}
+
+function deserializeItem(row) {
+  return { ...row, metadata: row.metadata ? JSON.parse(row.metadata) : {} };
+}
+
+function decodeCursor(cursor) {
+  try {
+    return JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function encodeCursor(item) {
+  return Buffer.from(JSON.stringify({ created_at: item.created_at, id: item.id })).toString('base64url');
+}
+
+function getItems({ status, source, type, collectionId, limit = 50, offset = 0 } = {}) {
+  const d = getDb();
+  const { conditions, params } = buildItemConditions({ status, source, type, collectionId });
+
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
   const sql = `SELECT * FROM items ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`;
   params.push(limit, offset);
 
-  const rows = d.prepare(sql).all(...params);
+  return d.prepare(sql).all(...params).map(deserializeItem);
+}
 
-  return rows.map((row) => ({
-    ...row,
-    metadata: row.metadata ? JSON.parse(row.metadata) : {},
-  }));
+// Cursor-based pagination — returns { items, nextCursor, hasMore }
+function getItemsPage({ status, source, type, collectionId, limit = 50, cursor } = {}) {
+  const d = getDb();
+  const { conditions, params } = buildItemConditions({ status, source, type, collectionId });
+
+  if (cursor) {
+    const decoded = decodeCursor(cursor);
+    if (decoded) {
+      conditions.push('(created_at < ? OR (created_at = ? AND id < ?))');
+      params.push(decoded.created_at, decoded.created_at, decoded.id);
+    }
+  }
+
+  const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+  // Fetch one extra to detect hasMore
+  params.push(limit + 1);
+
+  const rows = d.prepare(`SELECT * FROM items ${where} ORDER BY created_at DESC, id DESC LIMIT ?`).all(...params);
+
+  const hasMore = rows.length > limit;
+  const items = rows.slice(0, limit).map(deserializeItem);
+  const nextCursor = hasMore && items.length > 0 ? encodeCursor(items[items.length - 1]) : null;
+
+  return { items, nextCursor, hasMore };
 }
 
 function getItemById(id) {
@@ -302,6 +344,12 @@ function getItemById(id) {
   };
 }
 
+function deleteItem(id) {
+  const d = getDb();
+  const result = d.prepare('DELETE FROM items WHERE id = ?').run(id);
+  return result.changes > 0;
+}
+
 function updateItemStatus(id, status) {
   const d = getDb();
   const result = d.prepare('UPDATE items SET status = ? WHERE id = ?').run(status, id);
@@ -314,6 +362,16 @@ function updateItemResponse(id, response, score) {
     .prepare('UPDATE items SET response = ?, score = ? WHERE id = ?')
     .run(response, score, id);
   return result.changes > 0;
+}
+
+function updateItemMetadata(id, metadataUpdate) {
+  const d = getDb();
+  const row = d.prepare('SELECT metadata FROM items WHERE id = ?').get(id);
+  if (!row) return false;
+  const existing = row.metadata ? JSON.parse(row.metadata) : {};
+  const updated = { ...existing, ...metadataUpdate };
+  d.prepare('UPDATE items SET metadata = ? WHERE id = ?').run(JSON.stringify(updated), id);
+  return true;
 }
 
 function getItemCount({ status, source, collectionId } = {}) {
@@ -576,9 +634,12 @@ module.exports = {
   insertItem,
   insertItemsBatch,
   getItems,
+  getItemsPage,
   getItemById,
+  deleteItem,
   updateItemStatus,
   updateItemResponse,
+  updateItemMetadata,
   getItemCount,
   getSources,
   // Chunks

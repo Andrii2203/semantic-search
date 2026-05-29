@@ -78,7 +78,7 @@ afterEach(() => {
 function makeSourceItems(count = 3) {
   return Array.from({ length: count }, (_, i) => ({
     id: `src-item-${i + 1}`,
-    content: `Test content for item ${i + 1} about technology`,
+    content: `Test content for item ${i + 1} about technology and software engineering best practices`,
     type: 'post',
     source: 'mock-source',
     metadata: {
@@ -165,8 +165,55 @@ describe('scheduler.runCycle', () => {
   test('logs error and rethrows if cycle fails', async () => {
     const sources = require('../src/sources/index');
     jest.spyOn(sources, 'fetchAll').mockRejectedValue(new Error('Network Fail'));
-    
+
     await expect(scheduler.runCycle()).rejects.toThrow('Network Fail');
+  });
+
+  test('pre-filter: skips items with content shorter than 50 chars', async () => {
+    sources.fetchAll.mockResolvedValue([
+      ...makeSourceItems(2),
+      {
+        id: 'short-item',
+        content: 'too short',
+        type: 'post',
+        source: 'mock-source',
+        metadata: { title: 'Short', url: 'https://example.com/short' },
+      },
+    ]);
+
+    const result = await scheduler.runCycle();
+
+    expect(result.fetched).toBe(3);
+    expect(result.preFiltered).toBe(1);
+    expect(result.filtered).toBe(2);
+  });
+
+  test('pre-filter: skips items where title equals content', async () => {
+    const titleEqContent = 'Buy cheap backlinks SEO spam repeated here again';
+    sources.fetchAll.mockResolvedValue([
+      ...makeSourceItems(1),
+      {
+        id: 'spam-item',
+        content: titleEqContent,
+        type: 'post',
+        source: 'mock-source',
+        metadata: { title: titleEqContent, url: 'https://spam.com/1' },
+      },
+    ]);
+
+    const result = await scheduler.runCycle();
+
+    expect(result.preFiltered).toBe(1);
+    expect(result.filtered).toBe(1);
+  });
+
+  test('pre-filter: keeps items that pass both checks', async () => {
+    sources.fetchAll.mockResolvedValue(makeSourceItems(3));
+
+    const result = await scheduler.runCycle();
+
+    expect(result.preFiltered).toBe(0);
+    expect(result.filtered).toBe(3);
   });
 
 });
