@@ -5,7 +5,6 @@
 const mockFetch = jest.fn();
 globalThis.fetch = mockFetch;
 
-// Mock search-engine to avoid loading the ML model
 jest.mock('../src/search-engine', () => ({
   generateEmbedding: jest.fn((text) => {
     const vec = new Array(6).fill(0);
@@ -24,8 +23,7 @@ jest.mock('../src/search-engine', () => ({
     const mag = Math.sqrt(magA) * Math.sqrt(magB);
     return mag === 0 ? 0 : dot / mag;
   }),
-  findRelevant: jest.fn(async (items, _pv) => {
-    // In tests: return all items with a fake score above threshold
+  findRelevant: jest.fn(async (items) => {
     return items.map((item) => ({ ...item, score: 0.9 }));
   }),
   serializeVector: jest.fn((vec) => {
@@ -39,7 +37,6 @@ jest.mock('../src/search-engine', () => ({
   }),
 }));
 
-// Mock sources to return controlled data
 jest.mock('../src/sources/index', () => ({
   fetchAll: jest.fn(),
   getRegisteredSources: jest.fn(() => ['mock-source']),
@@ -51,16 +48,18 @@ const scheduler = require('../src/scheduler');
 
 // ─── Setup / Teardown ────────────────────────────────────────
 
-beforeEach(() => {
+let testUserId;
+
+beforeEach(async () => {
   db.init(':memory:');
   jest.clearAllMocks();
 
-  // Add default profile and chunking config to in-memory DB
-  const config = require('../src/config');
-  db.saveProfile({ id: config.activeProfile, keywords: ['test', 'keyword'] });
-  // chunking_config is initialized via DB migrations, so it's already there with defaults
+  // Register a test user so runCycle has someone to process items for
+  const bcrypt = require('bcryptjs');
+  const crypto = require('crypto');
+  testUserId = crypto.randomUUID();
+  db.createUser({ id: testUserId, email: 'scheduler-test@example.com', passwordHash: await bcrypt.hash('pass', 4) });
 
-  // Mock Groq API success
   mockFetch.mockResolvedValue({
     ok: true,
     json: () => Promise.resolve({
@@ -92,33 +91,31 @@ function makeSourceItems(count = 3) {
 // ─── Tests ───────────────────────────────────────────────────
 
 describe('scheduler.runCycle', () => {
-  test('full cycle: fetch → validate → filter → dispatch → save', async () => {
+  test('full cycle: fetch → validate → filter → save', async () => {
     const sourceItems = makeSourceItems(2);
     sources.fetchAll.mockResolvedValue(sourceItems);
 
     const result = await scheduler.runCycle();
 
     expect(result.fetched).toBe(2);
-    expect(result.filtered).toBe(2);
     expect(result.saved).toBeGreaterThanOrEqual(0);
     expect(result).toHaveProperty('duration');
 
-    // Items should be in DB
-    const dbItems = db.getItems();
+    const dbItems = db.getItems({ userId: testUserId });
     expect(dbItems.length).toBeGreaterThanOrEqual(0);
   });
 
-  test('partial failure: some items invalid → valid ones still saved', async () => {
+  test('partial failure: some items invalid → valid ones still processed', async () => {
     const items = [
       ...makeSourceItems(2),
-      { id: '', content: '', type: 'invalid' }, // invalid item
+      { id: '', content: '', type: 'invalid' },
     ];
     sources.fetchAll.mockResolvedValue(items);
 
     const result = await scheduler.runCycle();
 
-    // Should still process the 2 valid items
     expect(result.fetched).toBe(3);
+    expect(result.validated).toBe(2);
   });
 
   test('no items fetched → early return', async () => {
@@ -127,7 +124,18 @@ describe('scheduler.runCycle', () => {
     const result = await scheduler.runCycle();
 
     expect(result.fetched).toBe(0);
-    expect(result.filtered).toBe(0);
+    expect(result.saved).toBe(0);
+  });
+
+  test('no registered users → skips semantic filter and save', async () => {
+    // Close current DB and open fresh one with no users
+    db.close();
+    db.init(':memory:');
+    sources.fetchAll.mockResolvedValue(makeSourceItems(2));
+
+    const result = await scheduler.runCycle();
+
+    expect(result.fetched).toBe(2);
     expect(result.saved).toBe(0);
   });
 
@@ -135,12 +143,10 @@ describe('scheduler.runCycle', () => {
     const items = makeSourceItems(2);
     sources.fetchAll.mockResolvedValue(items);
 
-    // Run twice with same items
     await scheduler.runCycle();
     await scheduler.runCycle();
 
-    // DB should still have only 2 items (duplicates ignored)
-    const dbItems = db.getItems();
+    const dbItems = db.getItems({ userId: testUserId });
     expect(dbItems.length).toBe(2);
   });
 
@@ -150,22 +156,17 @@ describe('scheduler.runCycle', () => {
       return new Promise((resolve) => setTimeout(() => resolve(items), 100));
     });
 
-    // Start two cycles simultaneously
     const [r1, r2] = await Promise.all([
       scheduler.runCycle(),
       scheduler.runCycle(),
     ]);
 
-    // One should have been skipped
-    const results = [r1, r2];
-    const skipped = results.filter((r) => r.skipped);
+    const skipped = [r1, r2].filter((r) => r.skipped);
     expect(skipped.length).toBe(1);
   });
 
   test('logs error and rethrows if cycle fails', async () => {
-    const sources = require('../src/sources/index');
     jest.spyOn(sources, 'fetchAll').mockRejectedValue(new Error('Network Fail'));
-
     await expect(scheduler.runCycle()).rejects.toThrow('Network Fail');
   });
 
@@ -185,7 +186,7 @@ describe('scheduler.runCycle', () => {
 
     expect(result.fetched).toBe(3);
     expect(result.preFiltered).toBe(1);
-    expect(result.filtered).toBe(2);
+    expect(result.saved).toBeGreaterThanOrEqual(2);
   });
 
   test('pre-filter: skips items where title equals content', async () => {
@@ -204,7 +205,7 @@ describe('scheduler.runCycle', () => {
     const result = await scheduler.runCycle();
 
     expect(result.preFiltered).toBe(1);
-    expect(result.filtered).toBe(1);
+    expect(result.saved).toBeGreaterThanOrEqual(1);
   });
 
   test('pre-filter: keeps items that pass both checks', async () => {
@@ -213,72 +214,6 @@ describe('scheduler.runCycle', () => {
     const result = await scheduler.runCycle();
 
     expect(result.preFiltered).toBe(0);
-    expect(result.filtered).toBe(3);
-  });
-
-});
-
-describe('scheduler.loadProfile', () => {
-  test('loads profile and generates embedding', async () => {
-    const searchEngine = require('../src/search-engine');
-
-    const vector = await scheduler.loadProfile();
-
-    expect(searchEngine.generateEmbedding).toHaveBeenCalled();
-    expect(Array.isArray(vector)).toBe(true);
-    expect(vector.length).toBeGreaterThan(0);
-  });
-});
-
-// ─── Branch coverage: loadProfile edge cases ─────────────────
-// Uses jest.resetModules() to get fresh module instances with
-// a null profileVector cache, which lets us test specific branches.
-
-describe('scheduler.loadProfile — branch: profile not in DB (JSON fallback)', () => {
-  test('falls back to JSON file when profile not found in DB (lines 26-40)', async () => {
-    jest.resetModules();
-
-    // Fresh DB with no profile saved — forces the !profile branch
-    const freshDb = require('../src/db');
-    freshDb.init(':memory:');
-
-    const freshSearchEngine = require('../src/search-engine');
-    const freshScheduler = require('../src/scheduler');
-
-    const vector = await freshScheduler.loadProfile();
-
-    // Must have generated an embedding from the JSON file keywords
-    expect(freshSearchEngine.generateEmbedding).toHaveBeenCalled();
-    expect(Array.isArray(vector)).toBe(true);
-
-    freshDb.close();
-  });
-});
-
-describe('scheduler.loadProfile — branch: profile has stored vector', () => {
-  test('deserializes stored vector without calling generateEmbedding (line 44)', async () => {
-    jest.resetModules();
-
-    const freshDb = require('../src/db');
-    freshDb.init(':memory:');
-    const freshConfig = require('../src/config');
-    const freshSearchEngine = require('../src/search-engine');
-
-    // Save profile WITH a pre-computed serialized vector
-    const mockVec = new Array(6).fill(0.5);
-    const serialized = Buffer.from(new Float32Array(mockVec).buffer);
-    freshDb.saveProfile({
-      id: freshConfig.activeProfile,
-      keywords: ['test'],
-      vector: serialized,
-    });
-
-    const freshScheduler = require('../src/scheduler');
-    await freshScheduler.loadProfile();
-
-    expect(freshSearchEngine.deserializeVector).toHaveBeenCalled();
-    expect(freshSearchEngine.generateEmbedding).not.toHaveBeenCalled();
-
-    freshDb.close();
+    expect(result.saved).toBeGreaterThanOrEqual(3);
   });
 });

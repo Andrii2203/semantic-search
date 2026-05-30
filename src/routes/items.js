@@ -21,8 +21,9 @@ router.get('/', (req, res, next) => {
     }
 
     const { cursor, limit, offset, ...filters } = parsed.data;
-    const page = db.getItemsPage({ ...filters, limit, cursor });
-    const total = db.getItemCount(filters);
+    const userId = req.userId;
+    const page = db.getItemsPage({ ...filters, limit, cursor, userId });
+    const total = db.getItemCount({ ...filters, userId });
 
     res.json({
       items: page.items,
@@ -39,15 +40,16 @@ router.get('/', (req, res, next) => {
 
 // ─── GET /api/items/stats — counts by status ────────────────
 
-router.get('/stats', (_req, res, next) => {
+router.get('/stats', (req, res, next) => {
   try {
+    const userId = req.userId;
     res.json({
-      total: db.getItemCount(),
-      new: db.getItemCount({ status: 'new' }),
-      approved: db.getItemCount({ status: 'approved' }),
-      skipped: db.getItemCount({ status: 'skipped' }),
-      pending: db.getItemCount({ status: 'pending' }),
-      starred: db.getItemCount({ status: 'starred' }),
+      total:    db.getItemCount({ userId }),
+      new:      db.getItemCount({ status: 'new',      userId }),
+      approved: db.getItemCount({ status: 'approved', userId }),
+      skipped:  db.getItemCount({ status: 'skipped',  userId }),
+      pending:  db.getItemCount({ status: 'pending',  userId }),
+      starred:  db.getItemCount({ status: 'starred',  userId }),
     });
   } catch (err) {
     next(err);
@@ -61,7 +63,7 @@ router.post('/:id/approve', (req, res, next) => {
     const { id } = req.params;
     const item = db.getItemById(id);
 
-    if (!item) {
+    if (!item || (item.user_id && item.user_id !== req.userId)) {
       throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
     }
 
@@ -79,7 +81,7 @@ router.post('/:id/skip', (req, res, next) => {
     const { id } = req.params;
     const item = db.getItemById(id);
 
-    if (!item) {
+    if (!item || (item.user_id && item.user_id !== req.userId)) {
       throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
     }
 
@@ -97,7 +99,7 @@ router.post('/:id/star', (req, res, next) => {
     const { id } = req.params;
     const item = db.getItemById(id);
 
-    if (!item) {
+    if (!item || (item.user_id && item.user_id !== req.userId)) {
       throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
     }
 
@@ -115,11 +117,10 @@ router.post('/:id/generate', async (req, res, next) => {
     const { id } = req.params;
     const item = db.getItemById(id);
 
-    if (!item) {
+    if (!item || (item.user_id && item.user_id !== req.userId)) {
       throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
     }
 
-    // Return cached response without hitting Groq again
     if (item.response) {
       return res.json({ success: true, id, comment: item.response, cached: true });
     }
@@ -151,7 +152,7 @@ router.delete('/:id', (req, res, next) => {
     const { id } = req.params;
     const item = db.getItemById(id);
 
-    if (!item) {
+    if (!item || (item.user_id && item.user_id !== req.userId)) {
       throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
     }
 

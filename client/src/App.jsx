@@ -37,8 +37,8 @@ function AuthGuard({ children }) {
 
   useEffect(() => {
     if (data) {
-      setAuth(data.authenticated, data.passwordRequired)
-      if (data.passwordRequired && !data.authenticated) {
+      setAuth(data.authenticated, true)
+      if (!data.authenticated) {
         setShowLockScreen(true)
       }
     }

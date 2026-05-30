@@ -11,60 +11,55 @@ const fs = require('fs');
 
 const chunker = require('./chunker/index');
 
-let profileVector = null;
+// Per-user profile vector cache: Map<userId, Float32Array>
+const profileVectors = new Map();
 let isRunning = false;
 let scheduledTask = null;
 let currentStep = null;
 let cycleStartedAt = null;
 let lastResult = null;
 
-/**
- * Load and cache the active profile vector.
- */
-async function loadProfile() {
-  const profileId = config.activeProfile;
-  let profile = db.getProfile(profileId);
-  
+async function loadProfileForUser(userId) {
+  if (profileVectors.has(userId)) return profileVectors.get(userId);
+
+  let profile = db.getProfileByUserId(userId);
+
   if (!profile) {
+    const profileId = config.activeProfile;
     const profilePath = config.profiles?.[profileId];
-    if (!profilePath || !fs.existsSync(profilePath)) {
-      throw new Error(`Profile not found in DB or filesystem: ${profileId}`);
+    let defaultKeywords = [];
+    let defaultRawInput = '';
+
+    if (profilePath && fs.existsSync(profilePath)) {
+      const f = JSON.parse(fs.readFileSync(profilePath, 'utf-8'));
+      defaultKeywords = f.keywords || [];
+      defaultRawInput = f.rawInput || f.keywords?.join('. ') || '';
     }
-    
-    const fileProfile = JSON.parse(fs.readFileSync(profilePath, 'utf-8'));
-    profile = {
-      id: profileId,
-      keywords: fileProfile.keywords || [],
-      rawInput: fileProfile.rawInput || fileProfile.keywords?.join('. ') || '',
-      vector: null
-    };
-    
-    db.saveProfile(profile);
-    logger.info({ profile: profileId }, 'Profile seeded from JSON to DB');
+
+    profile = { id: `user-${userId}`, userId, keywords: defaultKeywords, rawInput: defaultRawInput, vector: null };
+    db.saveProfileForUser(userId, profile);
+    logger.info({ userId }, 'Profile created from defaults for new user');
   }
 
+  let vector;
   if (profile.vector) {
-    profileVector = searchEngine.deserializeVector(profile.vector);
+    vector = searchEngine.deserializeVector(profile.vector);
   } else {
-    const keywords = (profile.keywords || []).join('. ');
-    profileVector = await searchEngine.generateEmbedding(keywords);
-    db.saveProfile({
-      ...profile,
-      vector: searchEngine.serializeVector(profileVector)
-    });
+    const keywords = (profile.keywords || []).join('. ') || 'technology software';
+    vector = await searchEngine.generateEmbedding(keywords);
+    db.saveProfileForUser(userId, { ...profile, vector: searchEngine.serializeVector(vector) });
   }
 
-  logger.info(
-    { profile: profileId, keywords: (profile.keywords || []).length },
-    'Profile vector loaded from DB',
-  );
-
-  return profileVector;
+  profileVectors.set(userId, vector);
+  logger.info({ userId, keywords: (profile.keywords || []).length }, 'Profile vector loaded');
+  return vector;
 }
 
-/**
- * Run a single fetch-filter-dispatch-save cycle.
- */
+// Invalidate cached vector when a user updates their profile
+function invalidateProfileCache(userId) {
+  profileVectors.delete(userId);
+}
+
 async function runCycle() {
   if (isRunning) {
     logger.warn('Cycle already running, skipping');
@@ -78,12 +73,6 @@ async function runCycle() {
   logger.info('═══ CYCLE START ═══');
 
   try {
-    // 0. LOAD profile vector (embeddings from your keywords)
-    if (!profileVector) {
-      currentStep = 'Loading profile...';
-      await loadProfile();
-    }
-
     // 1. FETCH from all sources
     currentStep = 'Fetching from HN, Reddit, Djinni...';
     logger.info('Step 1: Fetching from sources...');
@@ -92,6 +81,8 @@ async function runCycle() {
 
     if (rawItems.length === 0) {
       logger.info('No items fetched, ending cycle');
+      lastResult = { fetched: 0, saved: 0, chunked: 0, duration: Date.now() - startTime };
+      currentStep = null;
       return { fetched: 0, validated: 0, filtered: 0, saved: 0, chunked: 0 };
     }
 
@@ -112,66 +103,79 @@ async function runCycle() {
     const preFilteredCount = validItems.length - preFiltered.length;
     logger.info({ passed: preFiltered.length, skipped: preFilteredCount }, 'Pre-filter complete');
 
-    // 3. FILTER by semantic similarity (local embeddings, NO AI calls)
-    currentStep = `Matching ${preFiltered.length} items to your profile...`;
-    logger.info('Step 3: Filtering by semantic relevance...');
-    const relevant = await searchEngine.findRelevant(preFiltered, profileVector, config.similarityThreshold);
-    logger.info({ relevant: relevant.length, filtered: preFiltered.length - relevant.length, threshold: config.similarityThreshold }, 'Semantic filter complete');
-
-    // 4. SAVE only relevant items to database
-    currentStep = `Saving ${relevant.length} relevant items...`;
-    logger.info('Step 4: Saving relevant items to database (collection: internet)...');
-    for (const item of relevant) {
-      item.collectionId = 'internet';
+    // 3. Get all registered users
+    const users = db.getAllUsers();
+    if (users.length === 0) {
+      logger.info('No registered users - skipping semantic filter and save');
+      lastResult = { fetched: rawItems.length, saved: 0, chunked: 0, duration: Date.now() - startTime };
+      currentStep = null;
+      return { fetched: rawItems.length, validated: validItems.length, preFiltered: preFilteredCount, filtered: 0, saved: 0, chunked: 0 };
     }
-    const saved = db.insertItemsBatch(relevant);
-    logger.info({ saved, duplicatesSkipped: relevant.length - saved }, 'Save complete');
 
-    // 5. CHUNK AND EMBED
-    currentStep = `Building search index for ${saved} new items...`;
-    logger.info('Step 5: Chunking and embedding relevant items...');
-    const chunkingConfig = db.getChunkingConfig();
-    let totalChunks = 0;
-    
-    for (const item of relevant) {
-      const chunks = await chunker.chunk(item.content, chunkingConfig.strategy, {
-        chunkSize: chunkingConfig.chunk_size,
-        overlap: chunkingConfig.overlap
-      });
-      
-      const chunksToSave = [];
-      for (const c of chunks) {
-        const vector = await searchEngine.generateEmbedding(c.content);
-        chunksToSave.push({
-          id: `${item.id}_${c.chunkIndex}`,
-          parentId: item.id,
-          content: c.content,
-          chunkIndex: c.chunkIndex,
-          level: c.level || 'section',
-          strategy: chunkingConfig.strategy,
-          vector: searchEngine.serializeVector(vector),
-          metadata: c.metadata || {}
+    let totalSaved = 0;
+    let totalChunked = 0;
+
+    for (const user of users) {
+      // 4. Load user's profile vector
+      const userVector = await loadProfileForUser(user.id);
+
+      // 5. FILTER by semantic similarity
+      currentStep = `Matching items for ${user.email}...`;
+      logger.info({ userId: user.id }, 'Step 3: Filtering by semantic relevance...');
+      const relevant = await searchEngine.findRelevant(preFiltered, userVector, config.similarityThreshold);
+      logger.info({ userId: user.id, relevant: relevant.length, threshold: config.similarityThreshold }, 'Semantic filter complete');
+
+      // 6. SAVE relevant items with user_id
+      currentStep = `Saving ${relevant.length} items for ${user.email}...`;
+      logger.info({ userId: user.id }, 'Step 4: Saving relevant items...');
+      const userItems = relevant.map((item) => ({ ...item, userId: user.id, collectionId: 'internet' }));
+      const saved = db.insertItemsBatch(userItems);
+      totalSaved += saved;
+      logger.info({ userId: user.id, saved, duplicatesSkipped: relevant.length - saved }, 'Save complete');
+
+      // 7. CHUNK AND EMBED new items only
+      currentStep = `Building search index for ${saved} new items...`;
+      logger.info({ userId: user.id }, 'Step 5: Chunking and embedding...');
+      const chunkingConfig = db.getChunkingConfig();
+
+      for (const item of userItems) {
+        const chunks = await chunker.chunk(item.content, chunkingConfig.strategy, {
+          chunkSize: chunkingConfig.chunk_size,
+          overlap: chunkingConfig.overlap,
         });
-      }
-      
-      if (chunksToSave.length > 0) {
-        db.insertChunksBatch(chunksToSave);
-        totalChunks += chunksToSave.length;
+
+        const chunksToSave = [];
+        for (const c of chunks) {
+          const vector = await searchEngine.generateEmbedding(c.content);
+          chunksToSave.push({
+            id: `${item.id}_${user.id.slice(0, 8)}_${c.chunkIndex}`,
+            parentId: item.id,
+            content: c.content,
+            chunkIndex: c.chunkIndex,
+            level: c.level || 'section',
+            strategy: chunkingConfig.strategy,
+            vector: searchEngine.serializeVector(vector),
+            metadata: c.metadata || {},
+          });
+        }
+
+        if (chunksToSave.length > 0) {
+          db.insertChunksBatch(chunksToSave);
+          totalChunked += chunksToSave.length;
+        }
       }
     }
-    
-    logger.info({ totalChunks, itemsProcessed: relevant.length }, 'Chunking and embedding complete');
 
     const duration = Date.now() - startTime;
     logger.info(
-      { fetched: rawItems.length, validated: validItems.length, relevant: relevant.length, saved, chunked: totalChunks, duration: `${duration}ms` },
-      '--- CYCLE END ═══',
+      { fetched: rawItems.length, validated: validItems.length, saved: totalSaved, chunked: totalChunked, duration: `${duration}ms` },
+      '─── CYCLE END ═══',
     );
 
-    lastResult = { fetched: rawItems.length, saved, chunked: totalChunks, duration };
+    lastResult = { fetched: rawItems.length, saved: totalSaved, chunked: totalChunked, duration };
     currentStep = null;
 
-    return { fetched: rawItems.length, validated: validItems.length, preFiltered: preFilteredCount, filtered: relevant.length, saved, chunked: totalChunks, duration };
+    return { fetched: rawItems.length, validated: validItems.length, preFiltered: preFilteredCount, saved: totalSaved, chunked: totalChunked, duration };
   } catch (err) {
     /* istanbul ignore next */
     logger.error({ err }, 'Cycle failed');
@@ -184,9 +188,6 @@ async function runCycle() {
   }
 }
 
-/**
- * Start the scheduler.
- */
 /* istanbul ignore next */
 function start() {
   logger.info({ schedule: config.cronSchedule, profile: config.activeProfile }, 'Scheduler starting');
@@ -203,9 +204,6 @@ function start() {
   return scheduledTask;
 }
 
-/**
- * Stop the scheduler.
- */
 /* istanbul ignore next */
 function stop() {
   if (scheduledTask) {
@@ -227,7 +225,7 @@ function getStatus() {
 
 module.exports = {
   runCycle,
-  loadProfile,
+  invalidateProfileCache,
   start,
   stop,
   getStatus,

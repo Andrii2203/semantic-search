@@ -1,8 +1,10 @@
 'use strict';
 
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 const config = require('../config');
 const logger = require('../logger');
+const db = require('../db');
 
 const SESSION_COOKIE = 'ume_session';
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60; // 7 days in seconds
@@ -26,26 +28,31 @@ function sign(value) {
     .digest('base64url');
 }
 
-function createSessionToken() {
+// Token format: userId.randomValue.sig  (2 dots, userId has no dots)
+function createSessionToken(userId) {
   const value = crypto.randomBytes(32).toString('base64url');
-  const sig = sign(value);
-  return `${value}.${sig}`;
+  const payload = `${userId}.${value}`;
+  const sig = sign(payload);
+  return `${payload}.${sig}`;
 }
 
+// Returns userId if valid, null otherwise
 function verifySessionToken(token) {
-  if (!token || typeof token !== 'string') return false;
-  const dot = token.lastIndexOf('.');
-  if (dot < 0) return false;
-  const value = token.slice(0, dot);
-  const sig = token.slice(dot + 1);
-  const expected = sign(value);
+  if (!token || typeof token !== 'string') return null;
+  const firstDot = token.indexOf('.');
+  const lastDot = token.lastIndexOf('.');
+  if (firstDot < 0 || firstDot === lastDot) return null;
+  const payload = token.slice(0, lastDot);
+  const sig = token.slice(lastDot + 1);
+  const expected = sign(payload);
   try {
     const sigBuf = Buffer.from(sig, 'base64url');
     const expBuf = Buffer.from(expected, 'base64url');
-    if (sigBuf.length !== expBuf.length) return false;
-    return crypto.timingSafeEqual(sigBuf, expBuf);
+    if (sigBuf.length !== expBuf.length) return null;
+    if (!crypto.timingSafeEqual(sigBuf, expBuf)) return null;
+    return token.slice(0, firstDot); // userId
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -73,15 +80,10 @@ function clearCookieHeader() {
   return flags.join('; ');
 }
 
-// Routes that bypass auth unconditionally
-const PUBLIC_PREFIXES = ['/api/auth', '/api/health', '/api/client-error'];
-// Routes that are public (Files mode)
-const PUBLIC_ROUTES = ['/api/upload', '/api/search'];
+const PUBLIC_PREFIXES = ['/api/auth', '/api/health', '/api/client-error', '/api/upload'];
 
 function isPublic(path) {
-  if (PUBLIC_PREFIXES.some((p) => path === p || path.startsWith(p + '/'))) return true;
-  if (PUBLIC_ROUTES.some((p) => path === p || path.startsWith(p + '/'))) return true;
-  return false;
+  return PUBLIC_PREFIXES.some((p) => path === p || path.startsWith(p + '/'));
 }
 
 function getSessionToken(req) {
@@ -90,35 +92,77 @@ function getSessionToken(req) {
 }
 
 function requireAuth(req, res, next) {
-  if (!config.internetModePassword) return next();
   if (isPublic(req.path)) return next();
 
   const token = getSessionToken(req);
-  if (!token || !verifySessionToken(token)) {
+  const userId = verifySessionToken(token);
+  if (!userId) {
     return res.status(401).json({
       error: { code: 'UNAUTHORIZED', message: 'Authentication required' },
     });
   }
+  req.userId = userId;
   next();
 }
 
-function login(req, res) {
-  const { password } = req.body || {};
+async function login(req, res) {
+  const { email, password } = req.body || {};
 
-  if (!config.internetModePassword) {
-    return res.json({ success: true, passwordRequired: false });
-  }
-
-  if (!password || password !== config.internetModePassword) {
-    return res.status(401).json({
-      error: { code: 'UNAUTHORIZED', message: 'Invalid password' },
+  if (!email || !password) {
+    return res.status(400).json({
+      error: { code: 'VALIDATION_FAILED', message: 'Email and password are required' },
     });
   }
 
-  const token = createSessionToken();
+  const user = db.findUserByEmail(email.toLowerCase().trim());
+  if (!user) {
+    return res.status(401).json({
+      error: { code: 'UNAUTHORIZED', message: 'Invalid email or password' },
+    });
+  }
+
+  const valid = await bcrypt.compare(password, user.password_hash);
+  if (!valid) {
+    return res.status(401).json({
+      error: { code: 'UNAUTHORIZED', message: 'Invalid email or password' },
+    });
+  }
+
+  const token = createSessionToken(user.id);
   res.setHeader('Set-Cookie', buildCookieHeader(token));
-  logger.info('User authenticated');
-  res.json({ success: true, passwordRequired: true });
+  logger.info({ userId: user.id }, 'User logged in');
+  res.json({ success: true });
+}
+
+async function register(req, res) {
+  const { email, password } = req.body || {};
+
+  if (!email || !password) {
+    return res.status(400).json({
+      error: { code: 'VALIDATION_FAILED', message: 'Email and password are required' },
+    });
+  }
+  if (password.length < 8) {
+    return res.status(400).json({
+      error: { code: 'VALIDATION_FAILED', message: 'Password must be at least 8 characters' },
+    });
+  }
+
+  const normalizedEmail = email.toLowerCase().trim();
+  if (db.findUserByEmail(normalizedEmail)) {
+    return res.status(409).json({
+      error: { code: 'CONFLICT', message: 'Email already registered' },
+    });
+  }
+
+  const id = crypto.randomUUID();
+  const passwordHash = await bcrypt.hash(password, 10);
+  db.createUser({ id, email: normalizedEmail, passwordHash });
+
+  const token = createSessionToken(id);
+  res.setHeader('Set-Cookie', buildCookieHeader(token));
+  logger.info({ userId: id, email: normalizedEmail }, 'User registered');
+  res.status(201).json({ success: true });
 }
 
 function logout(req, res) {
@@ -127,17 +171,19 @@ function logout(req, res) {
 }
 
 function getStatus(req, res) {
-  if (!config.internetModePassword) {
-    return res.json({ authenticated: true, passwordRequired: false });
-  }
   const token = getSessionToken(req);
-  const authenticated = verifySessionToken(token);
-  res.json({ authenticated, passwordRequired: true });
+  const userId = verifySessionToken(token);
+  if (!userId) {
+    return res.json({ authenticated: false });
+  }
+  const user = db.findUserById(userId);
+  res.json({ authenticated: true, userId, email: user?.email || null });
 }
 
 module.exports = {
   requireAuth,
   login,
+  register,
   logout,
   getStatus,
   parseCookies,

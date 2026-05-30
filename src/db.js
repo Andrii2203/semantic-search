@@ -118,6 +118,32 @@ const migrations = [
       CREATE INDEX IF NOT EXISTS idx_items_collection_id ON items(collection_id);
     `,
   },
+  {
+    name: '008_create_users',
+    up: `
+      CREATE TABLE IF NOT EXISTS users (
+        id            TEXT PRIMARY KEY,
+        email         TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at    TEXT NOT NULL DEFAULT (datetime('now'))
+      );
+      CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+    `,
+  },
+  {
+    name: '009_add_user_id_to_items',
+    up: `
+      ALTER TABLE items ADD COLUMN user_id TEXT REFERENCES users(id);
+      CREATE INDEX IF NOT EXISTS idx_items_user_id ON items(user_id);
+    `,
+  },
+  {
+    name: '010_add_user_id_to_profiles',
+    up: `
+      ALTER TABLE profiles ADD COLUMN user_id TEXT REFERENCES users(id);
+      CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles(user_id);
+    `,
+  },
 ];
 
 // ─── Initialization ──────────────────────────────────────────
@@ -175,8 +201,8 @@ function runMigrations() {
 
 // ─── Helpers ─────────────────────────────────────────────────
 
-function fingerprint(item) {
-  const raw = `${item.source}:${item.type}:${item.content}`;
+function fingerprint(item, userId) {
+  const raw = `${userId || ''}:${item.source}:${item.type}:${item.content}`;
   return crypto.createHash('sha256').update(raw).digest('hex').slice(0, 16);
 }
 
@@ -191,11 +217,11 @@ function getDb() {
 
 function insertItem(item) {
   const d = getDb();
-  const fp = fingerprint(item);
+  const fp = fingerprint(item, item.userId || null);
 
   const stmt = d.prepare(`
-    INSERT OR IGNORE INTO items (id, content, type, source, metadata, score, response, status, fingerprint, collection_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT OR IGNORE INTO items (id, content, type, source, metadata, score, response, status, fingerprint, collection_id, user_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const result = stmt.run(
@@ -209,6 +235,7 @@ function insertItem(item) {
     item.status || 'new',
     fp,
     item.collectionId || 'internet',
+    item.userId || null,
   );
 
   return result.changes > 0;
@@ -217,14 +244,14 @@ function insertItem(item) {
 function insertItemsBatch(items) {
   const d = getDb();
   const insert = d.prepare(`
-    INSERT OR IGNORE INTO items (id, content, type, source, metadata, score, response, status, fingerprint, collection_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT OR IGNORE INTO items (id, content, type, source, metadata, score, response, status, fingerprint, collection_id, user_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const insertMany = d.transaction((rows) => {
     let inserted = 0;
     for (const item of rows) {
-      const fp = fingerprint(item);
+      const fp = fingerprint(item, item.userId || null);
       const result = insert.run(
         item.id,
         item.content,
@@ -236,6 +263,7 @@ function insertItemsBatch(items) {
         item.status || 'new',
         fp,
         item.collectionId || 'internet',
+        item.userId || null,
       );
       if (result.changes > 0) {
         inserted++;
@@ -247,7 +275,7 @@ function insertItemsBatch(items) {
   return insertMany(items);
 }
 
-function buildItemConditions({ status, source, type, collectionId }) {
+function buildItemConditions({ status, source, type, collectionId, userId }) {
   const conditions = [];
   const params = [];
 
@@ -275,6 +303,10 @@ function buildItemConditions({ status, source, type, collectionId }) {
     conditions.push('collection_id = ?');
     params.push(collectionId);
   }
+  if (userId) {
+    conditions.push('user_id = ?');
+    params.push(userId);
+  }
 
   return { conditions, params };
 }
@@ -295,9 +327,9 @@ function encodeCursor(item) {
   return Buffer.from(JSON.stringify({ created_at: item.created_at, id: item.id })).toString('base64url');
 }
 
-function getItems({ status, source, type, collectionId, limit = 50, offset = 0 } = {}) {
+function getItems({ status, source, type, collectionId, userId, limit = 50, offset = 0 } = {}) {
   const d = getDb();
-  const { conditions, params } = buildItemConditions({ status, source, type, collectionId });
+  const { conditions, params } = buildItemConditions({ status, source, type, collectionId, userId });
 
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
   const sql = `SELECT * FROM items ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`;
@@ -307,9 +339,9 @@ function getItems({ status, source, type, collectionId, limit = 50, offset = 0 }
 }
 
 // Cursor-based pagination — returns { items, nextCursor, hasMore }
-function getItemsPage({ status, source, type, collectionId, limit = 50, cursor } = {}) {
+function getItemsPage({ status, source, type, collectionId, userId, limit = 50, cursor } = {}) {
   const d = getDb();
-  const { conditions, params } = buildItemConditions({ status, source, type, collectionId });
+  const { conditions, params } = buildItemConditions({ status, source, type, collectionId, userId });
 
   if (cursor) {
     const decoded = decodeCursor(cursor);
@@ -374,32 +406,9 @@ function updateItemMetadata(id, metadataUpdate) {
   return true;
 }
 
-function getItemCount({ status, source, collectionId } = {}) {
+function getItemCount({ status, source, collectionId, userId } = {}) {
   const d = getDb();
-  const conditions = [];
-  const params = [];
-
-  if (status) {
-    conditions.push('status = ?');
-    params.push(status);
-  }
-  /* istanbul ignore next */
-  if (source) {
-    const sources = source.split(',').map((s) => s.trim()).filter(Boolean);
-    if (sources.length === 1) {
-      conditions.push('source = ?');
-      params.push(sources[0]);
-    } else if (sources.length > 1) {
-      const placeholders = sources.map(() => '?').join(',');
-      conditions.push(`source IN (${placeholders})`);
-      params.push(...sources);
-    }
-  }
-  if (collectionId) {
-    conditions.push('collection_id = ?');
-    params.push(collectionId);
-  }
-
+  const { conditions, params } = buildItemConditions({ status, source, collectionId, userId });
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
   return d.prepare(`SELECT COUNT(*) as count FROM items ${where}`).get(...params).count;
 }
@@ -485,6 +494,7 @@ function chunksSearch(keywords, options = {}) {
   const d = getDb();
   const limit = options.limit || 100;
   const collectionId = options.collectionId || null;
+  const userId = options.userId || null;
   const query = keywords
     .filter(Boolean)
     .map((k) => `"${k.replace(/"/g, '""')}"`)
@@ -493,33 +503,29 @@ function chunksSearch(keywords, options = {}) {
   if (!query.trim()) return [];
 
   try {
-    let rows;
+    const whereClauses = ['chunks_fts MATCH ?'];
+    const params = [query];
+
     if (collectionId) {
-      rows = d
-        .prepare(
-          `SELECT c.*, chunks_fts.rank
-           FROM chunks_fts
-           JOIN chunks c ON c.rowid = chunks_fts.rowid
-           JOIN items i ON c.parent_id = i.id
-           WHERE chunks_fts MATCH ?
-           AND i.collection_id = ?
-           ORDER BY rank
-           LIMIT ?`,
-        )
-        .all(query, collectionId, limit);
-    } else {
-      rows = d
-        .prepare(
-          `SELECT c.*, chunks_fts.rank
-           FROM chunks_fts
-           JOIN chunks c ON c.rowid = chunks_fts.rowid
-           WHERE chunks_fts MATCH ?
-           ORDER BY rank
-           LIMIT ?`,
-        )
-        .all(query, limit);
+      whereClauses.push('i.collection_id = ?');
+      params.push(collectionId);
     }
-    return rows.map((row) => ({
+    if (userId) {
+      whereClauses.push('i.user_id = ?');
+      params.push(userId);
+    }
+    params.push(limit);
+
+    const sql = `
+      SELECT c.*, chunks_fts.rank
+      FROM chunks_fts
+      JOIN chunks c ON c.rowid = chunks_fts.rowid
+      JOIN items i ON c.parent_id = i.id
+      WHERE ${whereClauses.join(' AND ')}
+      ORDER BY rank
+      LIMIT ?`;
+
+    return d.prepare(sql).all(...params).map((row) => ({
       ...row,
       metadata: row.metadata ? JSON.parse(row.metadata) : {},
     }));
@@ -571,6 +577,63 @@ function deleteProfile(id) {
   return d.prepare('DELETE FROM profiles WHERE id = ?').run(id).changes > 0;
 }
 
+// ─── Users CRUD ──────────────────────────────────────────────
+
+function createUser({ id, email, passwordHash }) {
+  const d = getDb();
+  d.prepare('INSERT INTO users (id, email, password_hash) VALUES (?, ?, ?)').run(id, email, passwordHash);
+  return { id, email };
+}
+
+function findUserByEmail(email) {
+  const d = getDb();
+  return d.prepare('SELECT * FROM users WHERE email = ?').get(email) || null;
+}
+
+function findUserById(id) {
+  const d = getDb();
+  return d.prepare('SELECT * FROM users WHERE id = ?').get(id) || null;
+}
+
+function getAllUsers() {
+  const d = getDb();
+  return d.prepare('SELECT * FROM users ORDER BY created_at ASC').all();
+}
+
+// ─── Per-user profiles ────────────────────────────────────────
+
+function getProfileByUserId(userId) {
+  const d = getDb();
+  const row = d.prepare('SELECT * FROM profiles WHERE user_id = ?').get(userId);
+  if (!row) return null;
+  return { ...row, keywords: row.keywords ? JSON.parse(row.keywords) : [] };
+}
+
+function saveProfileForUser(userId, profile) {
+  const d = getDb();
+  const existing = d.prepare('SELECT id FROM profiles WHERE user_id = ?').get(userId);
+  if (existing) {
+    d.prepare(`
+      UPDATE profiles SET keywords = ?, vector = ?, raw_input = ? WHERE user_id = ?
+    `).run(
+      JSON.stringify(profile.keywords || []),
+      profile.vector || null,
+      profile.rawInput || '',
+      userId,
+    );
+  } else {
+    d.prepare(`
+      INSERT INTO profiles (id, user_id, keywords, vector, raw_input) VALUES (?, ?, ?, ?, ?)
+    `).run(
+      profile.id || `user-${userId}`,
+      userId,
+      JSON.stringify(profile.keywords || []),
+      profile.vector || null,
+      profile.rawInput || '',
+    );
+  }
+}
+
 // ─── Chunking Config ─────────────────────────────────────────
 
 function getChunkingConfig() {
@@ -594,21 +657,21 @@ function updateChunkingConfig({ strategy, chunkSize, overlap }) {
 function getAllChunksWithVectors(options = {}) {
   const d = getDb();
   const collectionId = options.collectionId || null;
+  const userId = options.userId || null;
+  const params = [];
 
-  const rows = collectionId
-    ? d
-        .prepare(
-          `SELECT c.* FROM chunks c
-           JOIN items i ON c.parent_id = i.id
-           WHERE c.vector IS NOT NULL AND i.collection_id = ?`,
-        )
-        .all(collectionId)
-    : d.prepare('SELECT * FROM chunks WHERE vector IS NOT NULL').all();
+  if (collectionId || userId) {
+    const whereClauses = ['c.vector IS NOT NULL'];
+    if (collectionId) { whereClauses.push('i.collection_id = ?'); params.push(collectionId); }
+    if (userId)       { whereClauses.push('i.user_id = ?');       params.push(userId); }
 
-  return rows.map((row) => ({
-    ...row,
-    metadata: row.metadata ? JSON.parse(row.metadata) : {},
-  }));
+    return d.prepare(
+      `SELECT c.* FROM chunks c JOIN items i ON c.parent_id = i.id WHERE ${whereClauses.join(' AND ')}`
+    ).all(...params).map((row) => ({ ...row, metadata: row.metadata ? JSON.parse(row.metadata) : {} }));
+  }
+
+  return d.prepare('SELECT * FROM chunks WHERE vector IS NOT NULL').all()
+    .map((row) => ({ ...row, metadata: row.metadata ? JSON.parse(row.metadata) : {} }));
 }
 
 function getActiveProfile() {
@@ -655,6 +718,13 @@ module.exports = {
   getAllProfiles,
   deleteProfile,
   getActiveProfile,
+  getProfileByUserId,
+  saveProfileForUser,
+  // Users
+  createUser,
+  findUserByEmail,
+  findUserById,
+  getAllUsers,
   // Config
   getChunkingConfig,
   updateChunkingConfig,

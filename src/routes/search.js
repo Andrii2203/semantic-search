@@ -8,6 +8,7 @@ const { explain } = require('../explainer');
 const db = require('../db');
 const logger = require('../logger');
 const { AppError, ErrorCodes } = require('../errors');
+const scheduler = require('../scheduler');
 
 const router = express.Router();
 
@@ -44,6 +45,16 @@ router.post('/', async (req, res, next) => {
       profile = ProfileGenerator.loadProfile(profileId);
     } else if (query) {
       profile = await ProfileGenerator.fromText(query, { useAI: true, save: false });
+
+      // Auto-save search query as user's profile so scheduler uses it
+      if (req.userId && profile.vector) {
+        db.saveProfileForUser(req.userId, {
+          keywords: profile.keywords,
+          rawInput: query,
+          vector: profile.vector,
+        });
+        scheduler.invalidateProfileCache(req.userId);
+      }
     } else {
       throw new AppError('Either "query" or "profileId" is required', ErrorCodes.VALIDATION_FAILED, 400);
     }
@@ -61,7 +72,7 @@ router.post('/', async (req, res, next) => {
     if (mode === 'sequential') {
       // Sequential: BM25 first → score BM25 results by cosine similarity
       const bm25Chunks = (profile.keywords && profile.keywords.length > 0)
-        ? db.chunksSearch(profile.keywords, { limit: maxBm25Results, collectionId })
+        ? db.chunksSearch(profile.keywords, { limit: maxBm25Results, collectionId, userId: req.userId })
         : [];
 
       if (profileVector && bm25Chunks.length > 0) {
@@ -79,13 +90,13 @@ router.post('/', async (req, res, next) => {
     } else {
       // Parallel: BM25 + semantic independently → merge
       const bm25Chunks = (profile.keywords && profile.keywords.length > 0)
-        ? db.chunksSearch(profile.keywords, { limit: maxBm25Results, collectionId })
+        ? db.chunksSearch(profile.keywords, { limit: maxBm25Results, collectionId, userId: req.userId })
         : [];
 
       let semanticChunks = [];
       if (profileVector) {
         // Get all chunks with vectors for semantic scoring
-        const allChunksRaw = db.getAllChunksWithVectors({ collectionId });
+        const allChunksRaw = db.getAllChunksWithVectors({ collectionId, userId: req.userId });
 
         semanticChunks = SearchEngine.scoreChunksByVector(allChunksRaw, profileVector, threshold);
       }
