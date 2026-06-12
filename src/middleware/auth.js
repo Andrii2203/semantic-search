@@ -80,7 +80,7 @@ function clearCookieHeader() {
   return flags.join('; ');
 }
 
-const PUBLIC_PREFIXES = ['/api/auth', '/api/health', '/api/client-error', '/api/upload'];
+const PUBLIC_PREFIXES = ['/api/auth', '/api/health', '/api/client-error'];
 
 function isPublic(path) {
   return PUBLIC_PREFIXES.some((p) => path === p || path.startsWith(p + '/'));

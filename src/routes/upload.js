@@ -52,7 +52,11 @@ router.post('/', upload.array('files', 50), async (req, res, next) => {
           throw new AppError(`Invalid IR generated: ${validation.error}`, ErrorCodes.VALIDATION_FAILED, 500);
         }
 
-        const inserted = db.insertItem(validation.data);
+        const inserted = db.insertItem({
+          ...validation.data,
+          userId: req.userId || null,
+          collectionId: 'files',
+        });
         if (inserted) {
           results.push(validation.data);
 
