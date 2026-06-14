@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const logger = require('./logger');
 const config = require('./config');
 const { AppError, ErrorCodes } = require('./errors');
+const WELCOME_MESSAGES = require('./welcome');
 
 let db = null;
 
@@ -635,6 +636,26 @@ function userCanAccessItem(item, userId) {
   return !item.user_id || item.user_id === userId;
 }
 
+// ─── Onboarding (Phase 2.6) ──────────────────────────────────
+// Seed a new user's inbox with welcome messages on first login. Stored once in
+// the shared corpus (content-deduped, id is the PRIMARY KEY) — each user just
+// gets their own user_matches row, so messages appear per-user, never duplicated.
+
+function seedWelcomeForUser(userId) {
+  for (const msg of WELCOME_MESSAGES) {
+    insertItem({
+      id: msg.id,
+      content: msg.content,
+      type: 'post',
+      source: 'system',
+      metadata: { title: msg.title, system: true },
+      collectionId: 'internet',
+    });
+    upsertUserMatch({ userId, itemId: msg.id, status: 'new' });
+  }
+  return WELCOME_MESSAGES.length;
+}
+
 function getSources() {
   const d = getDb();
   return d.prepare('SELECT DISTINCT source FROM items').all().map((row) => row.source);
@@ -960,6 +981,7 @@ module.exports = {
   deleteUserMatch,
   setItemStatusForUser,
   userCanAccessItem,
+  seedWelcomeForUser,
   // Chunks
   insertChunk,
   insertChunksBatch,

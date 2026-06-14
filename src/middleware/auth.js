@@ -159,6 +159,14 @@ async function register(req, res) {
   const passwordHash = await bcrypt.hash(password, 10);
   db.createUser({ id, email: normalizedEmail, passwordHash });
 
+  // Onboarding: seed the new user's inbox with welcome messages (best-effort —
+  // a seeding failure must not break registration).
+  try {
+    db.seedWelcomeForUser(id);
+  } catch (err) {
+    logger.warn({ err, userId: id }, 'Failed to seed welcome messages');
+  }
+
   const token = createSessionToken(id);
   res.setHeader('Set-Cookie', buildCookieHeader(token));
   logger.info({ userId: id, email: normalizedEmail }, 'User registered');

@@ -17,6 +17,7 @@ jest.mock('../../src/config', () => {
 const request = require('supertest');
 const { app }  = require('../../src/server');
 const db       = require('../../src/db');
+const WELCOME_COUNT = require('../../src/welcome').length; // onboarding items each user gets
 
 const TEST_EMAIL = 'auth-test@example.com';
 const TEST_PASS  = 'password123';
@@ -221,12 +222,13 @@ describe('User isolation — User A cannot see User B items', () => {
   test('User A stats reflect only their items', async () => {
     const res = await request(app).get('/api/items/stats').set('Cookie', cookieA);
     expect(res.statusCode).toBe(200);
-    expect(res.body.total).toBe(2);
+    // A's 2 inserted internet items + the onboarding welcome messages
+    expect(res.body.total).toBe(2 + WELCOME_COUNT);
   });
 
   test('User B stats reflect only their items', async () => {
     const res = await request(app).get('/api/items/stats').set('Cookie', cookieB);
     expect(res.statusCode).toBe(200);
-    expect(res.body.total).toBe(1);
+    expect(res.body.total).toBe(1 + WELCOME_COUNT);
   });
 });

@@ -43,13 +43,16 @@ router.get('/', (req, res, next) => {
 router.get('/stats', (req, res, next) => {
   try {
     const userId = req.userId;
+    // Inbox badges count only the internet collection — same as the inbox list.
+    // Files / __test__ items have their own views and must not inflate the badges.
+    const collectionId = 'internet';
     res.json({
-      total:    db.getItemCount({ userId }),
-      new:      db.getItemCount({ status: 'new',      userId }),
-      approved: db.getItemCount({ status: 'approved', userId }),
-      skipped:  db.getItemCount({ status: 'skipped',  userId }),
-      pending:  db.getItemCount({ status: 'pending',  userId }),
-      starred:  db.getItemCount({ status: 'starred',  userId }),
+      total:    db.getItemCount({ collectionId, userId }),
+      new:      db.getItemCount({ status: 'new',      collectionId, userId }),
+      approved: db.getItemCount({ status: 'approved', collectionId, userId }),
+      skipped:  db.getItemCount({ status: 'skipped',  collectionId, userId }),
+      pending:  db.getItemCount({ status: 'pending',  collectionId, userId }),
+      starred:  db.getItemCount({ status: 'starred',  collectionId, userId }),
     });
   } catch (err) {
     next(err);

@@ -29,6 +29,9 @@ describe('GET /api/items — cursor pagination', () => {
 
     cookie = await registerAndGetCookie('pagtest@example.com');
     userId = db.findUserByEmail('pagtest@example.com').id;
+    // This suite tests pagination of exactly 10 items — drop onboarding welcome
+    // messages so they don't skew the counts (cascades user_matches).
+    db.getDb().exec("DELETE FROM items WHERE source = 'system'");
 
     const items = Array.from({ length: 10 }, (_, i) => ({
       id: `item-${String(i).padStart(2, '0')}`,
