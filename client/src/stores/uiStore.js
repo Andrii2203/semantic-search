@@ -6,7 +6,7 @@ export const useUIStore = create((set) => ({
   toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
 
   // ── Navigation ────────────────────────────────────────────────
-  // 'inbox' | 'starred' | 'done' | 'skipped' | 'search'
+  // 'inbox' | 'starred' | 'done' | 'skipped' | 'search' | 'profile'
   currentView: 'inbox',
   setView: (view) => set({ currentView: view, selectedItemId: null }),
 

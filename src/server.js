@@ -15,6 +15,8 @@ const syncRouter = require('./routes/sync');
 const { router: exportRouter } = require('./routes/export');
 const uploadRouter = require('./routes/upload');
 const searchRouter = require('./routes/search');
+const profilesRouter = require('./routes/profiles');
+const seedRouter = require('./routes/seed');
 const configRouter = require('./routes/config-routes');
 const authRouter = require('./routes/auth');
 const clientErrorRouter = require('./routes/client-error');
@@ -68,6 +70,8 @@ app.use('/api', syncRouter);
 app.use('/api/export', exportRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/search', searchRouter);
+app.use('/api/profiles', profilesRouter);
+app.use('/api/seed-test-data', seedRouter);
 app.use('/api/config', configRouter);
 
 // ─── 404 for unknown routes ──────────────────────────────────

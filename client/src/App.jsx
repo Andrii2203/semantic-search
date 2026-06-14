@@ -4,6 +4,7 @@ import { ThemeProvider, useTheme } from './context/ThemeContext'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { Sidebar } from './components/Sidebar'
 import { ItemList } from './components/ItemList'
+import { ProfileEditor } from './components/ProfileEditor'
 import { ReadingPane } from './components/ReadingPane'
 import { LockScreen } from './components/LockScreen'
 import { HealthFooter } from './components/HealthFooter'
@@ -63,7 +64,7 @@ function AuthGuard({ children }) {
 }
 
 function GmailLayout() {
-  const { selectedItemId } = useUIStore()
+  const { selectedItemId, currentView } = useUIStore()
 
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-bg">
@@ -79,7 +80,11 @@ function GmailLayout() {
                STATE B — item selected   → reading pane fills width */}
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        {selectedItemId ? (
+        {currentView === 'profile' ? (
+          <ErrorBoundary>
+            <ProfileEditor />
+          </ErrorBoundary>
+        ) : selectedItemId ? (
           <ErrorBoundary>
             <ReadingPane />
           </ErrorBoundary>

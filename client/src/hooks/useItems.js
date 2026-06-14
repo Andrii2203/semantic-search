@@ -146,15 +146,29 @@ export function useSyncStatus(enabled) {
   })
 }
 
-// ── Save profile ──────────────────────────────────────────────
+// ── Profile (active intent) ───────────────────────────────────
+
+export function useActiveProfile() {
+  return useQuery({
+    queryKey: ['profile', 'active'],
+    queryFn: () => apiFetch('/api/profiles/active').then((d) => d.profile),
+    staleTime: 30_000,
+  })
+}
 
 export function useSaveProfile() {
+  const qc = useQueryClient()
   return useMutation({
-    mutationFn: (body) =>
-      apiFetch('/api/search', {
+    mutationFn: (rawInput) =>
+      apiFetch('/api/profiles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...body, saveProfile: true }),
+        body: JSON.stringify({ rawInput }),
       }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['profile'] })
+      // New profile changes what the scheduler matches — refresh inbox counts/list
+      qc.invalidateQueries({ queryKey: ['items'] })
+    },
   })
 }
