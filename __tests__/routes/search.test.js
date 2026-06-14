@@ -65,6 +65,8 @@ beforeEach(() => {
   SearchEngine.deserializeVector.mockReturnValue(new Array(384).fill(0.1));
   SearchEngine.scoreChunksByVector.mockReturnValue([]);
   SearchEngine.mergeResults.mockReturnValue([]);
+  SearchEngine.rrfMerge.mockReturnValue([]);
+  SearchEngine.mmrSelect.mockImplementation((docs) => docs); // identity — diversity tested in search-engine unit tests
   SearchEngine.groupByParent.mockReturnValue([]);
 
   ProfileGenerator.fromText.mockResolvedValue(MOCK_PROFILE);
@@ -165,14 +167,16 @@ describe('POST /api/search', () => {
     expect(res.body.results).toEqual([]);
   });
 
-  it('parallel mode: calls mergeResults', async () => {
+  it('parallel mode: fuses with RRF by default', async () => {
     const res = await request(app)
       .post('/api/search')
       .send({ query: 'test', mode: 'parallel' })
       .expect(200);
 
-    expect(SearchEngine.mergeResults).toHaveBeenCalled();
+    expect(SearchEngine.rrfMerge).toHaveBeenCalled();
+    expect(SearchEngine.mergeResults).not.toHaveBeenCalled();
     expect(res.body.stats.mode).toBe('parallel');
+    expect(res.body.stats.ranking).toBe('rrf');
   });
 
   it('parallel mode: skips semantic scoring when profileVector is null', async () => {
@@ -183,7 +187,8 @@ describe('POST /api/search', () => {
       .send({ query: 'test', mode: 'parallel' })
       .expect(200);
 
-    expect(SearchEngine.mergeResults).toHaveBeenCalled();
+    expect(SearchEngine.scoreChunksByVector).not.toHaveBeenCalled();
+    expect(SearchEngine.rrfMerge).toHaveBeenCalled();
     expect(res.body.results).toBeDefined();
   });
 

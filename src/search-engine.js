@@ -173,6 +173,118 @@ function mergeResults(bm25Results, semanticResults, weights = {}) {
   return [...merged.values()].sort((a, b) => b.score - a.score);
 }
 
+// ─── RRF (Reciprocal Rank Fusion) ───────────────────────────
+
+/**
+ * Merge BM25 and semantic results by rank, not by score magnitude.
+ * Phase 2.5: stable fusion independent of score scales.
+ *
+ *   rrfScore = 1/(k + bm25Rank) + 1/(k + semanticRank)
+ *
+ * Both input lists must be sorted best-first. Pure function.
+ *
+ * @param {Object[]} bm25Results - Chunks ordered by BM25 relevance
+ * @param {Object[]} semanticResults - Chunks ordered by cosine similarity
+ * @param {Object} options - { k = 60 }
+ * @returns {Object[]} Merged chunks with bm25Rank, semanticRank, rrfScore; sorted desc
+ */
+function rrfMerge(bm25Results, semanticResults, options = {}) {
+  const k = options.k || 60;
+  const merged = new Map();
+
+  (bm25Results || []).forEach((chunk, i) => {
+    merged.set(chunk.id, {
+      ...chunk,
+      bm25Rank: i + 1,
+      semanticRank: null,
+      semanticScore: chunk.semanticScore ?? null,
+    });
+  });
+
+  (semanticResults || []).forEach((chunk, i) => {
+    const semanticRank = i + 1;
+    if (merged.has(chunk.id)) {
+      const existing = merged.get(chunk.id);
+      existing.semanticRank = semanticRank;
+      existing.semanticScore = chunk.semanticScore;
+      if (chunk.vector && !existing.vector) existing.vector = chunk.vector;
+    } else {
+      merged.set(chunk.id, { ...chunk, bm25Rank: null, semanticRank });
+    }
+  });
+
+  return [...merged.values()]
+    .map((chunk) => {
+      const bm25Part = chunk.bm25Rank ? 1 / (k + chunk.bm25Rank) : 0;
+      const semanticPart = chunk.semanticRank ? 1 / (k + chunk.semanticRank) : 0;
+      const rrfScore = bm25Part + semanticPart;
+      return { ...chunk, rrfScore, score: rrfScore };
+    })
+    .sort((a, b) => b.score - a.score);
+}
+
+// ─── MMR (Maximal Marginal Relevance) ───────────────────────
+
+/**
+ * Select results balancing relevance and diversity.
+ * Phase 2.5: avoids five near-identical posts in the top.
+ *
+ *   value = λ * relevance − (1 − λ) * maxSimilarityToAlreadySelected
+ *
+ * λ = 1.0 disables diversity (pure relevance — rollback switch).
+ * Chunks without vectors get similarity 0 (never penalized). Pure function.
+ *
+ * @param {Object[]} chunks - Scored chunks (with .score and .vector), sorted desc
+ * @param {Object} options - { lambda = 0.5, topN = 20 }
+ * @returns {Object[]} Selected chunks in MMR order
+ */
+function mmrSelect(chunks, options = {}) {
+  const lambda = options.lambda ?? 0.5;
+  const topN = options.topN || 20;
+
+  if (!chunks || chunks.length === 0) return [];
+  if (lambda >= 1) return chunks.slice(0, topN);
+
+  const candidates = chunks.map((chunk) => ({
+    chunk,
+    vector: Array.isArray(chunk.vector) ? chunk.vector : deserializeVector(chunk.vector),
+  }));
+
+  const maxScore = Math.max(...chunks.map((c) => c.score || 0), 1e-9);
+  const selected = [];
+  const selectedVectors = [];
+
+  while (selected.length < topN && candidates.length > 0) {
+    let bestIdx = 0;
+    let bestValue = -Infinity;
+
+    for (let i = 0; i < candidates.length; i++) {
+      const { chunk, vector } = candidates[i];
+      const relevance = (chunk.score || 0) / maxScore;
+
+      let maxSim = 0;
+      if (vector) {
+        for (const sv of selectedVectors) {
+          const sim = cosineSimilarity(vector, sv);
+          if (sim > maxSim) maxSim = sim;
+        }
+      }
+
+      const value = lambda * relevance - (1 - lambda) * maxSim;
+      if (value > bestValue) {
+        bestValue = value;
+        bestIdx = i;
+      }
+    }
+
+    const [picked] = candidates.splice(bestIdx, 1);
+    selected.push(picked.chunk);
+    if (picked.vector) selectedVectors.push(picked.vector);
+  }
+
+  return selected;
+}
+
 // ─── Group by Parent Document ───────────────────────────────
 
 /**
@@ -195,6 +307,7 @@ function groupByParent(chunks) {
         matchedChunks: [],
         bestScore: 0,
         totalScore: 0,
+        vector: null,
       });
     }
 
@@ -205,13 +318,21 @@ function groupByParent(chunks) {
       chunkIndex: chunk.chunk_index,
       score: chunk.score,
       bm25Rank: chunk.bm25Rank,
+      semanticRank: chunk.semanticRank ?? null,
+      rrfScore: chunk.rrfScore ?? null,
       semanticScore: chunk.semanticScore,
     });
+    // Representative vector = vector of the document's best-scoring chunk (for MMR diversity)
+    if (doc.vector === null || chunk.score > doc.bestScore) {
+      const v = Array.isArray(chunk.vector) ? chunk.vector : deserializeVector(chunk.vector);
+      if (v) doc.vector = v;
+    }
     doc.bestScore = Math.max(doc.bestScore, chunk.score);
     doc.totalScore += chunk.score;
   }
 
   return [...documentMap.values()]
+    .map((doc) => ({ ...doc, score: doc.bestScore }))
     .sort((a, b) => b.bestScore - a.bestScore || b.totalScore - a.totalScore)
     .map((doc) => ({
       ...doc,
@@ -268,6 +389,8 @@ module.exports = {
   deserializeVector,
   scoreChunksByVector,
   mergeResults,
+  rrfMerge,
+  mmrSelect,
   groupByParent,
   findRelevant,
 };

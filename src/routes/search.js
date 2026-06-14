@@ -5,8 +5,10 @@ const SearchEngine = require('../search-engine');
 const ProfileGenerator = require('../profile-generator');
 const { rerank } = require('../reranker');
 const { explain } = require('../explainer');
+const { hydeExpand } = require('../hyde');
 const db = require('../db');
 const logger = require('../logger');
+const config = require('../config');
 const { AppError, ErrorCodes } = require('../errors');
 const scheduler = require('../scheduler');
 
@@ -35,6 +37,8 @@ router.post('/', async (req, res, next) => {
       topN = 20,
       useReranker = false,
       collectionId = null,
+      mmrLambda,
+      useHyde = false,
     } = req.body;
 
     const startTime = performance.now();
@@ -64,50 +68,52 @@ router.post('/', async (req, res, next) => {
       profile.keywords = customKeywords;
     }
 
-    const profileVector = SearchEngine.deserializeVector(profile.vector);
+    // ── Step 1b: Optional HyDE query expansion (paid, opt-in) ──
+    // Embed a hypothetical ideal document instead of the raw query for sharper
+    // semantic match. Keywords (BM25) stay from the original query. Does NOT
+    // change the saved profile — HyDE is per-search, not a profile edit.
+    let profileVector = SearchEngine.deserializeVector(profile.vector);
+    let hypotheticalDoc = null;
+    if (useHyde) {
+      if (!config.groq.apiKey) {
+        throw new AppError('Groq API key required for HyDE', ErrorCodes.VALIDATION_FAILED, 400);
+      }
+      hypotheticalDoc = await hydeExpand(query || profile.rawInput || profile.raw_input);
+      if (hypotheticalDoc) {
+        profileVector = await SearchEngine.generateEmbedding(hypotheticalDoc);
+      }
+    }
 
-    // ── Step 2: Fetch data from DB ───────────────────────────
-    let scoredChunks;
+    // ── Step 2: Retrieve BM25 + semantic ranked lists ───────
+    const hasKeywords = profile.keywords && profile.keywords.length > 0;
+    const bm25List = hasKeywords
+      ? db.chunksSearch(profile.keywords, { limit: maxBm25Results, collectionId, userId: req.userId })
+      : [];
 
-    if (mode === 'sequential') {
-      // Sequential: BM25 first → score BM25 results by cosine similarity
-      const bm25Chunks = (profile.keywords && profile.keywords.length > 0)
-        ? db.chunksSearch(profile.keywords, { limit: maxBm25Results, collectionId, userId: req.userId })
-        : [];
-
-      if (profileVector && bm25Chunks.length > 0) {
-        // Score BM25 results using stored vectors
-        scoredChunks = SearchEngine.scoreChunksByVector(bm25Chunks, profileVector, threshold);
+    let semanticList = [];
+    if (profileVector) {
+      if (mode === 'sequential') {
+        // Sequential: embeddings only for the BM25-filtered subset (fast)
+        semanticList = SearchEngine.scoreChunksByVector(bm25List, profileVector, threshold);
       } else {
-        // No vector or no BM25 results — return BM25 as-is with normalized ranks
-        scoredChunks = bm25Chunks.map((chunk, i) => ({
-          ...chunk,
-          score: 1 - i / Math.max(bm25Chunks.length, 1),
-          bm25Rank: chunk.rank || 0,
-          semanticScore: null,
-        }));
-      }
-    } else {
-      // Parallel: BM25 + semantic independently → merge
-      const bm25Chunks = (profile.keywords && profile.keywords.length > 0)
-        ? db.chunksSearch(profile.keywords, { limit: maxBm25Results, collectionId, userId: req.userId })
-        : [];
-
-      let semanticChunks = [];
-      if (profileVector) {
-        // Get all chunks with vectors for semantic scoring
+        // Parallel: score the whole corpus by cosine (thorough)
         const allChunksRaw = db.getAllChunksWithVectors({ collectionId, userId: req.userId });
-
-        semanticChunks = SearchEngine.scoreChunksByVector(allChunksRaw, profileVector, threshold);
+        semanticList = SearchEngine.scoreChunksByVector(allChunksRaw, profileVector, threshold);
       }
+    }
 
-      scoredChunks = SearchEngine.mergeResults(bm25Chunks, semanticChunks, {
-        bm25Weight: weights?.bm25 || 0.4,
-        semanticWeight: weights?.semantic || 0.6,
+    // ── Step 3: Fuse — RRF by default, weighted sum as rollback ──
+    let scoredChunks;
+    if (config.search.useRrf) {
+      scoredChunks = SearchEngine.rrfMerge(bm25List, semanticList, { k: config.search.rrfK });
+    } else {
+      scoredChunks = SearchEngine.mergeResults(bm25List, semanticList, {
+        bm25Weight: weights?.bm25 || config.search.bm25Weight,
+        semanticWeight: weights?.semantic || config.search.semanticWeight,
       });
     }
 
-    // ── Step 3: Group by parent document ─────────────────────
+    // ── Step 4: Group by parent document ─────────────────────
     let results = SearchEngine.groupByParent(scoredChunks);
 
     // Enrich with parent item data
@@ -118,7 +124,14 @@ router.post('/', async (req, res, next) => {
       }
     }
 
-    // ── Step 4: Optional reranking ──────────────────────────
+    // ── Step 4b: MMR diversity (document-level) ──────────────
+    // λ=1.0 disables diversity (pure relevance). Free, always-on by default.
+    const lambda = mmrLambda ?? config.search.mmrLambda;
+    if (results.length > 0 && lambda < 1) {
+      results = SearchEngine.mmrSelect(results, { lambda, topN: Math.max(topN, results.length) });
+    }
+
+    // ── Step 5: Optional reranking ──────────────────────────
     if (useReranker && query && results.length > 0) {
       const flatResults = results.map((doc) => ({
         ...doc,
@@ -136,12 +149,29 @@ router.post('/', async (req, res, next) => {
       }));
     }
 
-    // ── Step 5: Return ──────────────────────────────────────
-    results = results.slice(0, topN);
+    // ── Step 6: Shape response ──────────────────────────────
+    // Drop the internal representative vector; surface per-document scores
+    // (best chunk's ranks) for the debug panel.
+    results = results.slice(0, topN).map((doc) => {
+      const top = doc.matchedChunks?.[0] || {};
+      // eslint-disable-next-line no-unused-vars
+      const { vector, ...rest } = doc;
+      return {
+        ...rest,
+        scores: {
+          bm25Rank: top.bm25Rank ?? null,
+          semanticRank: top.semanticRank ?? null,
+          rrfScore: top.rrfScore ?? null,
+          semanticScore: top.semanticScore ?? null,
+        },
+      };
+    });
     const duration = Math.round(performance.now() - startTime);
 
     logger.info({
       mode,
+      ranking: config.search.useRrf ? 'rrf' : 'weighted',
+      mmrLambda: lambda,
       chunksScored: scoredChunks.length,
       documentsFound: results.length,
       duration,
@@ -153,10 +183,15 @@ router.post('/', async (req, res, next) => {
         id: profile.id,
         keywords: profile.keywords,
       },
+      hydeUsed: !!hypotheticalDoc,
+      hypotheticalDoc,
       stats: {
         mode,
-        bm25Results: scoredChunks.filter((c) => c.bm25Rank != null).length,
-        semanticResults: scoredChunks.filter((c) => c.semanticScore != null).length,
+        ranking: config.search.useRrf ? 'rrf' : 'weighted',
+        mmrLambda: lambda,
+        hydeUsed: !!hypotheticalDoc,
+        bm25Results: bm25List.length,
+        semanticResults: semanticList.length,
         totalChunks: scoredChunks.length,
         totalDocuments: results.length,
         duration,
