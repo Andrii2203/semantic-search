@@ -35,20 +35,25 @@ async function ensureAuth() {
 
 // ─── Helpers ─────────────────────────────────────────────────
 
+// v7.1: internet items are a shared corpus; what the user sees and their
+// personal status live in user_matches
 function seedItems(userId) {
   db.insertItem({
     id: 'item-1', content: 'Test post about JavaScript', type: 'post', source: 'hn',
     metadata: { title: 'JS Post', url: 'https://example.com/1', author: 'user1' },
-    status: 'new', response: 'Great post!', score: 0.85, userId,
+    status: 'new', response: 'Great post!', score: 0.85,
   });
   db.insertItem({
     id: 'item-2', content: 'Another post about Node.js', type: 'post', source: 'reddit',
-    metadata: { title: 'Node Tips', url: 'https://example.com/2' }, status: 'approved', userId,
+    metadata: { title: 'Node Tips', url: 'https://example.com/2' },
   });
   db.insertItem({
     id: 'item-3', content: 'Job posting for developer', type: 'job', source: 'djinni',
-    metadata: { title: 'Senior Dev', company: 'Acme' }, status: 'new', userId,
+    metadata: { title: 'Senior Dev', company: 'Acme' },
   });
+  db.upsertUserMatch({ userId, itemId: 'item-1', score: 0.85, status: 'new' });
+  db.upsertUserMatch({ userId, itemId: 'item-2', status: 'approved' });
+  db.upsertUserMatch({ userId, itemId: 'item-3', status: 'new' });
 }
 
 // ─── Setup / Teardown ────────────────────────────────────────
@@ -136,8 +141,8 @@ describe('POST /api/items/:id/approve', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.status).toBe('approved');
-    const item = db.getItemById('item-1');
-    expect(item.status).toBe('approved');
+    const match = db.getUserMatch(testUserId, 'item-1');
+    expect(match.status).toBe('approved');
   });
 
   test('returns 404 for nonexistent item with JSON error', async () => {
@@ -155,8 +160,8 @@ describe('POST /api/items/:id/skip', () => {
     const res = await request(app).post('/api/items/item-1/skip').set('Cookie', authCookie);
     expect(res.statusCode).toBe(200);
     expect(res.body.status).toBe('skipped');
-    const item = db.getItemById('item-1');
-    expect(item.status).toBe('skipped');
+    const match = db.getUserMatch(testUserId, 'item-1');
+    expect(match.status).toBe('skipped');
   });
 
   test('returns 404 for nonexistent item', async () => {

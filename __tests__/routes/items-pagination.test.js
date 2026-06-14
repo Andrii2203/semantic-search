@@ -36,10 +36,13 @@ describe('GET /api/items — cursor pagination', () => {
       type: 'post',
       source: 'hn',
       collectionId: 'internet',
-      userId,
       metadata: { title: `Title ${i}` },
     }));
     db.insertItemsBatch(items);
+    // v7.1: internet content is a shared corpus — personal visibility via user_matches
+    for (const item of items) {
+      db.upsertUserMatch({ userId, itemId: item.id });
+    }
   });
 
   afterAll(() => db.close());
@@ -120,15 +123,17 @@ describe('POST /api/items/:id/star', () => {
     const userId = db.findUserByEmail('star-test@example.com').id;
 
     db.insertItemsBatch([
-      { id: 'star-test-1', content: 'Hello world content here', type: 'post', source: 'hn', userId, metadata: {} },
+      { id: 'star-test-1', content: 'Hello world content here', type: 'post', source: 'hn', metadata: {} },
     ]);
+    db.upsertUserMatch({ userId, itemId: 'star-test-1' });
 
     const res = await request(app).post('/api/items/star-test-1/star').set('Cookie', cookie);
     expect(res.statusCode).toBe(200);
     expect(res.body.status).toBe('starred');
 
-    const item = db.getItemById('star-test-1');
-    expect(item.status).toBe('starred');
+    // v7.1: personal status for internet content lives in user_matches
+    const match = db.getUserMatch(userId, 'star-test-1');
+    expect(match.status).toBe('starred');
     db.close();
   });
 

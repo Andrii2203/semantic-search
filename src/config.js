@@ -86,6 +86,11 @@ const config = Object.freeze({
   // Search
   similarityThreshold: envFloat('SIMILARITY_THRESHOLD', 0.35),
 
+  // Semantic near-dedup at ingest (v7.1): skip chunks almost identical to recent
+  // corpus chunks (same story from HN and Reddit is embedded once)
+  dedupThreshold: envFloat('DEDUP_THRESHOLD', 0.95),
+  dedupWindow: envInt('DEDUP_WINDOW', 200),
+
   // Scheduler
   cronSchedule: env('CRON_SCHEDULE', '*/30 * * * *'),
 
@@ -116,6 +121,11 @@ const config = Object.freeze({
     semanticWeight: envFloat('SEMANTIC_WEIGHT', 0.6),
     batchSize: envInt('EMBEDDING_BATCH_SIZE', 20),
     maxBm25Results: envInt('MAX_BM25_RESULTS', 100),
+    // Phase 2.5 ranking — both free, always-on by default.
+    // Rollback switches: USE_RRF=false → weighted sum; MMR_LAMBDA=1.0 → no diversity.
+    useRrf: env('USE_RRF', 'true') !== 'false',
+    rrfK: envInt('RRF_K', 60),
+    mmrLambda: envFloat('MMR_LAMBDA', 0.5),
   }),
 });
 

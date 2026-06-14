@@ -144,7 +144,76 @@ const migrations = [
       CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles(user_id);
     `,
   },
+  {
+    name: '011_create_user_matches',
+    up: `
+      CREATE TABLE IF NOT EXISTS user_matches (
+        user_id    TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        item_id    TEXT NOT NULL REFERENCES items(id) ON DELETE CASCADE,
+        score      REAL,
+        status     TEXT NOT NULL DEFAULT 'new',
+        created_at TEXT NOT NULL DEFAULT (datetime('now')),
+        PRIMARY KEY (user_id, item_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_user_matches_user_status ON user_matches(user_id, status);
+      CREATE INDEX IF NOT EXISTS idx_user_matches_item ON user_matches(item_id);
+    `,
+  },
+  {
+    // v7.1: internet content is a shared corpus — collapse per-user duplicates,
+    // move personal status/score into user_matches, re-fingerprint by content hash
+    name: '012_dedup_internet_corpus',
+    up: (d) => backfillInternetCorpus(d),
+  },
 ];
+
+function contentHash(content) {
+  return crypto.createHash('sha256').update(`${content}`).digest('hex').slice(0, 16);
+}
+
+function backfillInternetCorpus(d) {
+  const items = d
+    .prepare(
+      "SELECT id, user_id, score, status, content, created_at FROM items WHERE collection_id = 'internet' ORDER BY created_at ASC, id ASC",
+    )
+    .all();
+  if (items.length === 0) return;
+
+  const upsertMatch = d.prepare(`
+    INSERT INTO user_matches (user_id, item_id, score, status, created_at)
+    VALUES (?, ?, ?, ?, ?)
+    ON CONFLICT(user_id, item_id) DO UPDATE SET
+      score  = COALESCE(excluded.score, user_matches.score),
+      status = excluded.status
+  `);
+  const makeCanonical = d.prepare('UPDATE items SET fingerprint = ?, user_id = NULL WHERE id = ?');
+  const removeDupeChunks = d.prepare('DELETE FROM chunks WHERE parent_id = ?');
+  const removeDupe = d.prepare('DELETE FROM items WHERE id = ?');
+
+  const canonicalByHash = new Map();
+  d.transaction(() => {
+    for (const item of items) {
+      const hash = contentHash(item.content);
+      let canonicalId = canonicalByHash.get(hash);
+      if (!canonicalId) {
+        canonicalId = item.id;
+        canonicalByHash.set(hash, canonicalId);
+        makeCanonical.run(hash, item.id);
+      }
+      if (item.user_id) {
+        upsertMatch.run(item.user_id, canonicalId, item.score, item.status || 'new', item.created_at);
+      }
+      if (canonicalId !== item.id) {
+        removeDupeChunks.run(item.id);
+        removeDupe.run(item.id);
+      }
+    }
+  })();
+  logger.info(
+    { total: items.length, unique: canonicalByHash.size },
+    'Internet corpus deduplicated, personal statuses moved to user_matches',
+  );
+}
 
 // ─── Initialization ──────────────────────────────────────────
 
@@ -192,7 +261,11 @@ function runMigrations() {
 
   for (const migration of migrations) {
     if (!applied.has(migration.name)) {
-      db.exec(migration.up);
+      if (typeof migration.up === 'function') {
+        migration.up(db);
+      } else {
+        db.exec(migration.up);
+      }
       db.prepare('INSERT INTO migrations (name) VALUES (?)').run(migration.name);
       logger.info({ migration: migration.name }, 'Migration applied');
     }
@@ -201,7 +274,13 @@ function runMigrations() {
 
 // ─── Helpers ─────────────────────────────────────────────────
 
+// v7.1: internet content is a shared corpus — fingerprint by content only, so the
+// same post from any source/user is stored and embedded once. Private collections
+// (files, __temp_*) include the owner in the hash for full isolation.
 function fingerprint(item, userId) {
+  if ((item.collectionId || 'internet') === 'internet') {
+    return contentHash(item.content);
+  }
   const raw = `${userId || ''}:${item.source}:${item.type}:${item.content}`;
   return crypto.createHash('sha256').update(raw).digest('hex').slice(0, 16);
 }
@@ -215,9 +294,15 @@ function getDb() {
 
 // ─── CRUD Operations ─────────────────────────────────────────
 
+// Shared internet corpus rows have no owner; personal relevance lives in user_matches
+function itemOwnerId(item) {
+  return (item.collectionId || 'internet') === 'internet' ? null : item.userId || null;
+}
+
 function insertItem(item) {
   const d = getDb();
-  const fp = fingerprint(item, item.userId || null);
+  const ownerId = itemOwnerId(item);
+  const fp = fingerprint(item, ownerId);
 
   const stmt = d.prepare(`
     INSERT OR IGNORE INTO items (id, content, type, source, metadata, score, response, status, fingerprint, collection_id, user_id)
@@ -235,7 +320,7 @@ function insertItem(item) {
     item.status || 'new',
     fp,
     item.collectionId || 'internet',
-    item.userId || null,
+    ownerId,
   );
 
   return result.changes > 0;
@@ -251,7 +336,8 @@ function insertItemsBatch(items) {
   const insertMany = d.transaction((rows) => {
     let inserted = 0;
     for (const item of rows) {
-      const fp = fingerprint(item, item.userId || null);
+      const ownerId = itemOwnerId(item);
+      const fp = fingerprint(item, ownerId);
       const result = insert.run(
         item.id,
         item.content,
@@ -263,7 +349,7 @@ function insertItemsBatch(items) {
         item.status || 'new',
         fp,
         item.collectionId || 'internet',
-        item.userId || null,
+        ownerId,
       );
       if (result.changes > 0) {
         inserted++;
@@ -315,6 +401,56 @@ function deserializeItem(row) {
   return { ...row, metadata: row.metadata ? JSON.parse(row.metadata) : {} };
 }
 
+// ─── Personal view over shared corpus (v7.1) ─────────────────
+// Internet items are shared rows; the user's own status/score live in user_matches.
+// Private items (files, __temp_*) belong to the user directly.
+const USER_ITEMS_VIEW = `
+  SELECT i.*, um.status AS user_status, um.score AS user_score
+    FROM items i JOIN user_matches um ON um.item_id = i.id
+   WHERE um.user_id = ? AND i.collection_id = 'internet'
+  UNION ALL
+  SELECT i.*, i.status AS user_status, i.score AS user_score
+    FROM items i
+   WHERE i.user_id = ? AND i.collection_id <> 'internet'
+`;
+
+function buildUserViewConditions({ status, source, type, collectionId }) {
+  const conditions = [];
+  const params = [];
+
+  if (status) {
+    conditions.push('user_status = ?');
+    params.push(status);
+  }
+  if (source) {
+    const sources = source.split(',').map((s) => s.trim()).filter(Boolean);
+    /* istanbul ignore next */
+    if (sources.length === 1) {
+      conditions.push('source = ?');
+      params.push(sources[0]);
+    } else if (sources.length > 1) {
+      const placeholders = sources.map(() => '?').join(',');
+      conditions.push(`source IN (${placeholders})`);
+      params.push(...sources);
+    }
+  }
+  if (type) {
+    conditions.push('type = ?');
+    params.push(type);
+  }
+  if (collectionId) {
+    conditions.push('collection_id = ?');
+    params.push(collectionId);
+  }
+
+  return { conditions, params };
+}
+
+function deserializeUserViewItem(row) {
+  const { user_status: userStatus, user_score: userScore, ...rest } = row;
+  return deserializeItem({ ...rest, status: userStatus, score: userScore ?? rest.score });
+}
+
 function decodeCursor(cursor) {
   try {
     return JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8'));
@@ -329,8 +465,18 @@ function encodeCursor(item) {
 
 function getItems({ status, source, type, collectionId, userId, limit = 50, offset = 0 } = {}) {
   const d = getDb();
-  const { conditions, params } = buildItemConditions({ status, source, type, collectionId, userId });
 
+  if (userId) {
+    const { conditions, params } = buildUserViewConditions({ status, source, type, collectionId });
+    const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    const sql = `SELECT * FROM (${USER_ITEMS_VIEW}) ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+    return d
+      .prepare(sql)
+      .all(userId, userId, ...params, limit, offset)
+      .map(deserializeUserViewItem);
+  }
+
+  const { conditions, params } = buildItemConditions({ status, source, type, collectionId });
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
   const sql = `SELECT * FROM items ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`;
   params.push(limit, offset);
@@ -341,7 +487,31 @@ function getItems({ status, source, type, collectionId, userId, limit = 50, offs
 // Cursor-based pagination — returns { items, nextCursor, hasMore }
 function getItemsPage({ status, source, type, collectionId, userId, limit = 50, cursor } = {}) {
   const d = getDb();
-  const { conditions, params } = buildItemConditions({ status, source, type, collectionId, userId });
+
+  if (userId) {
+    const { conditions, params } = buildUserViewConditions({ status, source, type, collectionId });
+
+    if (cursor) {
+      const decoded = decodeCursor(cursor);
+      if (decoded) {
+        conditions.push('(created_at < ? OR (created_at = ? AND id < ?))');
+        params.push(decoded.created_at, decoded.created_at, decoded.id);
+      }
+    }
+
+    const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    const rows = d
+      .prepare(`SELECT * FROM (${USER_ITEMS_VIEW}) ${where} ORDER BY created_at DESC, id DESC LIMIT ?`)
+      .all(userId, userId, ...params, limit + 1);
+
+    const hasMore = rows.length > limit;
+    const items = rows.slice(0, limit).map(deserializeUserViewItem);
+    const nextCursor = hasMore && items.length > 0 ? encodeCursor(items[items.length - 1]) : null;
+
+    return { items, nextCursor, hasMore };
+  }
+
+  const { conditions, params } = buildItemConditions({ status, source, type, collectionId });
 
   if (cursor) {
     const decoded = decodeCursor(cursor);
@@ -408,9 +578,61 @@ function updateItemMetadata(id, metadataUpdate) {
 
 function getItemCount({ status, source, collectionId, userId } = {}) {
   const d = getDb();
-  const { conditions, params } = buildItemConditions({ status, source, collectionId, userId });
+
+  if (userId) {
+    const { conditions, params } = buildUserViewConditions({ status, source, collectionId });
+    const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    return d
+      .prepare(`SELECT COUNT(*) as count FROM (${USER_ITEMS_VIEW}) ${where}`)
+      .get(userId, userId, ...params).count;
+  }
+
+  const { conditions, params } = buildItemConditions({ status, source, collectionId });
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
   return d.prepare(`SELECT COUNT(*) as count FROM items ${where}`).get(...params).count;
+}
+
+// ─── User matches CRUD (v7.1 dedup corpus) ───────────────────
+
+function upsertUserMatch({ userId, itemId, score = null, status = 'new' }) {
+  const d = getDb();
+  d.prepare(`
+    INSERT INTO user_matches (user_id, item_id, score, status)
+    VALUES (?, ?, ?, ?)
+    ON CONFLICT(user_id, item_id) DO UPDATE SET
+      score  = COALESCE(excluded.score, user_matches.score),
+      status = excluded.status
+  `).run(userId, itemId, score, status);
+}
+
+function getUserMatch(userId, itemId) {
+  const d = getDb();
+  return d.prepare('SELECT * FROM user_matches WHERE user_id = ? AND item_id = ?').get(userId, itemId) || null;
+}
+
+function deleteUserMatch(userId, itemId) {
+  const d = getDb();
+  return d.prepare('DELETE FROM user_matches WHERE user_id = ? AND item_id = ?').run(userId, itemId).changes > 0;
+}
+
+// Personal status lives in user_matches for shared internet content;
+// private collections keep status on the item row itself
+function setItemStatusForUser(itemId, userId, status) {
+  const item = getItemById(itemId);
+  if (!item) return false;
+  if (item.collection_id === 'internet' && userId) {
+    upsertUserMatch({ userId, itemId, status });
+    return true;
+  }
+  return updateItemStatus(itemId, status);
+}
+
+// True if the user is allowed to act on this item:
+// shared internet content — anyone authenticated; private — owner only
+function userCanAccessItem(item, userId) {
+  if (!item) return false;
+  if (item.collection_id === 'internet') return true;
+  return !item.user_id || item.user_id === userId;
 }
 
 function getSources() {
@@ -506,14 +728,7 @@ function chunksSearch(keywords, options = {}) {
     const whereClauses = ['chunks_fts MATCH ?'];
     const params = [query];
 
-    if (collectionId) {
-      whereClauses.push('i.collection_id = ?');
-      params.push(collectionId);
-    }
-    if (userId) {
-      whereClauses.push('i.user_id = ?');
-      params.push(userId);
-    }
+    appendVisibilityClauses(whereClauses, params, collectionId, userId);
     params.push(limit);
 
     const sql = `
@@ -654,6 +869,24 @@ function updateChunkingConfig({ strategy, chunkSize, overlap }) {
   `).run(strategy || null, chunkSize || null, overlap || null);
 }
 
+// Visibility rule (v7.1): the internet corpus is shared between users;
+// private collections (files, __temp_*) are visible to their owner only.
+function appendVisibilityClauses(whereClauses, params, collectionId, userId) {
+  if (collectionId === 'internet') {
+    whereClauses.push("i.collection_id = 'internet'");
+  } else if (collectionId) {
+    whereClauses.push('i.collection_id = ?');
+    params.push(collectionId);
+    if (userId) {
+      whereClauses.push('i.user_id = ?');
+      params.push(userId);
+    }
+  } else if (userId) {
+    whereClauses.push("(i.collection_id = 'internet' OR i.user_id = ?)");
+    params.push(userId);
+  }
+}
+
 function getAllChunksWithVectors(options = {}) {
   const d = getDb();
   const collectionId = options.collectionId || null;
@@ -662,8 +895,7 @@ function getAllChunksWithVectors(options = {}) {
 
   if (collectionId || userId) {
     const whereClauses = ['c.vector IS NOT NULL'];
-    if (collectionId) { whereClauses.push('i.collection_id = ?'); params.push(collectionId); }
-    if (userId)       { whereClauses.push('i.user_id = ?');       params.push(userId); }
+    appendVisibilityClauses(whereClauses, params, collectionId, userId);
 
     return d.prepare(
       `SELECT c.* FROM chunks c JOIN items i ON c.parent_id = i.id WHERE ${whereClauses.join(' AND ')}`
@@ -672,6 +904,22 @@ function getAllChunksWithVectors(options = {}) {
 
   return d.prepare('SELECT * FROM chunks WHERE vector IS NOT NULL').all()
     .map((row) => ({ ...row, metadata: row.metadata ? JSON.parse(row.metadata) : {} }));
+}
+
+// Last N chunk vectors of the shared internet corpus — the comparison window
+// for semantic near-dedup at ingest (v7.1)
+function getRecentInternetChunkVectors(limit = 200) {
+  const d = getDb();
+  return d
+    .prepare(`
+      SELECT c.vector
+        FROM chunks c JOIN items i ON c.parent_id = i.id
+       WHERE i.collection_id = 'internet' AND c.vector IS NOT NULL
+       ORDER BY c.created_at DESC, c.rowid DESC
+       LIMIT ?
+    `)
+    .all(limit)
+    .map((row) => row.vector);
 }
 
 function getActiveProfile() {
@@ -694,6 +942,7 @@ module.exports = {
   close,
   getDb,
   fingerprint,
+  backfillInternetCorpus,
   insertItem,
   insertItemsBatch,
   getItems,
@@ -705,6 +954,12 @@ module.exports = {
   updateItemMetadata,
   getItemCount,
   getSources,
+  // User matches (v7.1 dedup corpus)
+  upsertUserMatch,
+  getUserMatch,
+  deleteUserMatch,
+  setItemStatusForUser,
+  userCanAccessItem,
   // Chunks
   insertChunk,
   insertChunksBatch,
@@ -712,6 +967,7 @@ module.exports = {
   deleteChunksByParent,
   chunksSearch,
   getAllChunksWithVectors,
+  getRecentInternetChunkVectors,
   // Profiles
   saveProfile,
   getProfile,

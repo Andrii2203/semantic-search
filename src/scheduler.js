@@ -106,76 +106,108 @@ async function runCycle() {
     // 3. Get all registered users
     const users = db.getAllUsers();
     if (users.length === 0) {
-      logger.info('No registered users - skipping semantic filter and save');
+      logger.info('No registered users - skipping corpus build');
       lastResult = { fetched: rawItems.length, saved: 0, chunked: 0, duration: Date.now() - startTime };
       currentStep = null;
       return { fetched: rawItems.length, validated: validItems.length, preFiltered: preFilteredCount, filtered: 0, saved: 0, chunked: 0 };
     }
 
-    let totalSaved = 0;
-    let totalChunked = 0;
+    // 4. SAVE unique content to the shared corpus ONCE (v7.1: no owner,
+    //    fingerprint = hash(content) — duplicates across sources/cycles are skipped)
+    currentStep = 'Saving new items to corpus...';
+    logger.info('Step 3: Saving unique content to shared corpus...');
+    const newItems = [];
+    for (const item of preFiltered) {
+      const corpusItem = { ...item, collectionId: 'internet' };
+      if (db.insertItem(corpusItem)) newItems.push(corpusItem);
+    }
+    const totalSaved = newItems.length;
+    logger.info({ saved: totalSaved, duplicatesSkipped: preFiltered.length - totalSaved }, 'Corpus save complete');
 
+    // 5. CHUNK + EMBED each new item exactly once.
+    //    Near-dedup: a chunk almost identical (cosine > threshold) to a recent
+    //    corpus chunk is not stored again (same story from HN and Reddit).
+    currentStep = `Building search index for ${totalSaved} new items...`;
+    logger.info('Step 4: Chunking and embedding (once per item)...');
+    const chunkingConfig = db.getChunkingConfig();
+    const recentVectors = db
+      .getRecentInternetChunkVectors(config.dedupWindow)
+      .map((blob) => searchEngine.deserializeVector(blob));
+    const itemVectors = new Map();
+    let totalChunked = 0;
+    let nearDuplicates = 0;
+
+    for (const item of newItems) {
+      const itemVector = await searchEngine.generateEmbedding(item.content);
+      itemVectors.set(item.id, itemVector);
+
+      const chunks = await chunker.chunk(item.content, chunkingConfig.strategy, {
+        chunkSize: chunkingConfig.chunk_size,
+        overlap: chunkingConfig.overlap,
+      });
+
+      const chunksToSave = [];
+      for (const c of chunks) {
+        const vector = await searchEngine.generateEmbedding(c.content);
+
+        const isNearDuplicate = recentVectors.some(
+          (v) => searchEngine.cosineSimilarity(v, vector) > config.dedupThreshold,
+        );
+        if (isNearDuplicate) {
+          nearDuplicates++;
+          logger.info({ itemId: item.id, chunkIndex: c.chunkIndex }, 'Near-duplicate chunk skipped');
+          continue;
+        }
+
+        recentVectors.push(vector);
+        chunksToSave.push({
+          id: `${item.id}_${c.chunkIndex}`,
+          parentId: item.id,
+          content: c.content,
+          chunkIndex: c.chunkIndex,
+          level: c.level || 'section',
+          strategy: chunkingConfig.strategy,
+          vector: searchEngine.serializeVector(vector),
+          metadata: c.metadata || {},
+        });
+      }
+
+      if (chunksToSave.length > 0) {
+        db.insertChunksBatch(chunksToSave);
+        totalChunked += chunksToSave.length;
+      }
+    }
+    logger.info({ chunked: totalChunked, nearDuplicates }, 'Indexing complete');
+
+    // 6. MATCH each user's profile against new items — cosine only, no
+    //    re-embedding. Personal relevance goes to user_matches.
+    let totalMatches = 0;
     for (const user of users) {
-      // 4. Load user's profile vector
+      currentStep = `Matching items for ${user.email}...`;
       const userVector = await loadProfileForUser(user.id);
 
-      // 5. FILTER by semantic similarity
-      currentStep = `Matching items for ${user.email}...`;
-      logger.info({ userId: user.id }, 'Step 3: Filtering by semantic relevance...');
-      const relevant = await searchEngine.findRelevant(preFiltered, userVector, config.similarityThreshold);
-      logger.info({ userId: user.id, relevant: relevant.length, threshold: config.similarityThreshold }, 'Semantic filter complete');
-
-      // 6. SAVE relevant items with user_id
-      currentStep = `Saving ${relevant.length} items for ${user.email}...`;
-      logger.info({ userId: user.id }, 'Step 4: Saving relevant items...');
-      const userItems = relevant.map((item) => ({ ...item, userId: user.id, collectionId: 'internet' }));
-      const saved = db.insertItemsBatch(userItems);
-      totalSaved += saved;
-      logger.info({ userId: user.id, saved, duplicatesSkipped: relevant.length - saved }, 'Save complete');
-
-      // 7. CHUNK AND EMBED new items only
-      currentStep = `Building search index for ${saved} new items...`;
-      logger.info({ userId: user.id }, 'Step 5: Chunking and embedding...');
-      const chunkingConfig = db.getChunkingConfig();
-
-      for (const item of userItems) {
-        const chunks = await chunker.chunk(item.content, chunkingConfig.strategy, {
-          chunkSize: chunkingConfig.chunk_size,
-          overlap: chunkingConfig.overlap,
-        });
-
-        const chunksToSave = [];
-        for (const c of chunks) {
-          const vector = await searchEngine.generateEmbedding(c.content);
-          chunksToSave.push({
-            id: `${item.id}_${user.id.slice(0, 8)}_${c.chunkIndex}`,
-            parentId: item.id,
-            content: c.content,
-            chunkIndex: c.chunkIndex,
-            level: c.level || 'section',
-            strategy: chunkingConfig.strategy,
-            vector: searchEngine.serializeVector(vector),
-            metadata: c.metadata || {},
-          });
-        }
-
-        if (chunksToSave.length > 0) {
-          db.insertChunksBatch(chunksToSave);
-          totalChunked += chunksToSave.length;
+      let matched = 0;
+      for (const item of newItems) {
+        const score = searchEngine.cosineSimilarity(itemVectors.get(item.id), userVector);
+        if (score >= config.similarityThreshold) {
+          db.upsertUserMatch({ userId: user.id, itemId: item.id, score, status: 'new' });
+          matched++;
         }
       }
+      totalMatches += matched;
+      logger.info({ userId: user.id, matched, threshold: config.similarityThreshold }, 'User matching complete');
     }
 
     const duration = Date.now() - startTime;
     logger.info(
-      { fetched: rawItems.length, validated: validItems.length, saved: totalSaved, chunked: totalChunked, duration: `${duration}ms` },
+      { fetched: rawItems.length, validated: validItems.length, saved: totalSaved, chunked: totalChunked, matches: totalMatches, duration: `${duration}ms` },
       '─── CYCLE END ═══',
     );
 
-    lastResult = { fetched: rawItems.length, saved: totalSaved, chunked: totalChunked, duration };
+    lastResult = { fetched: rawItems.length, saved: totalSaved, chunked: totalChunked, matches: totalMatches, duration };
     currentStep = null;
 
-    return { fetched: rawItems.length, validated: validItems.length, preFiltered: preFilteredCount, saved: totalSaved, chunked: totalChunked, duration };
+    return { fetched: rawItems.length, validated: validItems.length, preFiltered: preFilteredCount, saved: totalSaved, chunked: totalChunked, matches: totalMatches, duration };
   } catch (err) {
     /* istanbul ignore next */
     logger.error({ err }, 'Cycle failed');

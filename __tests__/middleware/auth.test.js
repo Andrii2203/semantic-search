@@ -188,13 +188,16 @@ describe('User isolation — User A cannot see User B items', () => {
     cookieB = (Array.isArray(headerB) ? headerB[0] : headerB).split(';')[0];
     userIdB = db.findUserByEmail('user-b@example.com').id;
 
+    // v7.1: internet content is a shared corpus — what each user sees is
+    // defined by their rows in user_matches, not by items.user_id
     db.insertItemsBatch([
-      { id: 'item-a-1', content: 'Article for user A only', type: 'post', source: 'hn', userId: userIdA, metadata: {} },
-      { id: 'item-a-2', content: 'Another article for user A', type: 'post', source: 'hn', userId: userIdA, metadata: {} },
+      { id: 'item-a-1', content: 'Article for user A only', type: 'post', source: 'hn', metadata: {} },
+      { id: 'item-a-2', content: 'Another article for user A', type: 'post', source: 'hn', metadata: {} },
+      { id: 'item-b-1', content: 'Article for user B only', type: 'post', source: 'reddit', metadata: {} },
     ]);
-    db.insertItemsBatch([
-      { id: 'item-b-1', content: 'Article for user B only', type: 'post', source: 'reddit', userId: userIdB, metadata: {} },
-    ]);
+    db.upsertUserMatch({ userId: userIdA, itemId: 'item-a-1' });
+    db.upsertUserMatch({ userId: userIdA, itemId: 'item-a-2' });
+    db.upsertUserMatch({ userId: userIdB, itemId: 'item-b-1' });
   });
 
   test('User A sees only their own items', async () => {

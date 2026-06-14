@@ -56,59 +56,43 @@ router.get('/stats', (req, res, next) => {
   }
 });
 
-// ─── POST /api/items/:id/approve ────────────────────────────
+// ─── Status actions (approve / skip / star) ─────────────────
+// Personal status lives in user_matches for shared internet content (v7.1);
+// star/approve/skip also feed the learning loop (profile vector blend)
 
-router.post('/:id/approve', (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const item = db.getItemById(id);
+const STATUS_ACTIONS = [
+  { action: 'approve', status: 'approved', feedback: 'approve' },
+  { action: 'skip', status: 'skipped', feedback: 'skip' },
+  { action: 'star', status: 'starred', feedback: 'star' },
+];
 
-    if (!item || (item.user_id && item.user_id !== req.userId)) {
-      throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
+for (const { action, status, feedback } of STATUS_ACTIONS) {
+  router.post(`/:id/${action}`, async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const item = db.getItemById(id);
+
+      if (!item || !db.userCanAccessItem(item, req.userId)) {
+        throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
+      }
+
+      db.setItemStatusForUser(id, req.userId, status);
+
+      // Feedback loop is best-effort: a failed blend must not fail the action
+      try {
+        const { applyFeedback } = require('../feedback');
+        await applyFeedback(req.userId, item, feedback);
+      } catch (feedbackErr) {
+        const logger = require('../logger');
+        logger.warn({ err: feedbackErr, itemId: id, action }, 'Feedback blend failed');
+      }
+
+      res.json({ success: true, id, status });
+    } catch (err) {
+      next(err);
     }
-
-    db.updateItemStatus(id, 'approved');
-    res.json({ success: true, id, status: 'approved' });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// ─── POST /api/items/:id/skip ───────────────────────────────
-
-router.post('/:id/skip', (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const item = db.getItemById(id);
-
-    if (!item || (item.user_id && item.user_id !== req.userId)) {
-      throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
-    }
-
-    db.updateItemStatus(id, 'skipped');
-    res.json({ success: true, id, status: 'skipped' });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// ─── POST /api/items/:id/star ───────────────────────────────
-
-router.post('/:id/star', (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const item = db.getItemById(id);
-
-    if (!item || (item.user_id && item.user_id !== req.userId)) {
-      throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
-    }
-
-    db.updateItemStatus(id, 'starred');
-    res.json({ success: true, id, status: 'starred' });
-  } catch (err) {
-    next(err);
-  }
-});
+  });
+}
 
 // ─── POST /api/items/:id/generate — on-demand AI comment ───
 
@@ -117,7 +101,7 @@ router.post('/:id/generate', async (req, res, next) => {
     const { id } = req.params;
     const item = db.getItemById(id);
 
-    if (!item || (item.user_id && item.user_id !== req.userId)) {
+    if (!item || !db.userCanAccessItem(item, req.userId)) {
       throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
     }
 
@@ -145,19 +129,26 @@ router.post('/:id/generate', async (req, res, next) => {
   }
 });
 
-// ─── DELETE /api/items/:id — remove item + its chunks ──────
+// ─── DELETE /api/items/:id ──────────────────────────────────
+// Shared internet content: removes the user's match only (corpus row stays —
+// other users may still need it). Private items: physical delete with chunks.
 
 router.delete('/:id', (req, res, next) => {
   try {
     const { id } = req.params;
     const item = db.getItemById(id);
 
-    if (!item || (item.user_id && item.user_id !== req.userId)) {
+    if (!item || !db.userCanAccessItem(item, req.userId)) {
       throw new AppError(`Item not found: ${id}`, ErrorCodes.NOT_FOUND, 404);
     }
 
-    db.deleteChunksByParent(id);
-    db.deleteItem(id);
+    if (item.collection_id === 'internet' && req.userId) {
+      db.deleteUserMatch(req.userId, id);
+    } else {
+      db.deleteChunksByParent(id);
+      db.deleteItem(id);
+    }
+
     res.json({ success: true, id });
   } catch (err) {
     next(err);

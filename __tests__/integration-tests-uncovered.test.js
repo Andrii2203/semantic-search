@@ -276,9 +276,11 @@ describe('src/routes/upload.js', () => {
       appWithMock.use('/api/upload', uploadRouterWithMock);
 
       // First, seed DB with a resume that will cause duplicate
+      // (collectionId 'files' — upload route inserts into the files collection)
       const existingIR = {
         ...VALID_RESUME_IR,
         id: 'existing-resume',
+        collectionId: 'files',
         metadata: { ...VALID_RESUME_IR.metadata, fileName: 'duplicate.pdf' },
       };
       db.insertItem(existingIR);
@@ -926,10 +928,11 @@ describe('src/db.js — uncovered branches', () => {
     });
 
     test('counts with multiple sources filter (comma-separated)', () => {
+      // v7.1: fingerprint = hash(content) for internet — contents must differ
       db.insertItemsBatch([
-        { ...VALID_SOURCE_ITEM, id: '1', source: 'hackernews' },
-        { ...VALID_SOURCE_ITEM, id: '2', source: 'reddit' },
-        { ...VALID_SOURCE_ITEM, id: '3', source: 'djinni' },
+        { ...VALID_SOURCE_ITEM, id: '1', source: 'hackernews', content: 'Unique content one' },
+        { ...VALID_SOURCE_ITEM, id: '2', source: 'reddit', content: 'Unique content two' },
+        { ...VALID_SOURCE_ITEM, id: '3', source: 'djinni', content: 'Unique content three' },
       ]);
 
       const count = db.getItemCount({ source: 'hackernews, reddit' });
@@ -974,10 +977,11 @@ describe('src/db.js — uncovered branches', () => {
 
   describe('getSources', () => {
     test('returns distinct sources from items', () => {
+      // v7.1: fingerprint = hash(content) for internet — contents must differ
       db.insertItemsBatch([
-        { ...VALID_SOURCE_ITEM, id: '1', source: 'hackernews' },
-        { ...VALID_SOURCE_ITEM, id: '2', source: 'reddit' },
-        { ...VALID_SOURCE_ITEM, id: '3', source: 'hackernews' }, // duplicate source
+        { ...VALID_SOURCE_ITEM, id: '1', source: 'hackernews', content: 'Distinct text alpha' },
+        { ...VALID_SOURCE_ITEM, id: '2', source: 'reddit', content: 'Distinct text beta' },
+        { ...VALID_SOURCE_ITEM, id: '3', source: 'hackernews', content: 'Distinct text gamma' }, // duplicate source
       ]);
 
       const sources = db.getSources();

@@ -36,12 +36,16 @@ describe('Semantic Search API - Senior Integration Suite', () => {
     authCookie = (Array.isArray(header) ? header[0] : header).split(';')[0];
     testUserId = db.findUserByEmail('api-test@example.com').id;
 
+    // v7.1: internet items are a shared corpus — user visibility via user_matches
     const testItems = [
-      { id: 'hn-1', content: 'HN Post', type: 'post', source: 'hn', metadata: { title: 'T1' }, userId: testUserId },
-      { id: 'rd-1', content: 'Reddit Post', type: 'post', source: 'reddit', metadata: { title: 'T2' }, userId: testUserId },
-      { id: 'dj-1', content: 'Djinni Job', type: 'job', source: 'djinni', metadata: { title: 'T3' }, userId: testUserId },
+      { id: 'hn-1', content: 'HN Post', type: 'post', source: 'hn', metadata: { title: 'T1' } },
+      { id: 'rd-1', content: 'Reddit Post', type: 'post', source: 'reddit', metadata: { title: 'T2' } },
+      { id: 'dj-1', content: 'Djinni Job', type: 'job', source: 'djinni', metadata: { title: 'T3' } },
     ];
     db.insertItemsBatch(testItems);
+    for (const item of testItems) {
+      db.upsertUserMatch({ userId: testUserId, itemId: item.id });
+    }
   });
 
   afterAll(() => {
