@@ -166,6 +166,18 @@ const migrations = [
     name: '012_dedup_internet_corpus',
     up: (d) => backfillInternetCorpus(d),
   },
+  {
+    // Phase 3: normalized key-value settings — typed, partial updates, simple migrations
+    name: '013_create_settings',
+    up: `
+      CREATE TABLE IF NOT EXISTS settings (
+        key        TEXT PRIMARY KEY,
+        value      TEXT,
+        type       TEXT NOT NULL DEFAULT 'string',
+        updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+      );
+    `,
+  },
 ];
 
 function contentHash(content) {
@@ -656,6 +668,64 @@ function seedWelcomeForUser(userId) {
   return WELCOME_MESSAGES.length;
 }
 
+// ─── Settings (Phase 3) ──────────────────────────────────────
+// Normalized key-value store with typed values. Partial updates, simple
+// migrations of individual keys. Read by config with .env fallback (Phase 3).
+
+function serializeSettingValue(value, type) {
+  if (value == null) return null;
+  if (type === 'json') return JSON.stringify(value);
+  return String(value);
+}
+
+function parseSettingValue(row) {
+  if (!row) return undefined; // key not set
+  const { value, type } = row;
+  if (value == null) return null;
+  switch (type) {
+    case 'number':
+      return Number(value);
+    case 'boolean':
+      return value === 'true' || value === '1';
+    case 'json':
+      try {
+        return JSON.parse(value);
+      } catch {
+        return null;
+      }
+    default:
+      return value;
+  }
+}
+
+function getSetting(key) {
+  const d = getDb();
+  return parseSettingValue(d.prepare('SELECT value, type FROM settings WHERE key = ?').get(key));
+}
+
+function getAllSettings() {
+  const d = getDb();
+  const out = {};
+  for (const row of d.prepare('SELECT key, value, type FROM settings').all()) {
+    out[row.key] = parseSettingValue(row);
+  }
+  return out;
+}
+
+function setSetting(key, value, type = 'string') {
+  const d = getDb();
+  d.prepare(`
+    INSERT INTO settings (key, value, type, updated_at)
+    VALUES (?, ?, ?, datetime('now'))
+    ON CONFLICT(key) DO UPDATE SET value = excluded.value, type = excluded.type, updated_at = datetime('now')
+  `).run(key, serializeSettingValue(value, type), type);
+}
+
+function resetSettings() {
+  const d = getDb();
+  return d.prepare('DELETE FROM settings').run().changes;
+}
+
 function getSources() {
   const d = getDb();
   return d.prepare('SELECT DISTINCT source FROM items').all().map((row) => row.source);
@@ -982,6 +1052,11 @@ module.exports = {
   setItemStatusForUser,
   userCanAccessItem,
   seedWelcomeForUser,
+  // Settings (Phase 3)
+  getSetting,
+  getAllSettings,
+  setSetting,
+  resetSettings,
   // Chunks
   insertChunk,
   insertChunksBatch,

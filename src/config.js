@@ -127,6 +127,32 @@ const config = Object.freeze({
     rrfK: envInt('RRF_K', 60),
     mmrLambda: envFloat('MMR_LAMBDA', 0.5),
   }),
+
+  // Phase 3: live settings resolver. A value set via the settings table
+  // overrides the .env/default below. `db` is lazy-required to avoid the
+  // db <-> config require cycle, and a missing/uninitialized DB falls back.
+  live(key) {
+    const defaults = {
+      searchThreshold:          this.similarityThreshold,
+      searchMode:               this.search.defaultMode,
+      bm25Weight:               this.search.bm25Weight,
+      semanticWeight:           this.search.semanticWeight,
+      topN:                     20,
+      cronEnabled:              true,
+      cronSchedule:             this.cronSchedule,
+      groqModel:                this.groq.model,
+      chunkingStrategy:         this.chunking.defaultStrategy,
+      useHyde:                  false,
+      groqApiKey:               this.groq.apiKey,
+    };
+    let stored;
+    try {
+      stored = require('./db').getSetting(key);
+    } catch {
+      stored = undefined;
+    }
+    return stored === undefined ? defaults[key] : stored;
+  },
 });
 
 module.exports = config;

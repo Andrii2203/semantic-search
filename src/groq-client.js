@@ -39,7 +39,7 @@ class GroqClient {
 
     try {
       const response = await this.client.chat.completions.create({
-        model: options.model || config.groq.model,
+        model: options.model || config.live('groqModel'),
         messages,
         max_tokens: options.maxTokens || config.groq.maxTokens,
         temperature: options.temperature ?? 0.3,

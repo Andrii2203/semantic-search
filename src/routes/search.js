@@ -11,6 +11,7 @@ const logger = require('../logger');
 const config = require('../config');
 const { AppError, ErrorCodes } = require('../errors');
 const scheduler = require('../scheduler');
+const events = require('../events');
 
 const router = express.Router();
 
@@ -176,6 +177,14 @@ router.post('/', async (req, res, next) => {
       documentsFound: results.length,
       duration,
     }, 'Search complete');
+
+    events.emit('search.completed', {
+      userId: req.userId,
+      mode,
+      hydeUsed: !!hypotheticalDoc,
+      documentsFound: results.length,
+      duration,
+    });
 
     res.json({
       results,

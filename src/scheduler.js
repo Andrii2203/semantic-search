@@ -8,6 +8,7 @@ const sources = require('./sources/index');
 const searchEngine = require('./search-engine');
 const { validateIRBatch } = require('./validation');
 const fs = require('fs');
+const events = require('./events');
 
 const chunker = require('./chunker/index');
 
@@ -182,6 +183,8 @@ async function runCycle() {
     // 6. MATCH each user's profile against new items — cosine only, no
     //    re-embedding. Personal relevance goes to user_matches.
     let totalMatches = 0;
+    // Live threshold: respects a value set via Settings (falls back to .env)
+    const matchThreshold = config.live('searchThreshold');
     for (const user of users) {
       currentStep = `Matching items for ${user.email}...`;
       const userVector = await loadProfileForUser(user.id);
@@ -189,13 +192,13 @@ async function runCycle() {
       let matched = 0;
       for (const item of newItems) {
         const score = searchEngine.cosineSimilarity(itemVectors.get(item.id), userVector);
-        if (score >= config.similarityThreshold) {
+        if (score >= matchThreshold) {
           db.upsertUserMatch({ userId: user.id, itemId: item.id, score, status: 'new' });
           matched++;
         }
       }
       totalMatches += matched;
-      logger.info({ userId: user.id, matched, threshold: config.similarityThreshold }, 'User matching complete');
+      logger.info({ userId: user.id, matched, threshold: matchThreshold }, 'User matching complete');
     }
 
     const duration = Date.now() - startTime;
@@ -206,6 +209,8 @@ async function runCycle() {
 
     lastResult = { fetched: rawItems.length, saved: totalSaved, chunked: totalChunked, matches: totalMatches, duration };
     currentStep = null;
+
+    events.emit('sync.completed', { fetched: rawItems.length, saved: totalSaved, chunked: totalChunked, matches: totalMatches, duration });
 
     return { fetched: rawItems.length, validated: validItems.length, preFiltered: preFilteredCount, saved: totalSaved, chunked: totalChunked, matches: totalMatches, duration };
   } catch (err) {

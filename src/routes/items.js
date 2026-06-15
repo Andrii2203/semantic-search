@@ -4,6 +4,7 @@ const express = require('express');
 const db = require('../db');
 const { AppError, ErrorCodes } = require('../errors');
 const { validateItemQuery } = require('../validation');
+const events = require('../events');
 
 const router = express.Router();
 
@@ -80,6 +81,7 @@ for (const { action, status, feedback } of STATUS_ACTIONS) {
       }
 
       db.setItemStatusForUser(id, req.userId, status);
+      events.emit(`item.${status}`, { itemId: id, userId: req.userId });
 
       // Feedback loop is best-effort: a failed blend must not fail the action
       try {
@@ -126,6 +128,7 @@ router.post('/:id/generate', async (req, res, next) => {
 
     const logger = require('../logger');
     logger.info({ itemId: id, responseLength: comment.length }, 'Comment generated on demand');
+    events.emit('ai.generate.completed', { itemId: id, userId: req.userId });
     res.json({ success: true, id, comment, cached: false });
   } catch (err) {
     next(err);
