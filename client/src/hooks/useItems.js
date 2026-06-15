@@ -172,3 +172,45 @@ export function useSaveProfile() {
     },
   })
 }
+
+// ── Settings (Phase 3) ────────────────────────────────────────
+
+export function useSettings() {
+  return useQuery({
+    queryKey: ['settings'],
+    queryFn: () => apiFetch('/api/settings').then((d) => d.settings),
+    staleTime: 30_000,
+  })
+}
+
+export function useUpdateSetting() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ key, value }) =>
+      apiFetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value }),
+      }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['settings'] }),
+  })
+}
+
+export function useResetSettings() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => apiFetch('/api/settings/reset', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['settings'] }),
+  })
+}
+
+// ── Health (full, live) ───────────────────────────────────────
+
+export function useHealthFull() {
+  return useQuery({
+    queryKey: ['health', 'full'],
+    queryFn: () => apiFetch('/api/health/full'),
+    refetchInterval: 30_000,
+    staleTime: 15_000,
+  })
+}

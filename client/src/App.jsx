@@ -5,6 +5,9 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 import { Sidebar } from './components/Sidebar'
 import { ItemList } from './components/ItemList'
 import { ProfileEditor } from './components/ProfileEditor'
+import { SettingsPage } from './components/SettingsPage'
+import { SystemHealth } from './components/SystemHealth'
+import { AlertBanner } from './components/AlertBanner'
 import { ReadingPane } from './components/ReadingPane'
 import { LockScreen } from './components/LockScreen'
 import { HealthFooter } from './components/HealthFooter'
@@ -76,11 +79,21 @@ function GmailLayout() {
         <ThemeToggle />
       </header>
 
+      <AlertBanner />
+
       {/* Body: STATE A — no item selected → list fills width
                STATE B — item selected   → reading pane fills width */}
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        {currentView === 'profile' ? (
+        {currentView === 'settings' ? (
+          <ErrorBoundary>
+            <SettingsPage />
+          </ErrorBoundary>
+        ) : currentView === 'system' ? (
+          <ErrorBoundary>
+            <SystemHealth />
+          </ErrorBoundary>
+        ) : currentView === 'profile' ? (
           <ErrorBoundary>
             <ProfileEditor />
           </ErrorBoundary>

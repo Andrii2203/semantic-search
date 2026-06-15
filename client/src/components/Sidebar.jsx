@@ -4,7 +4,7 @@ import { useUIStore } from '../stores/uiStore'
 import { useItemStats, useSync, useSyncStatus } from '../hooks/useItems'
 import {
   InboxIcon, StarIcon, CheckCircleIcon, SkipIcon,
-  SearchIcon, SparkleIcon, RefreshIcon, ChevronRightIcon, StatusDot,
+  SearchIcon, SparkleIcon, GearIcon, SystemIcon, RefreshIcon, ChevronRightIcon, StatusDot,
 } from '../icons'
 
 function NavItem({ icon: Icon, label, view, count, collapsed }) {
@@ -15,7 +15,7 @@ function NavItem({ icon: Icon, label, view, count, collapsed }) {
     <button
       onClick={() => setView(view)}
       title={collapsed ? label : undefined}
-      className={`w-full flex items-center gap-3 px-3 py-2 rounded-sm text-left text-sm transition-colors ${
+      className={`w-full flex items-center gap-3 h-9 px-3 rounded-sm text-left text-sm transition-colors ${
         active
           ? 'bg-accent/10 text-accent'
           : 'text-fg-2 hover:bg-surface-2 hover:text-fg'
@@ -91,7 +91,7 @@ export function Sidebar() {
 
   return (
     <div className={`shrink-0 border-r border-border flex flex-col py-3 bg-surface transition-all duration-200 ${
-      sidebarCollapsed ? 'w-12' : 'w-52'
+      sidebarCollapsed ? 'w-14' : 'w-52'
     }`}>
       {/* Toggle button */}
       <div className={`px-2 mb-2 flex ${sidebarCollapsed ? 'justify-center' : 'justify-end'}`}>
@@ -112,6 +112,9 @@ export function Sidebar() {
         <Divider />
         <NavItem icon={SearchIcon}      label="Search"  view="search"                          collapsed={sidebarCollapsed} />
         <NavItem icon={SparkleIcon}     label="My Profile" view="profile"                       collapsed={sidebarCollapsed} />
+        <Divider />
+        <NavItem icon={GearIcon}        label="Settings" view="settings"                       collapsed={sidebarCollapsed} />
+        <NavItem icon={SystemIcon}      label="System"  view="system"                          collapsed={sidebarCollapsed} />
       </nav>
 
       <div className="px-2 pb-1 space-y-1">
@@ -122,9 +125,7 @@ export function Sidebar() {
           onClick={handleSync}
           disabled={isSyncing || syncMutation.isPending}
           title={isSyncing ? 'Syncing — fetching from sources…' : 'Sync — fetch latest from sources'}
-          className={`w-full flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-colors text-fg-2 hover:bg-surface-2 hover:text-fg disabled:opacity-40 ${
-            sidebarCollapsed ? 'justify-center' : ''
-          }`}
+          className="w-full flex items-center gap-3 h-9 px-3 rounded-sm text-sm transition-colors text-fg-2 hover:bg-surface-2 hover:text-fg disabled:opacity-40"
         >
           <RefreshIcon className={`w-4 h-4 shrink-0 ${isSyncing ? 'animate-spin' : ''}`} />
           {!sidebarCollapsed && (
