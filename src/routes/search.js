@@ -38,11 +38,15 @@ router.post('/', async (req, res, next) => {
       topN = 20,
       useReranker = false,
       collectionId = null,
+      batchId = null,
       mmrLambda,
       useHyde = false,
     } = req.body;
 
     const startTime = performance.now();
+    // Files Mode Match is ephemeral — searching your library must NOT overwrite
+    // your internet intent. Only an internet search updates the saved profile.
+    const isInternetSearch = !collectionId || collectionId === 'internet';
 
     // ── Step 1: Get or generate profile ──────────────────────
     let profile;
@@ -51,8 +55,8 @@ router.post('/', async (req, res, next) => {
     } else if (query) {
       profile = await ProfileGenerator.fromText(query, { useAI: true, save: false });
 
-      // Auto-save search query as user's profile so scheduler uses it
-      if (req.userId && profile.vector) {
+      // Auto-save search query as user's profile (internet only) so scheduler uses it
+      if (isInternetSearch && req.userId && profile.vector) {
         db.saveProfileForUser(req.userId, {
           keywords: profile.keywords,
           rawInput: query,
@@ -88,7 +92,7 @@ router.post('/', async (req, res, next) => {
     // ── Step 2: Retrieve BM25 + semantic ranked lists ───────
     const hasKeywords = profile.keywords && profile.keywords.length > 0;
     const bm25List = hasKeywords
-      ? db.chunksSearch(profile.keywords, { limit: maxBm25Results, collectionId, userId: req.userId })
+      ? db.chunksSearch(profile.keywords, { limit: maxBm25Results, collectionId, userId: req.userId, batchId })
       : [];
 
     let semanticList = [];
@@ -98,7 +102,7 @@ router.post('/', async (req, res, next) => {
         semanticList = SearchEngine.scoreChunksByVector(bm25List, profileVector, threshold);
       } else {
         // Parallel: score the whole corpus by cosine (thorough)
-        const allChunksRaw = db.getAllChunksWithVectors({ collectionId, userId: req.userId });
+        const allChunksRaw = db.getAllChunksWithVectors({ collectionId, userId: req.userId, batchId });
         semanticList = SearchEngine.scoreChunksByVector(allChunksRaw, profileVector, threshold);
       }
     }

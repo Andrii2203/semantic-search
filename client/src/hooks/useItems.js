@@ -204,6 +204,29 @@ export function useResetSettings() {
   })
 }
 
+// ── Files Mode: upload + match ────────────────────────────────
+
+export function useUploadFiles() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (files) => {
+      const fd = new FormData()
+      for (const f of files) fd.append('files', f)
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      if (res.status === 401) {
+        useUIStore.getState().setShowLockScreen(true)
+        throw new Error('UNAUTHORIZED')
+      }
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body?.error?.message || `HTTP ${res.status}`)
+      }
+      return res.json()
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['items'] }),
+  })
+}
+
 // ── Health (full, live) ───────────────────────────────────────
 
 export function useHealthFull() {

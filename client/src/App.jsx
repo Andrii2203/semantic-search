@@ -5,6 +5,7 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 import { Sidebar } from './components/Sidebar'
 import { ItemList } from './components/ItemList'
 import { ProfileEditor } from './components/ProfileEditor'
+import { FilesMode } from './components/FilesMode'
 import { SettingsPage } from './components/SettingsPage'
 import { SystemHealth } from './components/SystemHealth'
 import { AlertBanner } from './components/AlertBanner'
@@ -85,7 +86,11 @@ function GmailLayout() {
                STATE B — item selected   → reading pane fills width */}
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        {currentView === 'settings' ? (
+        {currentView === 'files' ? (
+          <ErrorBoundary>
+            <FilesMode />
+          </ErrorBoundary>
+        ) : currentView === 'settings' ? (
           <ErrorBoundary>
             <SettingsPage />
           </ErrorBoundary>

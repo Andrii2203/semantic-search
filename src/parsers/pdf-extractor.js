@@ -1,6 +1,6 @@
 'use strict';
 
-const pdfParse = require('pdf-parse');
+const { PDFParse } = require('pdf-parse');
 const { AppError, ErrorCodes } = require('../errors');
 
 /**
@@ -33,8 +33,11 @@ async function extractTextFromPDF(fileBuffer) {
     );
   }
 
+  let parser;
   try {
-    const result = await pdfParse(fileBuffer);
+    // pdf-parse v2 API: new PDFParse({ data }).getText()
+    parser = new PDFParse({ data: fileBuffer });
+    const result = await parser.getText();
     return cleanText(result.text);
   } catch (error) {
     throw new AppError(
@@ -42,6 +45,10 @@ async function extractTextFromPDF(fileBuffer) {
       ErrorCodes.VALIDATION_FAILED,
       400
     );
+  } finally {
+    if (parser && typeof parser.destroy === 'function') {
+      try { await parser.destroy(); } catch { /* ignore cleanup errors */ }
+    }
   }
 }
 

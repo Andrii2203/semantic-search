@@ -7,14 +7,18 @@ const { z } = require('zod');
 const IRSchema = z.object({
   id: z.string().min(1, 'id is required'),
   content: z.string().min(1, 'content is required'),
-  type: z.enum(['post', 'job', 'code_snippet', 'ui_component', 'resume']),
+  type: z.enum(['post', 'job', 'code_snippet', 'ui_component', 'resume', 'document']),
   source: z.string().min(1, 'source is required'),
   metadata: z
     .object({
       title: z.string().optional(),
       url: z.string().url('metadata.url must be a valid URL').optional(),
       author: z.string().optional(),
-      
+
+      // Files Mode: groups one upload session for scoped Match (batch vs whole base)
+      batchId: z.string().optional(),
+
+
       // Resume-specific fields
       fileName: z.string().optional(),
       skills: z.array(z.string()).optional(),
@@ -36,7 +40,7 @@ const ItemStatusSchema = z.enum(['new', 'approved', 'skipped', 'pending', 'starr
 const ItemQuerySchema = z.object({
   status: ItemStatusSchema.optional(),
   source: z.string().min(1).optional(),
-  type: z.enum(['post', 'job', 'code_snippet', 'ui_component', 'resume']).optional(),
+  type: z.enum(['post', 'job', 'code_snippet', 'ui_component', 'resume', 'document']).optional(),
   collectionId: z.string().optional(),
   limit: z.coerce.number().int().min(1).max(200).default(50),
   cursor: z.string().optional(),

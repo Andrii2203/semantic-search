@@ -6,3 +6,6 @@ docs/
 coverage/
 .DS_Store
 docs/
+
+# Generated test fixtures (synthetic resumes + ground truth for eval)
+test-data/

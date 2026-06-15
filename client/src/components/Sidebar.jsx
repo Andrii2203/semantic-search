@@ -4,7 +4,7 @@ import { useUIStore } from '../stores/uiStore'
 import { useItemStats, useSync, useSyncStatus } from '../hooks/useItems'
 import {
   InboxIcon, StarIcon, CheckCircleIcon, SkipIcon,
-  SearchIcon, SparkleIcon, GearIcon, SystemIcon, RefreshIcon, ChevronRightIcon, StatusDot,
+  SearchIcon, SparkleIcon, FileIcon, GearIcon, SystemIcon, RefreshIcon, ChevronRightIcon, StatusDot,
 } from '../icons'
 
 function NavItem({ icon: Icon, label, view, count, collapsed }) {
@@ -111,6 +111,7 @@ export function Sidebar() {
         <NavItem icon={SkipIcon}        label="Skipped" view="skipped" count={stats?.skipped}  collapsed={sidebarCollapsed} />
         <Divider />
         <NavItem icon={SearchIcon}      label="Search"  view="search"                          collapsed={sidebarCollapsed} />
+        <NavItem icon={FileIcon}        label="Files"   view="files"                           collapsed={sidebarCollapsed} />
         <NavItem icon={SparkleIcon}     label="My Profile" view="profile"                       collapsed={sidebarCollapsed} />
         <Divider />
         <NavItem icon={GearIcon}        label="Settings" view="settings"                       collapsed={sidebarCollapsed} />

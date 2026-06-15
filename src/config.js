@@ -91,6 +91,14 @@ const config = Object.freeze({
   dedupThreshold: envFloat('DEDUP_THRESHOLD', 0.95),
   dedupWindow: envInt('DEDUP_WINDOW', 200),
 
+  // File uploads (per request; the library itself grows unbounded across uploads).
+  // Not unlimited — memoryStorage holds every file in RAM, so a huge single
+  // request would blow memory / time out. Large batches → upload in chunks.
+  upload: Object.freeze({
+    maxFiles: envInt('UPLOAD_MAX_FILES', 200),
+    maxFileSizeMb: envInt('UPLOAD_MAX_FILE_MB', 10),
+  }),
+
   // Scheduler
   cronSchedule: env('CRON_SCHEDULE', '*/30 * * * *'),
 

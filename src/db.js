@@ -808,6 +808,7 @@ function chunksSearch(keywords, options = {}) {
   const limit = options.limit || 100;
   const collectionId = options.collectionId || null;
   const userId = options.userId || null;
+  const batchId = options.batchId || null;
   const query = keywords
     .filter(Boolean)
     .map((k) => `"${k.replace(/"/g, '""')}"`)
@@ -820,6 +821,10 @@ function chunksSearch(keywords, options = {}) {
     const params = [query];
 
     appendVisibilityClauses(whereClauses, params, collectionId, userId);
+    if (batchId) {
+      whereClauses.push("json_extract(i.metadata, '$.batchId') = ?");
+      params.push(batchId);
+    }
     params.push(limit);
 
     const sql = `
@@ -982,11 +987,16 @@ function getAllChunksWithVectors(options = {}) {
   const d = getDb();
   const collectionId = options.collectionId || null;
   const userId = options.userId || null;
+  const batchId = options.batchId || null;
   const params = [];
 
   if (collectionId || userId) {
     const whereClauses = ['c.vector IS NOT NULL'];
     appendVisibilityClauses(whereClauses, params, collectionId, userId);
+    if (batchId) {
+      whereClauses.push("json_extract(i.metadata, '$.batchId') = ?");
+      params.push(batchId);
+    }
 
     return d.prepare(
       `SELECT c.* FROM chunks c JOIN items i ON c.parent_id = i.id WHERE ${whereClauses.join(' AND ')}`
