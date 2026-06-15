@@ -7,8 +7,8 @@
   --surface:    #18181e;
   --surface-2:  #22222c;
   --border:     #2c2c38;
-  --fg:         #e2e2e6;
-  --fg-2:       #6a6a72;
+  --fg:         #ededf0;
+  --fg-2:       #9a9aa6;
   --accent:     #e95420;
 }
 
@@ -18,7 +18,7 @@
   --surface-2:  #eaeaee;
   --border:     #d8d8e0;
   --fg:         #16161a;
-  --fg-2:       #888890;
+  --fg-2:       #5c5c66;
   --accent:     #c43b0e;
 }
 
@@ -41,9 +41,11 @@
 body {
   background-color: var(--bg);
   color: var(--fg);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
   font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 html, body, #root {
@@ -51,9 +53,12 @@ html, body, #root {
   overflow: hidden;
 }
 
+/* De-terminalised: the legacy `.font-mono` class is used across the UI, so we
+   render it as clean Inter at normal size instead of monospace. (Full Gmail
+   redesign will remove the class from components.) */
 .font-mono {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: 0.95em;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 1em;
 }
 
 /* ── Scrollbars ─────────────────────────────────────────────── */
