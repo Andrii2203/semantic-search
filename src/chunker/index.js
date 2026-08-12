@@ -6,31 +6,17 @@ const chunkSemantic = require('./semantic');
 const chunkHierarchical = require('./hierarchical');
 const { AppError, ErrorCodes } = require('../errors');
 
-// ─── Strategy Registry ──────────────────────────────────────
-
 const strategies = {
   fixed: chunkFixed,
   semantic: chunkSemantic,
   hierarchical: chunkHierarchical,
 };
 
-// ─── Unified Chunking Interface ─────────────────────────────
-
-/**
- * Chunk text using the specified strategy.
- * Short texts (≤200 tokens) are returned as a single chunk.
- *
- * @param {string} text - Input text to chunk
- * @param {string} strategy - 'fixed' | 'semantic' | 'hierarchical'
- * @param {Object} options - Strategy-specific options
- * @returns {Promise<Object[]>} Array of chunk objects
- */
 async function chunk(text, strategy = 'semantic', options = {}) {
   if (!text || typeof text !== 'string' || text.trim().length === 0) {
     return [];
   }
 
-  // Short texts — no chunking needed
   if (countTokens(text) <= 200) {
     return [
       {

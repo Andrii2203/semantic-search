@@ -1,5 +1,10 @@
 'use strict';
 
+const os = require('os');
+const pathModule = require('path');
+
+process.env.EXPORT_PATH = pathModule.join(os.tmpdir(), 'semantic-search-export-api-test.json');
+
 const request = require('supertest');
 const { app } = require('../src/server');
 const db = require('../src/db');
@@ -111,7 +116,7 @@ describe('Semantic Search API - Senior Integration Suite', () => {
   // ─── Export API ──────────────────────────────────────────────
 
   describe('GET /api/export - File System Branches', () => {
-    const exportPath = path.join(__dirname, '../data/export.json');
+    const exportPath = require('../src/config').exportPath;
 
     test('should return empty object if file does not exist', async () => {
       if (fs.existsSync(exportPath)) { fs.unlinkSync(exportPath); }

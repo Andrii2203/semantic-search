@@ -7,10 +7,6 @@ const { AppError, ErrorCodes } = require('../errors');
 
 const router = express.Router();
 
-// ─── POST /api/seed-test-data — dev only ────────────────────
-// Inserts the synthetic eval dataset for the current user so hybrid search
-// ranking can be verified. Refused in production.
-
 router.post('/', async (req, res, next) => {
   try {
     if (config.isProduction) {

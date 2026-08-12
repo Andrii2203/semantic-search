@@ -2,16 +2,13 @@
 
 const crypto = require('crypto');
 const logger = require('../logger');
+const { fetchWithTimeout } = require('../http');
 const { retry } = require('../retry');
 const { validateIRBatch } = require('../validation');
 
 const HN_API_BASE = 'https://hacker-news.firebaseio.com/v0';
 const MAX_STORIES = 130;
 
-/**
- * Source: Hacker News
- * Fetches top stories and converts them to IR format.
- */
 async function fetch(options = {}) {
   const limit = options.limit || MAX_STORIES;
 
@@ -21,7 +18,7 @@ async function fetch(options = {}) {
   try {
     storyIds = await retry(
       async () => {
-        const res = await globalThis.fetch(`${HN_API_BASE}/topstories.json`);
+        const res = await fetchWithTimeout(`${HN_API_BASE}/topstories.json`);
         if (!res.ok) {
           throw new Error(`HN API responded with ${res.status}`);
         }
@@ -36,10 +33,8 @@ async function fetch(options = {}) {
 
   const topIds = storyIds.slice(0, limit);
 
-  // Fetch story details in parallel (with concurrency limit)
   const stories = await fetchStoriesDetails(topIds);
 
-  // Convert to IR format
   const irItems = stories
     .filter((s) => s && s.title && s.type === 'story')
     .map((story) => ({
@@ -58,7 +53,6 @@ async function fetch(options = {}) {
       },
     }));
 
-  // Validate through Zod schema
   const validItems = validateIRBatch(irItems, logger);
 
   logger.info({ source: 'hn', fetched: stories.length, valid: validItems.length }, 'HN fetch complete');
@@ -66,9 +60,6 @@ async function fetch(options = {}) {
   return validItems;
 }
 
-/**
- * Fetches story details with concurrency limit.
- */
 async function fetchStoriesDetails(ids) {
   const CONCURRENCY = 5;
   const results = [];
@@ -89,12 +80,9 @@ async function fetchStoriesDetails(ids) {
   return results;
 }
 
-/**
- * Fetches a single story detail.
- */
 async function fetchStoryDetail(id) {
   try {
-    const res = await globalThis.fetch(`${HN_API_BASE}/item/${id}.json`);
+    const res = await fetchWithTimeout(`${HN_API_BASE}/item/${id}.json`);
     if (!res.ok) {
       /* istanbul ignore next */
       return null;
@@ -106,13 +94,9 @@ async function fetchStoryDetail(id) {
   }
 }
 
-/**
- * Builds the content string for embeddings.
- */
 function buildContent(story) {
   const parts = [story.title];
   if (story.text) {
-    // Strip HTML tags from HN text
     parts.push(story.text.replace(/<[^>]*>/g, ''));
   }
   return parts.join('. ');

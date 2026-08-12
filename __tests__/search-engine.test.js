@@ -43,53 +43,20 @@ describe('SearchEngine Module', () => {
     });
   });
 
-  describe('findRelevant', () => {
-    const makeItem = (id, content) => ({ id, content, type: 'post', source: 'test' });
-
-    test('returns only items with score >= threshold', async () => {
-      const items = [
-        makeItem('1', 'JavaScript framework comparison'),
-        makeItem('2', 'Cooking recipe for pasta'),
-        makeItem('3', 'Node.js microservices architecture'),
-      ];
-      const profileVector = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5];
-      
-      const results = await searchEngine.findRelevant(items, profileVector, 0.5);
-      expect(results.length).toBeGreaterThan(0);
-      for (const r of results) {
-         expect(r.score).toBeGreaterThanOrEqual(0.5);
-      }
+  describe('public api', () => {
+    test('exports exactly the documented surface', () => {
+      expect(Object.keys(searchEngine).sort()).toEqual([
+        'cosineSimilarity',
+        'deserializeVector',
+        'generateEmbedding',
+        'groupByParent',
+        'mergeResults',
+        'mmrSelect',
+        'rrfMerge',
+        'scoreChunksByVector',
+        'serializeVector',
+      ]);
     });
-
-    test('returns empty array for empty input', async () => {
-      const results = await searchEngine.findRelevant([], [1, 0], 0.5);
-      expect(results).toEqual([]);
-    });
-
-    test('threshold 0 returns all items sorted', async () => {
-      const items = [makeItem('1', 'a'), makeItem('2', 'b')];
-      const profileVector = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5];
-      
-      const results = await searchEngine.findRelevant(items, profileVector, 0);
-      expect(results).toHaveLength(2);
-      expect(results[0].score).toBeDefined();
-    });
-
-    test('calls mocked generateEmbedding', async () => {
-      const items = [makeItem('1', 'Test content')];
-      await searchEngine.findRelevant(items, [0.5, 0.5, 0.5, 0.5, 0.5, 0.5], 0);
-      
-      // Переконуємось, що "шпигун" спрацював
-      expect(searchEngine.generateEmbedding).toHaveBeenCalledWith('Test content');
-    });
-
-    test('findRelevant returns empty array for null or empty input', async () => {
-      const resNull = await searchEngine.findRelevant(null, [1,0]);
-      const resEmpty = await searchEngine.findRelevant([], [1,0]);
-      expect(resNull).toEqual([]);
-      expect(resEmpty).toEqual([]);
-    });
-
   });
 
   test('search-engine.js does not import any project modules (isolation check)', () => {

@@ -126,10 +126,4 @@ describe('SearchEngine: Hybrid Functions', () => {
     expect(SearchEngine.groupByParent(null)).toEqual([]);
   });
 
-  // ─── findRelevant (legacy v4 interface) ────────────────────
-
-  test('findRelevant with empty batch returns empty', async () => {
-    expect(await SearchEngine.findRelevant([], [1, 0])).toEqual([]);
-    expect(await SearchEngine.findRelevant(null, [1, 0])).toEqual([]);
-  });
 });

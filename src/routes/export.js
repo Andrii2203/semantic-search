@@ -2,19 +2,15 @@
 
 const express = require('express');
 const fs = require('fs');
-const path = require('path');
 const logger = require('../logger');
+const config = require('../config');
 
 const router = express.Router();
 
-// ─── GET /api/export — download all items with comments as JSON
-
 router.get('/', (_req, res, next) => {
   try {
-    const exportPath = path.join(__dirname, '..', '..', 'data', 'export.json');
-
-    if (fs.existsSync(exportPath)) {
-      res.download(exportPath, 'semantic-search-export.json');
+    if (fs.existsSync(config.exportPath)) {
+      res.download(config.exportPath, 'semantic-search-export.json');
     } else {
       res.json({ items: [] });
     }
@@ -24,12 +20,9 @@ router.get('/', (_req, res, next) => {
   }
 });
 
-/**
- * Append item+comment to the JSON export file.
- */
 async function saveToExportFile(id, item, comment) {
   const { writeFile, readFile } = fs.promises;
-  const exportPath = path.join(__dirname, '..', '..', 'data', 'export.json');
+  const exportPath = config.exportPath;
 
   let data = { items: [] };
   if (fs.existsSync(exportPath)) {
@@ -41,7 +34,6 @@ async function saveToExportFile(id, item, comment) {
     }
   }
 
-  // Update if exists, add if new
   const idx = data.items.findIndex((i) => i.id === id);
   const entry = {
     id,

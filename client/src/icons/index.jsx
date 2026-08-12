@@ -1,4 +1,3 @@
-// Pure SVG icons — no emoji, no external deps
 
 export function InboxIcon({ className = 'w-4 h-4' }) {
   return (

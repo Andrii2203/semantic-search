@@ -7,11 +7,6 @@ const { AppError, ErrorCodes } = require('../errors');
 
 const router = express.Router();
 
-// ─── Settings registry ──────────────────────────────────────
-// Whitelist of editable settings with type + validation. Anything not here is
-// rejected, so the key-value store can't be written with arbitrary keys.
-// `secret: true` → value is set-only: it can be replaced but never read back.
-
 const SETTINGS_SCHEMA = {
   searchThreshold:          { type: 'number', min: 0, max: 1 },
   searchMode:               { type: 'string', enum: ['sequential', 'parallel'] },
@@ -37,23 +32,20 @@ function validateSetting(key, value) {
 
   if (schema.type === 'number') {
     const n = Number(value);
-    if (Number.isNaN(n)) throw new AppError(`${key} must be a number`, ErrorCodes.VALIDATION_FAILED, 400);
-    if (schema.min != null && n < schema.min) throw new AppError(`${key} must be ≥ ${schema.min}`, ErrorCodes.VALIDATION_FAILED, 400);
-    if (schema.max != null && n > schema.max) throw new AppError(`${key} must be ≤ ${schema.max}`, ErrorCodes.VALIDATION_FAILED, 400);
+    if (Number.isNaN(n)) {throw new AppError(`${key} must be a number`, ErrorCodes.VALIDATION_FAILED, 400);}
+    if (schema.min != null && n < schema.min) {throw new AppError(`${key} must be ≥ ${schema.min}`, ErrorCodes.VALIDATION_FAILED, 400);}
+    if (schema.max != null && n > schema.max) {throw new AppError(`${key} must be ≤ ${schema.max}`, ErrorCodes.VALIDATION_FAILED, 400);}
     return n;
   }
   if (schema.type === 'boolean') {
-    if (typeof value !== 'boolean') throw new AppError(`${key} must be a boolean`, ErrorCodes.VALIDATION_FAILED, 400);
+    if (typeof value !== 'boolean') {throw new AppError(`${key} must be a boolean`, ErrorCodes.VALIDATION_FAILED, 400);}
     return value;
   }
-  // string
   if (schema.enum && !schema.enum.includes(value)) {
     throw new AppError(`${key} must be one of: ${schema.enum.join(', ')}`, ErrorCodes.VALIDATION_FAILED, 400);
   }
   return String(value);
 }
-
-// ─── GET /api/settings — all settings, secrets masked ───────
 
 router.get('/', (_req, res, next) => {
   try {
@@ -61,7 +53,6 @@ router.get('/', (_req, res, next) => {
     const out = {};
     for (const [key, schema] of Object.entries(SETTINGS_SCHEMA)) {
       if (schema.secret) {
-        // Never echo the secret — only whether it is configured
         out[key] = stored[key] ? '********' : null;
       } else if (stored[key] !== undefined) {
         out[key] = stored[key];
@@ -73,8 +64,6 @@ router.get('/', (_req, res, next) => {
   }
 });
 
-// ─── POST /api/settings — atomic upsert of one key ──────────
-
 router.post('/', (req, res, next) => {
   try {
     const { key, value } = req.body || {};
@@ -85,14 +74,11 @@ router.post('/', (req, res, next) => {
     db.setSetting(key, coerced, SETTINGS_SCHEMA[key].type);
 
     logger.info({ key }, 'Setting updated');
-    // Do not echo secret values
     res.json({ success: true, key, value: SETTINGS_SCHEMA[key].secret ? '********' : coerced });
   } catch (err) {
     next(err);
   }
 });
-
-// ─── POST /api/settings/reset — clear all to defaults ───────
 
 router.post('/reset', (_req, res, next) => {
   try {

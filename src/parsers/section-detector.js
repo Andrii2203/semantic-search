@@ -35,17 +35,12 @@ const SECTION_MARKERS = {
   ]
 };
 
-/**
- * Checks if a line looks like a section header (short, no punctuation-heavy sentence).
- */
 function looksLikeHeader(line) {
   const trimmed = line.trim();
   if (!trimmed) { return false };
   
-  // Section headers are short
   if (trimmed.length > 50) { return false };
   
-  // Section headers don't contain common sentence words
   const sentenceIndicators = /\b(the|and|for|was|with|have|been|this|that|from|your|our)\b/i;
   if (sentenceIndicators.test(trimmed) && trimmed.split(/\s+/).length > 3) {
     return false;
@@ -54,9 +49,6 @@ function looksLikeHeader(line) {
   return true;
 }
 
-/**
- * Splits raw resume text into logical sections based on predefined markers.
- */
 function detectSections(text) {
   const sections = {
     header: [],
@@ -93,7 +85,6 @@ function detectSections(text) {
 
     if (matchedSection && matchedSection !== currentSection) {
       currentSection = matchedSection;
-      // Don't push the header itself as content
     } else {
       sections[currentSection].push(trimmed);
     }

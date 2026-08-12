@@ -2,18 +2,6 @@
 
 const crypto = require('crypto');
 
-/**
- * Builds the final Intermediate Representation (IR) object for a resume.
- * @param {object} params
- * @param {string} params.fileName
- * @param {string} params.rawText
- * @param {string[]} params.skills
- * @param {object} params.experience
- * @param {string} params.education
- * @param {string[]|string} params.languages
- * @param {string} params.summary
- * @returns {object} IR object
- */
 function buildResumeIR({ fileName, rawText, skills, experience, education, languages, summary }) {
   const content = rawText || '';
   const id = crypto.createHash('sha256').update(content + fileName).digest('hex').slice(0, 16);

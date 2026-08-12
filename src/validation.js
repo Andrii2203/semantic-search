@@ -2,8 +2,6 @@
 
 const { z } = require('zod');
 
-// ─── IR Schema ───────────────────────────────────────────────
-
 const IRSchema = z.object({
   id: z.string().min(1, 'id is required'),
   content: z.string().min(1, 'content is required'),
@@ -15,11 +13,8 @@ const IRSchema = z.object({
       url: z.string().url('metadata.url must be a valid URL').optional(),
       author: z.string().optional(),
 
-      // Files Mode: groups one upload session for scoped Match (batch vs whole base)
       batchId: z.string().optional(),
 
-
-      // Resume-specific fields
       fileName: z.string().optional(),
       skills: z.array(z.string()).optional(),
       totalYears: z.number().optional(),
@@ -32,8 +27,6 @@ const IRSchema = z.object({
     })
     .passthrough(),
 });
-
-// ─── API Input Schemas ───────────────────────────────────────
 
 const ItemStatusSchema = z.enum(['new', 'approved', 'skipped', 'pending', 'starred']);
 
@@ -51,11 +44,6 @@ const ItemIdSchema = z.object({
   id: z.string().min(1, 'Item id is required'),
 });
 
-// ─── Validators ──────────────────────────────────────────────
-
-/**
- * Validates a single IR object. Returns { success, data, error }.
- */
 function validateIR(obj) {
   const result = IRSchema.safeParse(obj);
   if (result.success) {
@@ -68,9 +56,6 @@ function validateIR(obj) {
   };
 }
 
-/**
- * Validates an array of IR objects. Returns only valid ones + logs invalids.
- */
 function validateIRBatch(items, logger) {
   const valid = [];
   for (const item of items) {
@@ -84,21 +69,13 @@ function validateIRBatch(items, logger) {
   return valid;
 }
 
-/**
- * Validates API query params for item listing.
- */
 function validateItemQuery(params) {
   return ItemQuerySchema.safeParse(params);
 }
 
-/**
- * Validates item ID from route params.
- */
 function validateItemId(params) {
   return ItemIdSchema.safeParse(params);
 }
-
-// ─── Search & Config Schemas ─────────────────────────────────
 
 const SearchRequestSchema = z.object({
   query: z.string().min(1).optional(),

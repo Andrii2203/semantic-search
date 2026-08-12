@@ -3,8 +3,6 @@
 const logger = require('./logger');
 const actionsRegistry = require('./actions/index');
 
-// ─── Simple Rate Limiter ─────────────────────────────────────
-
 class RateLimiter {
   constructor(maxPerMinute) {
     this.maxPerMinute = maxPerMinute;
@@ -14,33 +12,21 @@ class RateLimiter {
   async waitForSlot() {
     const now = Date.now();
 
-    // Remove timestamps older than 1 minute
     this.timestamps = this.timestamps.filter((t) => now - t < 60_000);
 
     /* istanbul ignore next */
     if (this.timestamps.length >= this.maxPerMinute) {
       const oldest = this.timestamps[0];
-      const waitMs = 60_000 - (now - oldest) + 100; // +100ms buffer
+      const waitMs = 60_000 - (now - oldest) + 100;
       logger.info({ waitMs }, 'Rate limiter: waiting for slot');
       await new Promise((resolve) => setTimeout(resolve, waitMs));
-      return this.waitForSlot(); // Re-check after waiting
+      return this.waitForSlot();
     }
 
     this.timestamps.push(Date.now());
   }
 }
 
-// ─── Dispatcher ──────────────────────────────────────────────
-
-/**
- * Dispatch an action for a single item based on its type.
- *
- * @param {Object}  item        — IR object with type field
- * @param {Object}  context     — profile context or additional data
- * @param {Object}  opts
- * @param {RateLimiter} opts.rateLimiter — optional rate limiter instance
- * @returns {Promise<{ response: string|null, status: string }>}
- */
 async function dispatch(item, context = {}, opts = {}) {
   const action = actionsRegistry.getAction(item.type);
 
@@ -66,14 +52,6 @@ async function dispatch(item, context = {}, opts = {}) {
   }
 }
 
-/**
- * Dispatch actions for a batch of items.
- *
- * @param {Object[]} items      — array of IR objects
- * @param {Object}   context    — profile context
- * @param {number}   rateLimit  — max Groq calls per minute
- * @returns {Promise<Object[]>} — items enriched with response and status
- */
 /* istanbul ignore next */
 async function dispatchBatch(items, context = {}, rateLimit = 10) {
   const rateLimiter = new RateLimiter(rateLimit);

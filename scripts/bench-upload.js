@@ -21,7 +21,7 @@ async function main() {
     throw new Error(`No resumes at ${DIR}. Run: node scripts/gen-resumes.js [N]`);
   }
   const files = fs.readdirSync(DIR).filter((f) => f.endsWith('.pdf')).sort().slice(0, LIMIT);
-  if (!files.length) throw new Error('No PDF files found to upload.');
+  if (!files.length) {throw new Error('No PDF files found to upload.');}
 
   // Fresh bench user
   const email = `bench-${Date.now()}@example.com`;
@@ -31,7 +31,7 @@ async function main() {
     body: JSON.stringify({ email, password: 'password123' }),
   });
   const cookie = (reg.headers.get('set-cookie') || '').split(';')[0];
-  if (!cookie) throw new Error(`register failed (${reg.status})`);
+  if (!cookie) {throw new Error(`register failed (${reg.status})`);}
   console.log(`Registered ${email}`);
   console.log(`Uploading ${files.length} files in batches of ${BATCH} → ${BASE}\n`);
 
@@ -43,7 +43,7 @@ async function main() {
     try { await fetch(`${BASE}/api/health`); } catch {}
     const dt = Date.now() - p0;
     pings++;
-    if (dt > maxPing) maxPing = dt;
+    if (dt > maxPing) {maxPing = dt;}
   }, 1000);
 
   let uploaded = 0;

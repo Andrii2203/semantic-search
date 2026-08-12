@@ -3,7 +3,7 @@
 const db = require('../src/db');
 const searchEngine = require('../src/search-engine');
 const config = require('../src/config');
-const { checkDatabase, checkEmbeddingModel, checkGroqAPI, checkFTS5, runStartupChecks } = require('../src/startup');
+const { checkDatabase, checkEmbeddingModel, checkGroqAPI, checkFTS5, checkSessionSecret, runStartupChecks } = require('../src/startup');
 
 jest.mock('../src/db');
 jest.mock('../src/search-engine');
@@ -16,7 +16,9 @@ jest.mock('../src/logger', () => ({
 
 jest.mock('../src/config', () => ({
   groq: { apiKey: 'default' },
-  isProduction: false
+  isProduction: false,
+  sessionSecret: 'a-real-secret',
+  defaultSessionSecret: 'change-me-in-production'
 }));
 
 describe('Startup Diagnostics', () => {
@@ -117,6 +119,59 @@ describe('Startup Diagnostics', () => {
       db.getDb.mockImplementation(() => { throw new Error('DB failed'); });
 
       await expect(runStartupChecks()).rejects.toThrow('Database check failed: DB failed');
+    });
+  });
+
+  describe('checkSessionSecret', () => {
+    afterEach(() => {
+      config.isProduction = false;
+      config.sessionSecret = 'a-real-secret';
+    });
+
+    it('refuses to start in production when the secret is still the default', async () => {
+      config.isProduction = true;
+      config.sessionSecret = config.defaultSessionSecret;
+
+      const result = await checkSessionSecret();
+
+      expect(result.ok).toBe(false);
+      expect(result.status).toBe('error');
+    });
+
+    it('accepts the default secret outside production', async () => {
+      config.isProduction = false;
+      config.sessionSecret = config.defaultSessionSecret;
+
+      const result = await checkSessionSecret();
+
+      expect(result).toEqual({ ok: true, status: 'ok' });
+    });
+
+    it('accepts a configured secret in production', async () => {
+      config.isProduction = true;
+      config.sessionSecret = 'a-long-random-production-secret';
+
+      const result = await checkSessionSecret();
+
+      expect(result).toEqual({ ok: true, status: 'ok' });
+    });
+  });
+
+  describe('runStartupChecks with a default session secret in production', () => {
+    afterEach(() => {
+      config.isProduction = false;
+      config.sessionSecret = 'a-real-secret';
+    });
+
+    it('stops the boot instead of signing sessions with a published value', async () => {
+      const mockDb = { prepare: jest.fn().mockReturnValue({ get: jest.fn() }) };
+      db.getDb.mockReturnValue(mockDb);
+      searchEngine.generateEmbedding.mockResolvedValue(new Array(384).fill(0));
+      config.groq.apiKey = 'key';
+      config.isProduction = true;
+      config.sessionSecret = config.defaultSessionSecret;
+
+      await expect(runStartupChecks()).rejects.toThrow(/SESSION_SECRET/);
     });
   });
 });

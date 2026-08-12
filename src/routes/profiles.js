@@ -9,10 +9,6 @@ const { AppError, ErrorCodes } = require('../errors');
 
 const router = express.Router();
 
-// ─── POST /api/profiles — save the user's active profile ────
-// Free text → keywords + embedding vector → stored as the user's profile.
-// The scheduler then matches new content against this vector.
-
 router.post('/', async (req, res, next) => {
   try {
     const { rawInput } = req.body || {};
@@ -20,7 +16,6 @@ router.post('/', async (req, res, next) => {
       throw new AppError('"rawInput" is required', ErrorCodes.VALIDATION_FAILED, 400);
     }
 
-    // fromText validates min length and builds keywords + vector
     const generated = await ProfileGenerator.fromText(rawInput, { useAI: true, save: false });
 
     db.saveProfileForUser(req.userId, {
@@ -40,8 +35,6 @@ router.post('/', async (req, res, next) => {
     next(err);
   }
 });
-
-// ─── GET /api/profiles/active — the user's current profile ──
 
 router.get('/active', (req, res, next) => {
   try {

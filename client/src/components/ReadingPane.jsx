@@ -7,7 +7,6 @@ import {
   TrashIcon, ArrowLeftIcon,
 } from '../icons'
 
-
 function ActionButton({ onClick, icon: Icon, label, disabled, variant = 'default', title }) {
   const base = 'flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-mono transition-colors disabled:opacity-40 disabled:cursor-not-allowed border'
   const variants = {
@@ -119,7 +118,6 @@ export function ReadingPane() {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden min-w-0 bg-bg">
-      {/* Header */}
       <div className="px-4 py-3 border-b border-border bg-surface flex items-center gap-3">
         <button
           onClick={() => setSelectedItemId(null)}
@@ -148,7 +146,6 @@ export function ReadingPane() {
         </div>
       </div>
 
-      {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
         {generatedComment && (
           <div className="bg-accent/6 border border-accent/25 rounded-sm p-4">
@@ -169,7 +166,6 @@ export function ReadingPane() {
         </div>
       </div>
 
-      {/* Action bar */}
       <div className="px-6 py-3 border-t border-border bg-surface flex flex-wrap items-center gap-2">
         <ActionButton
           icon={isGenerating ? LoaderIcon : SparkleIcon}

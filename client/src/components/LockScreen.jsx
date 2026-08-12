@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { LockIcon, LoaderIcon } from '../icons'
 
 export function LockScreen({ onSuccess }) {
-  const [mode, setMode]       = useState('login')  // 'login' | 'register'
+  const [mode, setMode]       = useState('login')
   const [email, setEmail]     = useState('')
   const [password, setPassword] = useState('')
   const [error, setError]     = useState(null)
@@ -55,7 +55,6 @@ export function LockScreen({ onSuccess }) {
             <p className="text-fg-2 text-xs mt-1">{isLogin ? 'Sign in to your account' : 'Create an account'}</p>
           </div>
 
-          {/* Mode toggle */}
           <div className="flex w-full border border-border rounded-sm overflow-hidden text-xs font-mono">
             <button
               type="button"

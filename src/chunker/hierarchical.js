@@ -4,20 +4,7 @@ const chunkSemantic = require('./semantic');
 const { getGroqClient } = require('../groq-client');
 const logger = require('../logger');
 
-// ─── Hierarchical Chunking ──────────────────────────────────
-
-/**
- * Two-level chunking: document summary + section chunks.
- * Uses Groq AI to generate a summary of the entire document.
- *
- * @param {string} text - Input text
- * @param {Object} options
- * @param {number} options.maxChunkSize - Max words per section chunk (default 300)
- * @param {number} options.minChunkSize - Min words before merging (default 50)
- * @returns {Promise<Object[]>} Array of chunk objects (summary + sections)
- */
 async function chunkHierarchical(text, options = {}) {
-  // Level 1: Generate document summary via AI
   const summary = await generateSummary(text);
 
   const summaryChunk = {
@@ -31,10 +18,9 @@ async function chunkHierarchical(text, options = {}) {
     },
   };
 
-  // Level 2: Semantic chunks of sections
   const sectionChunks = chunkSemantic(text, options).map((chunk, i) => ({
     ...chunk,
-    chunkIndex: i + 1, // offset by 1 for summary
+    chunkIndex: i + 1,
     level: 'section',
     strategy: 'hierarchical',
   }));
@@ -42,10 +28,6 @@ async function chunkHierarchical(text, options = {}) {
   return [summaryChunk, ...sectionChunks];
 }
 
-/**
- * Generate a concise summary of the document via Groq API.
- * Falls back to first 200 words if API fails.
- */
 async function generateSummary(text) {
   try {
     const groq = getGroqClient();

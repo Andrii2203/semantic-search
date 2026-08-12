@@ -21,8 +21,6 @@ async function apiFetch(url, opts = {}) {
   return res.json()
 }
 
-// ── Items list (infinite / cursor-based) ──────────────────────
-
 export function useItemsInfinite(view) {
   const status = VIEW_STATUS[view]
   return useInfiniteQuery({
@@ -40,8 +38,6 @@ export function useItemsInfinite(view) {
   })
 }
 
-// ── Sidebar counts ────────────────────────────────────────────
-
 export function useItemStats() {
   return useQuery({
     queryKey: ['items', 'stats'],
@@ -50,8 +46,6 @@ export function useItemStats() {
     staleTime: 30_000,
   })
 }
-
-// ── Auth status ───────────────────────────────────────────────
 
 export function useAuthStatus() {
   return useQuery({
@@ -65,8 +59,6 @@ export function useAuthStatus() {
   })
 }
 
-// ── Status mutations ──────────────────────────────────────────
-
 export function useUpdateStatus() {
   const qc = useQueryClient()
   return useMutation({
@@ -78,8 +70,6 @@ export function useUpdateStatus() {
   })
 }
 
-// ── Generate comment ──────────────────────────────────────────
-
 export function useGenerateComment() {
   const qc = useQueryClient()
   return useMutation({
@@ -89,8 +79,6 @@ export function useGenerateComment() {
     },
   })
 }
-
-// ── Explain match ─────────────────────────────────────────────
 
 export function useExplain() {
   return useMutation({
@@ -103,8 +91,6 @@ export function useExplain() {
   })
 }
 
-// ── Search ────────────────────────────────────────────────────
-
 export function useSearch() {
   return useMutation({
     mutationFn: (body) =>
@@ -116,8 +102,6 @@ export function useSearch() {
   })
 }
 
-// ── Delete item ───────────────────────────────────────────────
-
 export function useDeleteItem() {
   const qc = useQueryClient()
   return useMutation({
@@ -127,8 +111,6 @@ export function useDeleteItem() {
     },
   })
 }
-
-// ── Manual sync ───────────────────────────────────────────────
 
 export function useSync() {
   return useMutation({
@@ -145,8 +127,6 @@ export function useSyncStatus(enabled) {
     staleTime: 0,
   })
 }
-
-// ── Profile (active intent) ───────────────────────────────────
 
 export function useActiveProfile() {
   return useQuery({
@@ -167,13 +147,10 @@ export function useSaveProfile() {
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['profile'] })
-      // New profile changes what the scheduler matches — refresh inbox counts/list
       qc.invalidateQueries({ queryKey: ['items'] })
     },
   })
 }
-
-// ── Settings (Phase 3) ────────────────────────────────────────
 
 export function useSettings() {
   return useQuery({
@@ -204,8 +181,6 @@ export function useResetSettings() {
   })
 }
 
-// ── Files Mode: upload + match ────────────────────────────────
-
 export function useUploadFiles() {
   const qc = useQueryClient()
   return useMutation({
@@ -226,8 +201,6 @@ export function useUploadFiles() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['items'] }),
   })
 }
-
-// ── Health (full, live) ───────────────────────────────────────
 
 export function useHealthFull() {
   return useQuery({

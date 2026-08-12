@@ -121,7 +121,7 @@ describe('Feedback loop — profile vector blending', () => {
     const profile = db.getProfileByUserId('u-1');
     const current = searchEngine.deserializeVector(profile.vector);
     let norm = 0;
-    for (let i = 0; i < current.length; i++) norm += current[i] * current[i];
+    for (let i = 0; i < current.length; i++) {norm += current[i] * current[i];}
     expect(Math.sqrt(norm)).toBeCloseTo(1.0, 5);
   });
 });

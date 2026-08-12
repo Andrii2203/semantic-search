@@ -1,28 +1,16 @@
 'use strict';
 
-// ─── Token / Word Counting ──────────────────────────────────
-
-/**
- * Approximate token count (words × 1.3 for English).
- * Good enough for MiniLM-L6-v2 (256 token limit ≈ 200 words).
- */
 function countTokens(text) {
   return Math.ceil(countWords(text) * 1.3);
 }
 
 function countWords(text) {
-  if (!text || typeof text !== 'string') return 0;
+  if (!text || typeof text !== 'string') {return 0;}
   return text.split(/\s+/).filter(Boolean).length;
 }
 
-// ─── Section Splitting ──────────────────────────────────────
-
-/**
- * Split text by section headers.
- * Recognizes: "## Heading", "Experience:", "ОСВІТА:", etc.
- */
 function splitBySections(text) {
-  if (!text || typeof text !== 'string') return [{ title: '', content: text || '' }];
+  if (!text || typeof text !== 'string') {return [{ title: '', content: text || '' }];}
 
   const sectionPattern = /^(#{1,3}\s+.+|[A-ZА-ЯІЇЄҐ][A-ZА-ЯІЇЄҐ\s]{2,}:)/gm;
   const matches = [...text.matchAll(sectionPattern)];
@@ -33,7 +21,6 @@ function splitBySections(text) {
 
   const sections = [];
 
-  // Content before first section header
   const beforeFirst = text.slice(0, matches[0].index).trim();
   if (beforeFirst) {
     sections.push({ title: '', content: beforeFirst });
@@ -53,13 +40,8 @@ function splitBySections(text) {
   return sections;
 }
 
-// ─── Paragraph Splitting ────────────────────────────────────
-
-/**
- * Split text by double newlines (paragraphs).
- */
 function splitByParagraphs(text) {
-  if (!text || typeof text !== 'string') return [text || ''];
+  if (!text || typeof text !== 'string') {return [text || ''];}
 
   return text
     .split(/\n\s*\n/)
@@ -67,13 +49,8 @@ function splitByParagraphs(text) {
     .filter((p) => p.length > 0);
 }
 
-// ─── Merge Small Chunks ─────────────────────────────────────
-
-/**
- * Merge consecutive chunks that are smaller than minSize words.
- */
 function mergeSmallChunks(chunks, minSize = 50) {
-  if (!chunks || chunks.length <= 1) return chunks || [];
+  if (!chunks || chunks.length <= 1) {return chunks || [];}
 
   const merged = [];
   let buffer = null;
@@ -85,7 +62,6 @@ function mergeSmallChunks(chunks, minSize = 50) {
     }
 
     if (countWords(buffer.content) < minSize) {
-      // Merge into buffer
       buffer.content = buffer.content + '\n\n' + chunk.content;
       if (chunk.sectionTitle && !buffer.sectionTitle) {
         buffer.sectionTitle = chunk.sectionTitle;
@@ -97,7 +73,6 @@ function mergeSmallChunks(chunks, minSize = 50) {
   }
 
   if (buffer) {
-    // If the last buffer is still too small, merge with previous
     if (merged.length > 0 && countWords(buffer.content) < minSize) {
       merged[merged.length - 1].content += '\n\n' + buffer.content;
     } else {

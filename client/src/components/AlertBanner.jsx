@@ -7,7 +7,6 @@ function moduleStatus(m) {
   return typeof m === 'string' ? m : m?.status || 'unknown'
 }
 
-// Top-of-content banner shown when system health is degraded/critical.
 export function AlertBanner() {
   const { data } = useHealthFull()
   const { setView } = useUIStore()

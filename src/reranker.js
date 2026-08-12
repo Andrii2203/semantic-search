@@ -3,20 +3,9 @@
 const { getGroqClient } = require('./groq-client');
 const logger = require('./logger');
 
-// ─── Reranker ───────────────────────────────────────────────
-
-/**
- * Rerank top-N results using AI relevance scoring.
- * Each (query, result) pair gets a relevance score from 0 to 1.
- *
- * @param {Object[]} results - Search results to rerank
- * @param {string} originalQuery - The original search query
- * @param {number} topN - How many results to rerank (default 20)
- * @returns {Promise<Object[]>} Reranked results with rerankScore
- */
 async function rerank(results, originalQuery, topN = 20) {
-  if (!results || results.length === 0) return [];
-  if (!originalQuery || originalQuery.trim().length === 0) return results;
+  if (!results || results.length === 0) {return [];}
+  if (!originalQuery || originalQuery.trim().length === 0) {return results;}
 
   const toRerank = results.slice(0, topN);
   const rest = results.slice(topN);
@@ -24,7 +13,6 @@ async function rerank(results, originalQuery, topN = 20) {
   const groq = getGroqClient();
   const scored = [];
 
-  // Process in small batches to reduce API calls
   const batchSize = 5;
   for (let i = 0; i < toRerank.length; i += batchSize) {
     const batch = toRerank.slice(i, i + batchSize);
@@ -38,16 +26,11 @@ async function rerank(results, originalQuery, topN = 20) {
     }
   }
 
-  // Sort by rerankScore descending
   scored.sort((a, b) => b.rerankScore - a.rerankScore);
 
-  // Append non-reranked items at the end
   return [...scored, ...rest.map((item) => ({ ...item, rerankScore: 0 }))];
 }
 
-/**
- * Score a batch of items against the query using Groq.
- */
 async function scoreBatch(groq, query, items) {
   const itemTexts = items
     .map((item, i) => `[${i}] ${(item.content || '').slice(0, 500)}`)
@@ -78,10 +61,8 @@ async function scoreBatch(groq, query, items) {
       }));
     }
   } catch {
-    // Parse failed
   }
 
-  // Fallback: keep original scores
   return items.map((item) => ({ ...item, rerankScore: item.score || 0 }));
 }
 

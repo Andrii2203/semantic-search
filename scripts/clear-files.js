@@ -20,7 +20,7 @@ const dups = db
 
 console.log(`Total files items: ${total}`);
 console.log(`Distinct fileNames with duplicates: ${dups.length}`);
-if (dups.length) console.log('  sample:', dups.map((d) => `${d.fn}×${d.c}`).join(', '));
+if (dups.length) {console.log('  sample:', dups.map((d) => `${d.fn}×${d.c}`).join(', '));}
 
 if (process.argv.includes('--clear')) {
   const chunks = db

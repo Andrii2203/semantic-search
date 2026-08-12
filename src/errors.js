@@ -17,11 +17,6 @@ const ErrorCodes = Object.freeze({
 });
 
 class AppError extends Error {
-  /**
-   * @param {string} message  — human-readable message
-   * @param {string} code     — one of ErrorCodes
-   * @param {number} statusCode — HTTP status (default 500)
-   */
   constructor(message, code, statusCode = 500) {
     super(message);
     this.name = 'AppError';

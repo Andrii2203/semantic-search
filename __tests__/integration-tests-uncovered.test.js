@@ -5,6 +5,10 @@
 // No shallow mocks on business logic. Real buffers, real DB, real Express.
 // ═══════════════════════════════════════════════════════════════
 
+const os = require('os');
+
+process.env.EXPORT_PATH = require('path').join(os.tmpdir(), 'semantic-search-export-integration-test.json');
+
 const request = require('supertest');
 const express = require('express');
 const path = require('path');
@@ -16,50 +20,10 @@ process.env.DB_PATH = ':memory:';
 
 // ─── Helpers to build minimal valid PDF buffer ───────────────
 // PDF header + minimal structure that pdf-parse can handle
-function createMinimalPDFBuffer(textContent = 'Test PDF Content') {
-  // This is a structurally valid but minimal PDF
-  const pdf = `%PDF-1.4
-1 0 obj
-<< /Type /Catalog /Pages 2 0 R >>
-endobj
-2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
-endobj
-3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R >>
-endobj
-4 0 obj
-<< /Length 44 >>
-stream
-BT
-/F1 12 Tf
-100 700 Td
-(${textContent}) Tj
-ET
-endstream
-endobj
-xref
-0 5
-0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000214 00000 n 
-trailer
-<< /Size 5 /Root 1 0 R >>
-startxref
-308
-%%EOF`;
-  return Buffer.from(pdf, 'ascii');
-}
 
-function createInvalidPDFBuffer() {
-  return Buffer.from('NOT_A_PDF_AT_ALL_just_random_bytes_12345', 'utf-8');
-}
 
 // ─── Module imports (after env setup) ────────────────────────
 let db = require('../src/db');
-const { validateIR } = require('../src/validation');
 
 // ─── Test Data Fixtures ──────────────────────────────────────
 
@@ -75,23 +39,6 @@ const VALID_SOURCE_ITEM = {
   },
 };
 
-const VALID_RESUME_IR = {
-  id: 'resume-1',
-  content: 'Senior developer with 10 years experience',
-  type: 'resume',
-  source: 'file-upload',
-  metadata: {
-    fileName: 'test-resume.pdf',
-    skills: ['JavaScript', 'Node.js', 'Python'],
-    totalYears: 10,
-    experienceCount: 3,
-    hasEnglish: true,
-    education: 'BS Computer Science',
-    summary: 'Experienced developer',
-    languages: ['English', 'Ukrainian'],
-    uploadedAt: new Date().toISOString(),
-  },
-};
 
 // ═══════════════════════════════════════════════════════════════
 // DESCRIBE BLOCK: src/routes/sync.js
@@ -189,186 +136,6 @@ describe('src/routes/sync.js', () => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// DESCRIBE BLOCK: src/routes/upload.js
-// Uncovered: branches at lines 42, 49 (validation failure, insert failure)
-// ═══════════════════════════════════════════════════════════════
-
-describe('src/routes/upload.js', () => {
-  let app;
-  let uploadRouter;
-
-  beforeEach(() => {
-    jest.resetModules();
-    db = require('../src/db');
-    db.init(':memory:');
-    uploadRouter = require('../src/routes/upload');
-    app = express();
-    app.use(express.json());
-    app.use('/api/upload', uploadRouter);
-    app.use((err, _req, res, _next) => {
-      res.status(err.statusCode || 500).json({ error: err.message });
-    });
-  });
-
-  afterEach(() => {
-    db.close();
-    jest.resetModules();
-  });
-
-  describe('POST /api/upload', () => {
-    test('rejects non-PDF files with 400', async () => {
-      const res = await request(app)
-        .post('/api/upload')
-        .attach('files', Buffer.from('not a pdf'), 'test.txt')
-        .expect(400);
-
-      expect(res.body.error).toMatch(/Only PDF files are allowed/);
-    });
-
-    test('rejects empty upload with 400', async () => {
-      const res = await request(app)
-        .post('/api/upload')
-        .expect(400);
-
-      expect(res.body.error).toMatch(/No files uploaded/);
-    });
-
-    test('processes valid PDF and saves to DB', async () => {
-      // Mock pdf-parse to avoid native module issues in test env
-      jest.resetModules();
-      jest.doMock('pdf-parse', () => {
-        return jest.fn(() => Promise.resolve({ text: 'John Doe\nSkills: JavaScript, Node.js\nExperience: 5 years at Google' }));
-      });
-      
-      db = require('../src/db');
-      db.init(':memory:');
-      const uploadRouterWithMock = require('../src/routes/upload');
-      const appWithMock = express();
-      appWithMock.use(express.json());
-      appWithMock.use('/api/upload', uploadRouterWithMock);
-
-      const pdfBuffer = createMinimalPDFBuffer();
-
-      const res = await request(appWithMock)
-        .post('/api/upload')
-        .attach('files', pdfBuffer, 'resume.pdf')
-        .expect(200);
-
-      expect(res.body.success).toBe(true);
-      expect(res.body.processed).toBeGreaterThanOrEqual(0);
-
-      jest.dontMock('pdf-parse');
-    });
-
-    test('handles duplicate resume gracefully', async () => {
-      jest.resetModules();
-      jest.doMock('pdf-parse', () => {
-        return jest.fn(() => Promise.resolve({
-          text: 'Senior developer with 10 years experience'
-        }));
-      });
-
-      db = require('../src/db');
-      db.init(':memory:');
-      const uploadRouterWithMock = require('../src/routes/upload');
-      const appWithMock = express();
-      appWithMock.use(express.json());
-      appWithMock.use('/api/upload', uploadRouterWithMock);
-
-      // First, seed DB with a resume that will cause duplicate
-      // (collectionId 'files' — upload route inserts into the files collection)
-      const existingIR = {
-        ...VALID_RESUME_IR,
-        id: 'existing-resume',
-        collectionId: 'files',
-        metadata: { ...VALID_RESUME_IR.metadata, fileName: 'duplicate.pdf' },
-      };
-      db.insertItem(existingIR);
-
-      const res = await request(appWithMock)
-        .post('/api/upload')
-        .attach('files', createMinimalPDFBuffer(), 'duplicate.pdf')
-        .expect(200);
-
-      // Should report the duplicate in errors
-      expect(res.body.errors).toBeDefined();
-      expect(res.body.errors.length).toBeGreaterThan(0);
-      expect(res.body.errors[0].error).toMatch(/Duplicate|already exists/i);
-
-      jest.dontMock('pdf-parse');
-    });
-
-    test('handles validation failure in generated IR', async () => {
-      jest.resetModules();
-      jest.doMock('pdf-parse', () => {
-        return jest.fn(() => Promise.resolve({ text: '' })); // Empty text = invalid IR
-      });
-
-      db = require('../src/db');
-      db.init(':memory:');
-      const uploadRouterWithMock = require('../src/routes/upload');
-      const appWithMock = express();
-      appWithMock.use(express.json());
-      appWithMock.use('/api/upload', uploadRouterWithMock);
-
-      const res = await request(appWithMock)
-        .post('/api/upload')
-        .attach('files', createMinimalPDFBuffer(), 'empty.pdf')
-        .expect(200);
-
-      // Should have errors for invalid IR
-      expect(res.body.failed).toBeGreaterThan(0);
-
-      jest.dontMock('pdf-parse');
-    });
-
-    test('handles per-file processing error without failing entire batch', async () => {
-      // Upload multiple files where one fails
-      jest.doMock('pdf-parse', () => {
-        return jest.fn(() => Promise.resolve({
-          text: 'Valid resume content with skills and experience'
-        }));
-      });
-
-      const res = await request(app)
-        .post('/api/upload')
-        .attach('files', createMinimalPDFBuffer(), 'valid1.pdf')
-        .attach('files', createMinimalPDFBuffer(), 'valid2.pdf')
-        .expect(200);
-
-      expect(res.body.success).toBe(true);
-      expect(res.body.processed + res.body.failed).toBe(2);
-
-      jest.dontMock('pdf-parse');
-    });
-
-    test('handles invalid PDF buffer (pdf-parse throws)', async () => {
-      jest.resetModules();
-      jest.doMock('pdf-parse', () => {
-        return jest.fn(() => Promise.reject(new Error('Invalid PDF structure')));
-      });
-
-      db = require('../src/db');
-      db.init(':memory:');
-      const uploadRouterWithMock = require('../src/routes/upload');
-      const appWithMock = express();
-      appWithMock.use(express.json());
-      appWithMock.use('/api/upload', uploadRouterWithMock);
-
-      const res = await request(appWithMock)
-        .post('/api/upload')
-        .attach('files', createInvalidPDFBuffer(), 'corrupt.pdf')
-        .expect(200);
-
-      expect(res.body.failed).toBe(1);
-      expect(res.body.errors[0].error).toMatch(/Failed to parse PDF|Invalid PDF/);
-
-      jest.dontMock('pdf-parse');
-    });
-  });
-});
-
-// ═══════════════════════════════════════════════════════════════
 // DESCRIBE BLOCK: src/routes/export.js
 // Uncovered: branches at lines 35-48 (file exists vs not exists, error handling)
 // ═══════════════════════════════════════════════════════════════
@@ -380,7 +147,7 @@ describe('src/routes/export.js', () => {
 
   beforeEach(() => {
     exportModule = require('../src/routes/export');
-    exportPath = path.join(__dirname, '..', 'data', 'export.json');
+    exportPath = require('../src/config').exportPath;
 
     // Ensure data directory exists
     const dataDir = path.dirname(exportPath);
@@ -553,138 +320,6 @@ describe('src/routes/export.js', () => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// DESCRIBE BLOCK: src/parsers/index.js
-// Uncovered: 42% statements, 0% branches, 0% functions
-// ═══════════════════════════════════════════════════════════════
-
-describe('src/parsers/index.js — parseResume', () => {
-  let parseResume;
-
-  beforeEach(() => {
-    jest.resetModules();
-    // We will mock pdf-parse but test the integration of all other parsers
-    jest.doMock('pdf-parse', () => {
-      return jest.fn((buffer) => {
-        // Simulate parsing based on buffer content hints
-        const text = buffer.hint || 'Default PDF text';
-        return Promise.resolve({ text });
-      });
-    });
-    parseResume = require('../src/parsers').parseResume;
-  });
-
-  afterEach(() => {
-    jest.dontMock('pdf-parse');
-  });
-
-  test('full pipeline: PDF buffer → structured IR', async () => {
-    const buffer = Buffer.from('test');
-    buffer.hint = `
-John Doe
-john@example.com
-
-SKILLS
-JavaScript, Node.js, Python, React
-
-EXPERIENCE
-Senior Developer at Google
-2020 - Present
-- Built scalable systems
-
-EDUCATION
-BS Computer Science, Stanford University
-
-LANGUAGES
-English, Spanish
-
-SUMMARY
-Experienced full-stack developer with 8 years in the industry.
-    `.trim();
-
-    const result = await parseResume(buffer, 'john-doe.pdf');
-
-    expect(result).toBeDefined();
-    expect(result.metadata.fileName).toBe('john-doe.pdf');
-    expect(result.content).toBeDefined();
-    expect(Array.isArray(result.metadata.skills)).toBe(true);
-    expect(Array.isArray(result.metadata.experienceCount)).toBeDefined();
-    expect(typeof result.metadata.education).toBe('string');
-    expect(Array.isArray(result.metadata.languages)).toBe(true);
-    expect(typeof result.metadata.summary).toBe('string');
-  });
-
-  test('handles PDF with minimal/empty content', async () => {
-    const buffer = Buffer.from('empty');
-    buffer.hint = '';
-
-    const result = await parseResume(buffer, 'empty.pdf');
-
-    expect(result.metadata.fileName).toBe('empty.pdf');
-    expect(result.metadata.skills).toEqual([]);
-    expect(result.metadata.experienceCount).toBe(0);
-    expect(result.metadata.education).toBe('');
-    expect(result.metadata.languages).toEqual([]);
-    expect(result.metadata.summary).toBe('');
-  });
-
-  test('handles PDF with only skills section', async () => {
-    const buffer = Buffer.from('skills-only');
-    buffer.hint = 'SKILLS\nJavaScript, Python\n\nSome other text';
-
-    const result = await parseResume(buffer, 'skills-only.pdf');
-
-    expect(result.metadata.skills.length).toBeGreaterThan(0);
-    expect(result.metadata.experienceCount).toBe(0);
-  });
-
-  test('handles PDF with only experience section', async () => {
-    const buffer = Buffer.from('exp-only');
-    buffer.hint = 'EXPERIENCE\nDeveloper at Corp\n2020-2022\n- Did things';
-
-    const result = await parseResume(buffer, 'exp-only.pdf');
-
-    expect(result.metadata.experienceCount).toBeGreaterThan(0);
-    expect(result.metadata.skills).toEqual([]);
-  });
-
-  test('propagates pdf-parse errors as AppError', async () => {
-    jest.resetModules();
-    jest.doMock('pdf-parse', () => {
-      return jest.fn(() => Promise.reject(new Error('PDF corrupted')));
-    });
-    const { parseResume: failingParseResume } = require('../src/parsers');
-
-    await expect(failingParseResume(Buffer.from('bad'), 'corrupt.pdf'))
-      .rejects
-      .toThrow();
-  });
-
-  test('validates IR schema compliance of output', async () => {
-    const buffer = Buffer.from('validation-test');
-    buffer.hint = 'Valid content for testing';
-
-    const result = await parseResume(buffer, 'test.pdf');
-
-    // The result should be validatable
-    const validation = validateIR({
-      id: 'test-resume',
-      content: result.rawText || 'Resume content',
-      type: 'resume',
-      source: 'upload',
-      metadata: {
-        fileName: result.fileName,
-        skills: result.skills,
-        totalYears: result.experience?.reduce((sum, exp) => sum + (exp.years || 0), 0),
-        experienceCount: result.experience?.length,
-        education: result.education,
-        summary: result.summary,
-        languages: result.languages,
-      },
-    });
-
-    expect(validation.success).toBe(true);
-  });
-});
 
 // ═══════════════════════════════════════════════════════════════
 // DESCRIBE BLOCK: src/scheduler.js

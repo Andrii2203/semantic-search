@@ -3,16 +3,6 @@
 const { getGroqClient } = require('./groq-client');
 const logger = require('./logger');
 
-// ─── Explainer (Lazy / On-Click) ────────────────────────────
-
-/**
- * Generate an explanation for why a specific item matches the query.
- * Called on-demand (on-click), not for every search result.
- *
- * @param {Object} item - The matched item/document
- * @param {Object} profile - The search profile (keywords, rawInput)
- * @returns {Promise<string>} Human-readable explanation
- */
 async function explain(item, profile) {
   if (!item || !profile) {
     return 'No explanation available.';
@@ -44,9 +34,6 @@ async function explain(item, profile) {
   }
 }
 
-/**
- * Generate a simple explanation without AI.
- */
 function generateFallbackExplanation(item, profile) {
   const keywords = profile.keywords || [];
   const content = (item.content || '').toLowerCase();

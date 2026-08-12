@@ -1,10 +1,5 @@
 'use strict';
 
-// Onboarding welcome messages (Phase 2.6).
-// Content lives here, separate from db/business logic, so the copy can be
-// edited without touching code. In Phase 3 this could graduate to the settings
-// table for runtime/UI editing without a deploy.
-
 module.exports = [
   {
     id: 'welcome_1_intro',

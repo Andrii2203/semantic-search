@@ -23,15 +23,12 @@ jest.mock('../src/search-engine', () => ({
     const mag = Math.sqrt(magA) * Math.sqrt(magB);
     return mag === 0 ? 0 : dot / mag;
   }),
-  findRelevant: jest.fn(async (items) => {
-    return items.map((item) => ({ ...item, score: 0.9 }));
-  }),
   serializeVector: jest.fn((vec) => {
-    if (!vec) return null;
+    if (!vec) {return null;}
     return Buffer.from(new Float32Array(vec).buffer);
   }),
   deserializeVector: jest.fn((buf) => {
-    if (!buf) return null;
+    if (!buf) {return null;}
     const b = Buffer.isBuffer(buf) ? buf : Buffer.from(buf);
     return Array.from(new Float32Array(b.buffer, b.byteOffset, b.byteLength / 4));
   }),
@@ -127,8 +124,7 @@ describe('scheduler.runCycle', () => {
     expect(result.saved).toBe(0);
   });
 
-  test('no registered users → skips semantic filter and save', async () => {
-    // Close current DB and open fresh one with no users
+  test('builds the corpus when there are no registered users', async () => {
     db.close();
     db.init(':memory:');
     sources.fetchAll.mockResolvedValue(makeSourceItems(2));
@@ -136,7 +132,18 @@ describe('scheduler.runCycle', () => {
     const result = await scheduler.runCycle();
 
     expect(result.fetched).toBe(2);
-    expect(result.saved).toBe(0);
+    expect(result.saved).toBe(2);
+    expect(result.chunked).toBeGreaterThan(0);
+  });
+
+  test('creates no user matches when there are no registered users', async () => {
+    db.close();
+    db.init(':memory:');
+    sources.fetchAll.mockResolvedValue(makeSourceItems(2));
+
+    const result = await scheduler.runCycle();
+
+    expect(result.matches).toBe(0);
   });
 
   test('duplicates are not added again', async () => {

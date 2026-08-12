@@ -2,6 +2,8 @@
 
 const express = require('express');
 const crypto = require('crypto');
+const fs = require('fs');
+const fsp = require('fs/promises');
 const multer = require('multer');
 const { parseResume, parseDocument } = require('../parsers');
 const db = require('../db');
@@ -14,8 +16,13 @@ const config = require('../config');
 
 const router = express.Router();
 
+fs.mkdirSync(config.upload.tempDir, { recursive: true });
+
 const upload = multer({
-  storage: multer.memoryStorage(),
+  storage: multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, config.upload.tempDir),
+    filename: (_req, _file, cb) => cb(null, `${crypto.randomUUID()}.pdf`),
+  }),
   limits: {
     fileSize: config.upload.maxFileSizeMb * 1024 * 1024,
   },
@@ -25,8 +32,130 @@ const upload = multer({
     } else {
       cb(new AppError('Only PDF files are allowed', ErrorCodes.VALIDATION_FAILED, 400));
     }
-  }
+  },
 });
+
+function readChunkingConfig() {
+  try {
+    return db.getChunkingConfig();
+  } catch {
+    return { strategy: 'semantic', chunk_size: 200, overlap: 50 };
+  }
+}
+
+function scopeIdToOwner(id, userId) {
+  if (!userId) {
+    return id;
+  }
+  return crypto.createHash('sha256').update(`${userId}:${id}`).digest('hex').slice(0, 16);
+}
+
+async function indexItem(item, chunkingConfig) {
+  const chunks = await chunk(item.content, chunkingConfig.strategy, {
+    chunkSize: chunkingConfig.chunk_size,
+    overlap: chunkingConfig.overlap,
+  });
+
+  for (const piece of chunks) {
+    db.insertChunk({
+      id: `${item.id}_chunk_${piece.chunkIndex}`,
+      parentId: item.id,
+      content: piece.content,
+      chunkIndex: piece.chunkIndex,
+      level: piece.level || 'section',
+      strategy: piece.strategy,
+      vector: await embedOrNull(piece.content),
+      metadata: piece.metadata || {},
+    });
+  }
+
+  logger.info(
+    { itemId: item.id, chunksCreated: chunks.length, strategy: chunkingConfig.strategy },
+    'Document chunked and indexed',
+  );
+}
+
+async function embedOrNull(content) {
+  try {
+    return SearchEngine.serializeVector(await SearchEngine.generateEmbedding(content));
+  } catch {
+    return null;
+  }
+}
+
+async function processFile(file, context) {
+  const buffer = await fsp.readFile(file.path);
+  const parsed = await context.parse(buffer, file.originalname);
+
+  parsed.id = scopeIdToOwner(parsed.id, context.userId);
+  parsed.metadata = { ...parsed.metadata, batchId: context.batchId };
+
+  const validation = validateIR(parsed);
+  if (!validation.success) {
+    throw new AppError(
+      `Invalid IR generated: ${validation.error}`,
+      ErrorCodes.VALIDATION_FAILED,
+      500,
+    );
+  }
+
+  const inserted = db.insertItem({
+    ...validation.data,
+    userId: context.userId || null,
+    collectionId: 'files',
+  });
+  if (!inserted) {
+    throw new AppError(
+      'Duplicate document (already in your library)',
+      ErrorCodes.VALIDATION_FAILED,
+      409,
+    );
+  }
+
+  try {
+    await indexItem(validation.data, context.chunkingConfig);
+  } catch (err) {
+    logger.error({ err, itemId: validation.data.id }, 'Chunking failed for item');
+  }
+
+  return validation.data;
+}
+
+async function removeTempFile(filePath) {
+  try {
+    await fsp.unlink(filePath);
+  } catch (err) {
+    logger.warn({ err, filePath }, 'Failed to remove temporary upload file');
+  }
+}
+
+function buildUploadContext(body, userId) {
+  const useResumeParser = body && body.type === 'resume';
+  return {
+    batchId: (body && body.batchId) || crypto.randomUUID(),
+    userId,
+    parse: useResumeParser ? parseResume : parseDocument,
+    chunkingConfig: readChunkingConfig(),
+  };
+}
+
+async function processBatch(files, context) {
+  const results = [];
+  const errors = [];
+
+  for (const file of files) {
+    try {
+      results.push(await processFile(file, context));
+    } catch (err) {
+      logger.error({ err, fileName: file.originalname }, 'Failed to process document');
+      errors.push({ fileName: file.originalname, error: err.message });
+    } finally {
+      await removeTempFile(file.path);
+    }
+  }
+
+  return { results, errors };
+}
 
 router.post('/', upload.array('files', config.upload.maxFiles), async (req, res, next) => {
   try {
@@ -34,107 +163,21 @@ router.post('/', upload.array('files', config.upload.maxFiles), async (req, res,
       throw new AppError('No files uploaded', ErrorCodes.VALIDATION_FAILED, 400);
     }
 
-    // Get chunking config
-    let chunkingConfig;
-    try {
-      chunkingConfig = db.getChunkingConfig();
-    } catch {
-      chunkingConfig = { strategy: 'semantic', chunk_size: 200, overlap: 50 };
-    }
-
-    // One upload = one batch (for scoped Match: this batch vs the whole library).
-    // Default parser is generic 'document'; resume parsing is opt-in (type=resume).
-    const batchId = (req.body && req.body.batchId) || crypto.randomUUID();
-    const useResumeParser = req.body && req.body.type === 'resume';
-    const parse = useResumeParser ? parseResume : parseDocument;
-
-    const results = [];
-    const errors = [];
-
-    for (const file of req.files) {
-      try {
-        const irObject = await parse(file.buffer, file.originalname);
-        // Private library: the content-addressed id is the PK, so two users
-        // uploading the same file would collide (INSERT OR IGNORE drops the
-        // second). Scope the id to the owner — same user re-uploading still
-        // dedups; different users each keep their own copy. (fingerprint is
-        // already user-scoped for non-internet collections.)
-        if (req.userId) {
-          irObject.id = crypto.createHash('sha256')
-            .update(`${req.userId}:${irObject.id}`)
-            .digest('hex')
-            .slice(0, 16);
-        }
-        irObject.metadata = { ...irObject.metadata, batchId };
-
-        const validation = validateIR(irObject);
-        if (!validation.success) {
-          throw new AppError(`Invalid IR generated: ${validation.error}`, ErrorCodes.VALIDATION_FAILED, 500);
-        }
-
-        const inserted = db.insertItem({
-          ...validation.data,
-          userId: req.userId || null,
-          collectionId: 'files',
-        });
-        if (inserted) {
-          results.push(validation.data);
-
-          // Chunk the document and generate embeddings
-          try {
-            const chunks = await chunk(validation.data.content, chunkingConfig.strategy, {
-              chunkSize: chunkingConfig.chunk_size,
-              overlap: chunkingConfig.overlap,
-            });
-
-            for (const c of chunks) {
-              let vector = null;
-              try {
-                const embedding = await SearchEngine.generateEmbedding(c.content);
-                vector = SearchEngine.serializeVector(embedding);
-              } catch {
-                // Skip embedding generation on failure — chunk is still searchable via FTS5
-              }
-
-              db.insertChunk({
-                id: `${validation.data.id}_chunk_${c.chunkIndex}`,
-                parentId: validation.data.id,
-                content: c.content,
-                chunkIndex: c.chunkIndex,
-                level: c.level || 'section',
-                strategy: c.strategy,
-                vector,
-                metadata: c.metadata || {},
-              });
-            }
-
-            logger.info(
-              { itemId: validation.data.id, chunksCreated: chunks.length, strategy: chunkingConfig.strategy },
-              'Document chunked and indexed',
-            );
-          } catch (chunkErr) {
-            logger.error({ err: chunkErr, itemId: validation.data.id }, 'Chunking failed for item');
-            // Item is still saved even if chunking fails
-          }
-        } else {
-          errors.push({ fileName: file.originalname, error: 'Duplicate document (already in your library)' });
-        }
-      } catch (err) {
-        logger.error({ err, fileName: file.originalname }, 'Failed to process document');
-        errors.push({ fileName: file.originalname, error: err.message });
-      }
-    }
+    const context = buildUploadContext(req.body, req.userId);
+    const { results, errors } = await processBatch(req.files, context);
 
     res.status(200).json({
       success: true,
-      batchId,
+      batchId: context.batchId,
       processed: results.length,
       failed: errors.length,
       items: results,
-      errors: errors.length > 0 ? errors : undefined
+      errors: errors.length > 0 ? errors : undefined,
     });
-
   } catch (err) {
+    if (req.files) {
+      await Promise.all(req.files.map((file) => removeTempFile(file.path)));
+    }
     next(err);
   }
 });

@@ -50,10 +50,6 @@ export function FilesMode() {
         batchId: wholeLibrary ? undefined : lastBatchId,
         topN: useAI ? 20 : 50,
         useReranker: useAI,
-        // Measured optimum for candidate matching (scripts/eval-match.js):
-        // route default threshold 0.65 over-filters MiniLM scores, and MMR
-        // diversity (0.5) pushes same-role candidates down. thr 0.3 + mmr 1.0
-        // lifts nDCG@10 0.72 → 0.98. (Diversity stays ON for internet search.)
         threshold: 0.3,
         mmrLambda: 1.0,
       })
@@ -76,7 +72,6 @@ export function FilesMode() {
           you're looking for and Match — the engine searches your whole library semantically.
         </p>
 
-        {/* Add documents (optional) */}
         <div className="border border-border rounded-md p-4 space-y-2">
           <div className="text-xs text-fg-2 uppercase tracking-wider">Add documents (optional)</div>
           <div className="flex items-center gap-3">
@@ -92,7 +87,6 @@ export function FilesMode() {
           </div>
         </div>
 
-        {/* Match */}
         <div className="space-y-3">
           <label className="text-xs text-fg-2 uppercase tracking-wider">What are you looking for?</label>
           <textarea
@@ -132,7 +126,6 @@ export function FilesMode() {
           </div>
         </div>
 
-        {/* Results */}
         {results.length > 0 && (
           <div className="border border-border rounded-md overflow-hidden">
             {results.map((doc, i) => (

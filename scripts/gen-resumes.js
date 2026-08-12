@@ -67,7 +67,7 @@ function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function pickN(arr, n) {
   const copy = [...arr];
   const out = [];
-  for (let i = 0; i < n && copy.length; i++) out.push(copy.splice(Math.floor(Math.random() * copy.length), 1)[0]);
+  for (let i = 0; i < n && copy.length; i++) {out.push(copy.splice(Math.floor(Math.random() * copy.length), 1)[0]);}
   return out;
 }
 function randint(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
@@ -100,9 +100,9 @@ function makeWriter(doc, font, bold) {
     for (const w of words) {
       const trial = cur ? `${cur} ${w}` : w;
       if (f.widthOfTextAtSize(trial, size) > MAXW && cur) { lines.push(cur); cur = w; }
-      else cur = trial;
+      else {cur = trial;}
     }
-    if (cur) lines.push(cur);
+    if (cur) {lines.push(cur);}
     return lines;
   }
   function line(text, { size = 9.5, b = false, gap = 3, color } = {}) {
@@ -193,7 +193,7 @@ async function genOne(i) {
   const truth = [];
   for (let i = 1; i <= N; i++) {
     truth.push(await genOne(i));
-    if (i % 20 === 0) console.log(`  generated ${i}/${N}`);
+    if (i % 20 === 0) {console.log(`  generated ${i}/${N}`);}
   }
   // Ground truth: per-resume labels + the eval queries (one per role).
   const queries = Object.entries(ROLE_PROFILES).map(([role, p]) => ({ role, query: p.query }));

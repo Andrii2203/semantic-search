@@ -9,9 +9,6 @@ const { AppError, ErrorCodes } = require('../errors');
 
 const router = express.Router();
 
-// ─── Chunking Config ────────────────────────────────────────
-
-// GET /api/config/chunking
 router.get('/chunking', (_req, res, next) => {
   try {
     const config = db.getChunkingConfig();
@@ -21,12 +18,10 @@ router.get('/chunking', (_req, res, next) => {
   }
 });
 
-// POST /api/config/chunking
 router.post('/chunking', (req, res, next) => {
   try {
     const { strategy, chunkSize, overlap } = req.body;
 
-    // Validate strategy
     const validStrategies = ['fixed', 'semantic', 'hierarchical'];
     if (strategy && !validStrategies.includes(strategy)) {
       throw new AppError(
@@ -36,7 +31,6 @@ router.post('/chunking', (req, res, next) => {
       );
     }
 
-    // Validate numbers
     if (chunkSize !== undefined && (chunkSize < 50 || chunkSize > 1000)) {
       throw new AppError('chunkSize must be between 50 and 1000', ErrorCodes.VALIDATION_FAILED, 400);
     }
@@ -55,9 +49,6 @@ router.post('/chunking', (req, res, next) => {
   }
 });
 
-// ─── Profiles ───────────────────────────────────────────────
-
-// GET /api/config/profiles
 router.get('/profiles', (_req, res, next) => {
   try {
     const profiles = db.getAllProfiles();
@@ -67,7 +58,6 @@ router.get('/profiles', (_req, res, next) => {
   }
 });
 
-// DELETE /api/config/profiles/:id
 router.delete('/profiles/:id', (req, res, next) => {
   try {
     const deleted = db.deleteProfile(req.params.id);
@@ -80,9 +70,33 @@ router.delete('/profiles/:id', (req, res, next) => {
   }
 });
 
-// ─── Re-chunk ───────────────────────────────────────────────
+async function embedOrNull(content) {
+  try {
+    return SearchEngine.serializeVector(await SearchEngine.generateEmbedding(content));
+  } catch {
+    return null;
+  }
+}
 
-// POST /api/config/rechunk — re-chunk all items with current strategy
+async function rechunkItem(item, strategy, options) {
+  db.deleteChunksByParent(item.id);
+
+  const chunks = await chunk(item.content, strategy, options);
+
+  for (const piece of chunks) {
+    db.insertChunk({
+      id: `${item.id}_chunk_${piece.chunkIndex}`,
+      parentId: item.id,
+      content: piece.content,
+      chunkIndex: piece.chunkIndex,
+      level: piece.level || 'section',
+      strategy: piece.strategy,
+      vector: await embedOrNull(piece.content),
+      metadata: piece.metadata || {},
+    });
+  }
+}
+
 router.post('/rechunk', async (req, res, next) => {
   try {
     const config = db.getChunkingConfig();
@@ -92,41 +106,13 @@ router.post('/rechunk', async (req, res, next) => {
       overlap: req.body.overlap || config.overlap,
     };
 
-    // Get all items
     const items = db.getItems({ limit: 10000 });
     let processed = 0;
     let errors = 0;
 
     for (const item of items) {
       try {
-        // Delete old chunks
-        db.deleteChunksByParent(item.id);
-
-        // Re-chunk
-        const chunks = await chunk(item.content, strategy, options);
-
-        // Generate embeddings and save
-        for (const c of chunks) {
-          let vector = null;
-          try {
-            const embedding = await SearchEngine.generateEmbedding(c.content);
-            vector = SearchEngine.serializeVector(embedding);
-          } catch {
-            // Skip embedding on failure
-          }
-
-          db.insertChunk({
-            id: `${item.id}_chunk_${c.chunkIndex}`,
-            parentId: item.id,
-            content: c.content,
-            chunkIndex: c.chunkIndex,
-            level: c.level || 'section',
-            strategy: c.strategy,
-            vector,
-            metadata: c.metadata || {},
-          });
-        }
-
+        await rechunkItem(item, strategy, options);
         processed++;
       } catch (err) {
         logger.error({ err, itemId: item.id }, 'Re-chunk failed for item');

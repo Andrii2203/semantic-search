@@ -9,7 +9,6 @@ const logger = require('./logger');
 const db = require('./db');
 const { createShutdownHandler } = require('./shutdown');
 
-// Routes
 const itemsRouter = require('./routes/items');
 const syncRouter = require('./routes/sync');
 const { router: exportRouter } = require('./routes/export');
@@ -25,7 +24,6 @@ const { requireAuth } = require('./middleware/auth');
 
 const app = express();
 app.set('trust proxy', 1);
-// ─── Middleware ───────────────────────────────────────────────
 
 app.use(helmet());
 
@@ -47,24 +45,15 @@ app.use(
 
 app.use(express.json());
 
-// Serve static files from /public
 app.use(express.static('public'));
-
-// ─── Health Check ────────────────────────────────────────────
 
 const healthRouter = require('./routes/health');
 app.use('/api/health', healthRouter);
 
-// ─── Auth (public — no requireAuth) ──────────────────────────
-
 app.use('/api/auth', authRouter);
 app.use('/api/client-error', clientErrorRouter);
 
-// ─── Auth guard for all remaining /api/* routes ───────────────
-
 app.use(requireAuth);
-
-// ─── Protected Routes ─────────────────────────────────────────
 
 app.use('/api/items', itemsRouter);
 app.use('/api', syncRouter);
@@ -76,15 +65,11 @@ app.use('/api/seed-test-data', seedRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/config', configRouter);
 
-// ─── 404 for unknown routes ──────────────────────────────────
-
 app.use((_req, res) => {
   res.status(404).json({
     error: { code: 'NOT_FOUND', message: 'Route not found' },
   });
 });
-
-// ─── Global error handler ────────────────────────────────────
 
 app.use((err, _req, res, _next) => {
   const statusCode = err.statusCode || 500;
@@ -102,16 +87,12 @@ app.use((err, _req, res, _next) => {
   });
 });
 
-// ─── Start ───────────────────────────────────────────────────
-
 const startup = require('./startup');
 const scheduler = require('./scheduler');
 
 async function start() {
-  // Initialize database
   db.init();
   
-  // Run startup diagnostics before fully booting
   try {
     await startup.runStartupChecks();
   } catch (err) {
@@ -123,15 +104,13 @@ async function start() {
     logger.info({ port: config.port, env: config.nodeEnv }, 'Server started');
   });
 
-  createShutdownHandler(server, db);
+  createShutdownHandler(server, db, { scheduler });
 
-  // Start scheduler (cron) + run first cycle immediately
   scheduler.start();
-  // We can let the first cycle run asynchronously
   scheduler.runCycle().catch((err) => logger.error({ err }, 'Initial cycle failed'));
-  
-  logger.info('Server ready. Use "Fetch Posts" button to sync manually.');
-  
+
+  logger.info('Server ready');
+
   return server;
 }
 

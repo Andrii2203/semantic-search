@@ -1,9 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 
-/**
- * Production-grade Living Design Hook.
- * Features: SSR safety, caching, fetch timeouts, and visibility sync.
- */
 export function useLivingDesign() {
   const [design, setDesign] = useState({
     accentHue: 20,
@@ -13,8 +9,6 @@ export function useLivingDesign() {
     weather: { blur: 0, saturation: 1, temp: 20 },
     noise: 0
   })
-
-  // --- Helper Functions ---
 
   const getMoonPhase = (date) => {
     if (!date || isNaN(date.getTime())) return 0
@@ -44,8 +38,6 @@ export function useLivingDesign() {
     }
   }
 
-  // --- Core Update Logic ---
-
   const updateDesign = useCallback(async () => {
     const now = new Date()
     now.setMonth(3)
@@ -54,12 +46,11 @@ export function useLivingDesign() {
     const yearAngle = (dayOfYear / 365) * Math.PI * 2
     const moonPhase = getMoonPhase(now)
     
-    // 1. Weather Logic (with caching)
     let weatherParams = { blur: 0, saturation: 1, temp: 20 }
     const cachedWeather = typeof localStorage !== 'undefined' ? localStorage.getItem('living_ui_weather') : null
     const cacheTimestamp = typeof localStorage !== 'undefined' ? localStorage.getItem('living_ui_weather_ts') : null
     
-    const isCacheValid = cacheTimestamp && (Date.now() - parseInt(cacheTimestamp)) < 3600000 // 1 hour
+    const isCacheValid = cacheTimestamp && (Date.now() - parseInt(cacheTimestamp)) < 3600000
 
     if (isCacheValid && cachedWeather) {
       weatherParams = JSON.parse(cachedWeather)
@@ -69,8 +60,8 @@ export function useLivingDesign() {
         const data = await res.json()
         if (data?.current && typeof data.current.wind_speed_10m === 'number') {
           weatherParams = {
-            blur: Math.min(data.current.wind_speed_10m * 0.5, 20), // Max blur 20px
-            saturation: Math.max(1 - data.current.cloud_cover / 200, 0.4), // Min saturation 40%
+            blur: Math.min(data.current.wind_speed_10m * 0.5, 20),
+            saturation: Math.max(1 - data.current.cloud_cover / 200, 0.4),
             temp: data.current.temperature_2m
           }
           if (typeof localStorage !== 'undefined') {
@@ -84,7 +75,6 @@ export function useLivingDesign() {
       }
     }
 
-    // 2. Calculations
     const noise1 = getDailyNoise(now)
     const noise2 = getDailyNoise(now, 500)
     const radius = 35 + noise1 * 5
@@ -94,7 +84,6 @@ export function useLivingDesign() {
     const daylight = 0.3 + (Math.sin(hourAngle - Math.PI/2) + 1) / 2 * 0.7
     const hue = (20 + dayOfYear) % 360
 
-    // 3. Apply to DOM (SSR safe)
     if (typeof document !== 'undefined') {
       const root = document.documentElement
       root.style.setProperty('--dynamic-accent-hue', hue.toString())
@@ -103,7 +92,6 @@ export function useLivingDesign() {
       root.style.setProperty('--weather-saturation', weatherParams.saturation.toString())
       root.style.setProperty('--moon-phase', moonPhase.toFixed(3))
       
-      // Вираховуємо інтенсивність сяйва (0 до 1)
       const moonIntensity = Math.max(0, Math.sin(moonPhase * Math.PI))
       root.style.setProperty('--moon-intensity', moonIntensity.toFixed(3))
       
@@ -125,7 +113,6 @@ export function useLivingDesign() {
   useEffect(() => {
     updateDesign()
 
-    // Sync on tab visibility change
     const handleVisibilityChange = () => {
       if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
         updateDesign()
@@ -136,7 +123,7 @@ export function useLivingDesign() {
       document.addEventListener('visibilitychange', handleVisibilityChange)
     }
 
-    const interval = setInterval(updateDesign, 600000) // 10 min refresh
+    const interval = setInterval(updateDesign, 600000)
     
     return () => {
       clearInterval(interval)

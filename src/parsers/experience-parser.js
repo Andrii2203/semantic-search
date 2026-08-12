@@ -3,11 +3,6 @@
 const DATE_PATTERN = /(\d{4})\s*[-–—to]+\s*(present|тепер|настоящее|по настоящее|current)/i;
 const DATE_PATTERN_STATIC = /(\d{4})\s*[-–—to]+\s*(\d{4})/i;
 
-/**
- * Extracts and calculates experience duration from the experience section.
- * @param {string[]} experienceSectionLines Lines of text from the experience section
- * @returns {object} Object containing parsed experiences and total years
- */
 function parseExperience(experienceSectionLines) {
   if (!experienceSectionLines || experienceSectionLines.length === 0) {
     return { experiences: [], totalYears: 0 };
@@ -44,7 +39,6 @@ function parseExperience(experienceSectionLines) {
     }
   }
 
-  // Calculate totalYears by merging overlapping intervals
   let totalYears = 0;
   if (experiences.length > 0) {
     const intervals = experiences.map(exp => [exp.yearsFrom, exp.yearsTo]);
@@ -56,16 +50,13 @@ function parseExperience(experienceSectionLines) {
     for (let i = 1; i < intervals.length; i++) {
       const nextInterval = intervals[i];
       if (nextInterval[0] <= currentInterval[1]) {
-        // Overlapping intervals, extend the end year
         currentInterval[1] = Math.max(currentInterval[1], nextInterval[1]);
       } else {
-        // Non-overlapping, push as new interval
         currentInterval = [...nextInterval];
         mergedIntervals.push(currentInterval);
       }
     }
 
-    // Sum the durations of all merged non-overlapping intervals
     totalYears = mergedIntervals.reduce((sum, interval) => sum + (interval[1] - interval[0]), 0);
   }
 

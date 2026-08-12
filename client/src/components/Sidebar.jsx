@@ -57,25 +57,22 @@ export function Sidebar() {
   const qc = useQueryClient()
 
   const [isSyncing, setIsSyncing] = useState(false)
-  const [syncDone, setSyncDone] = useState(null)   // { saved, duration } shown after finish
+  const [syncDone, setSyncDone] = useState(null)
   const [elapsed, setElapsed] = useState(0)
   const syncMutation = useSync()
   const { data: syncStatus } = useSyncStatus(isSyncing)
 
-  // Elapsed timer while syncing
   useEffect(() => {
     if (!isSyncing) { setElapsed(0); return }
     const t = setInterval(() => setElapsed(e => e + 1), 1000)
     return () => clearInterval(t)
   }, [isSyncing])
 
-  // When polling detects cycle finished → show result + refresh items
   useEffect(() => {
     if (isSyncing && syncStatus && !syncStatus.isRunning) {
       setIsSyncing(false)
       setSyncDone(syncStatus.lastResult || { saved: 0, duration: 0 })
       qc.invalidateQueries({ queryKey: ['items'] })
-      // Hide result after 8s
       setTimeout(() => setSyncDone(null), 8000)
     }
   }, [syncStatus, isSyncing, qc])
@@ -93,7 +90,6 @@ export function Sidebar() {
     <div className={`shrink-0 border-r border-border flex flex-col py-3 bg-surface transition-all duration-200 ${
       sidebarCollapsed ? 'w-14' : 'w-52'
     }`}>
-      {/* Toggle button */}
       <div className={`px-2 mb-2 flex ${sidebarCollapsed ? 'justify-center' : 'justify-end'}`}>
         <button
           onClick={toggleSidebar}
@@ -121,7 +117,6 @@ export function Sidebar() {
       <div className="px-2 pb-1 space-y-1">
         <Divider />
 
-        {/* Sync button */}
         <button
           onClick={handleSync}
           disabled={isSyncing || syncMutation.isPending}
@@ -134,7 +129,6 @@ export function Sidebar() {
           )}
         </button>
 
-        {/* Sync progress panel */}
         {isSyncing && syncStatus?.currentStep && !sidebarCollapsed && (
           <div className="mx-1 px-2 py-2 rounded-sm bg-surface-2 border border-border space-y-1">
             <p className="text-[10px] font-mono text-fg-2 leading-snug">{syncStatus.currentStep}</p>
@@ -142,7 +136,6 @@ export function Sidebar() {
           </div>
         )}
 
-        {/* Sync result */}
         {syncDone && !isSyncing && !sidebarCollapsed && (
           <div className="mx-1 px-2 py-2 rounded-sm bg-surface-2 border border-border">
             <p className="text-[10px] font-mono text-green-500">
@@ -151,7 +144,6 @@ export function Sidebar() {
           </div>
         )}
 
-        {/* Health status */}
         <div className={`px-3 py-2 flex items-center gap-2 text-[10px] font-mono text-fg-2 ${
           sidebarCollapsed ? 'justify-center' : ''
         }`}>

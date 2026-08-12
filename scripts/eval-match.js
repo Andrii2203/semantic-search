@@ -45,24 +45,24 @@ const MATRIX = [
 // ── Metrics (binary relevance) ──────────────────────────────
 function precisionAtK(ranked, relevant, k) {
   const top = ranked.slice(0, k);
-  if (top.length === 0) return 0;
+  if (top.length === 0) {return 0;}
   return top.filter((r) => relevant.has(r)).length / top.length;
 }
 function recallAtK(ranked, relevant, k) {
-  if (relevant.size === 0) return 0;
+  if (relevant.size === 0) {return 0;}
   return ranked.slice(0, k).filter((r) => relevant.has(r)).length / relevant.size;
 }
 function reciprocalRank(ranked, relevant) {
-  for (let i = 0; i < ranked.length; i++) if (relevant.has(ranked[i])) return 1 / (i + 1);
+  for (let i = 0; i < ranked.length; i++) {if (relevant.has(ranked[i])) {return 1 / (i + 1);}}
   return 0;
 }
 function ndcgAtK(ranked, relevant, k) {
   let dcg = 0;
   for (let i = 0; i < Math.min(k, ranked.length); i++) {
-    if (relevant.has(ranked[i])) dcg += 1 / Math.log2(i + 2);
+    if (relevant.has(ranked[i])) {dcg += 1 / Math.log2(i + 2);}
   }
   let idcg = 0;
-  for (let i = 0; i < Math.min(relevant.size, k); i++) idcg += 1 / Math.log2(i + 2);
+  for (let i = 0; i < Math.min(relevant.size, k); i++) {idcg += 1 / Math.log2(i + 2);}
   return idcg === 0 ? 0 : dcg / idcg;
 }
 
@@ -98,7 +98,7 @@ async function evalConfig(cookie, gt, relevantByRole, knobs) {
   const agg = { p: 0, r: 0, mrr: 0, ndcg: 0 };
   for (const { role, query } of gt.queries) {
     const relevant = relevantByRole.get(role);
-    if (!relevant || relevant.size === 0) continue;
+    if (!relevant || relevant.size === 0) {continue;}
     const ranked = await runQuery(cookie, query, knobs);
     const row = {
       role,
@@ -122,17 +122,17 @@ async function register() {
     body: JSON.stringify({ email, password: 'password123' }),
   });
   const cookie = (reg.headers.get('set-cookie') || '').split(';')[0];
-  if (!cookie) throw new Error(`register failed (${reg.status})`);
+  if (!cookie) {throw new Error(`register failed (${reg.status})`);}
   return cookie;
 }
 
 function loadGroundTruth() {
   const gtPath = path.join(DIR, '_ground-truth.json');
-  if (!fs.existsSync(gtPath)) throw new Error('No ground truth. Run: node scripts/gen-resumes.js [N]');
+  if (!fs.existsSync(gtPath)) {throw new Error('No ground truth. Run: node scripts/gen-resumes.js [N]');}
   const gt = JSON.parse(fs.readFileSync(gtPath, 'utf8'));
   const relevantByRole = new Map();
   for (const r of gt.resumes) {
-    if (!relevantByRole.has(r.role)) relevantByRole.set(r.role, new Set());
+    if (!relevantByRole.has(r.role)) {relevantByRole.set(r.role, new Set());}
     relevantByRole.get(r.role).add(r.file);
   }
   return { gt, relevantByRole };

@@ -7,13 +7,13 @@ const logger = require('../logger');
 const db = require('../db');
 
 const SESSION_COOKIE = 'ume_session';
-const COOKIE_MAX_AGE = 7 * 24 * 60 * 60; // 7 days in seconds
+const COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
 
 function parseCookies(cookieHeader) {
-  if (!cookieHeader) return {};
+  if (!cookieHeader) {return {};}
   return cookieHeader.split(';').reduce((acc, pair) => {
     const idx = pair.indexOf('=');
-    if (idx < 0) return acc;
+    if (idx < 0) {return acc;}
     const key = pair.slice(0, idx).trim();
     const val = pair.slice(idx + 1).trim();
     acc[key] = val;
@@ -28,7 +28,6 @@ function sign(value) {
     .digest('base64url');
 }
 
-// Token format: userId.randomValue.sig  (2 dots, userId has no dots)
 function createSessionToken(userId) {
   const value = crypto.randomBytes(32).toString('base64url');
   const payload = `${userId}.${value}`;
@@ -36,21 +35,20 @@ function createSessionToken(userId) {
   return `${payload}.${sig}`;
 }
 
-// Returns userId if valid, null otherwise
 function verifySessionToken(token) {
-  if (!token || typeof token !== 'string') return null;
+  if (!token || typeof token !== 'string') {return null;}
   const firstDot = token.indexOf('.');
   const lastDot = token.lastIndexOf('.');
-  if (firstDot < 0 || firstDot === lastDot) return null;
+  if (firstDot < 0 || firstDot === lastDot) {return null;}
   const payload = token.slice(0, lastDot);
   const sig = token.slice(lastDot + 1);
   const expected = sign(payload);
   try {
     const sigBuf = Buffer.from(sig, 'base64url');
     const expBuf = Buffer.from(expected, 'base64url');
-    if (sigBuf.length !== expBuf.length) return null;
-    if (!crypto.timingSafeEqual(sigBuf, expBuf)) return null;
-    return token.slice(0, firstDot); // userId
+    if (sigBuf.length !== expBuf.length) {return null;}
+    if (!crypto.timingSafeEqual(sigBuf, expBuf)) {return null;}
+    return token.slice(0, firstDot);
   } catch {
     return null;
   }
@@ -64,7 +62,7 @@ function buildCookieHeader(value) {
     'HttpOnly',
     'SameSite=Strict',
   ];
-  if (config.isProduction) flags.push('Secure');
+  if (config.isProduction) {flags.push('Secure');}
   return flags.join('; ');
 }
 
@@ -76,7 +74,7 @@ function clearCookieHeader() {
     'HttpOnly',
     'SameSite=Strict',
   ];
-  if (config.isProduction) flags.push('Secure');
+  if (config.isProduction) {flags.push('Secure');}
   return flags.join('; ');
 }
 
@@ -92,7 +90,7 @@ function getSessionToken(req) {
 }
 
 function requireAuth(req, res, next) {
-  if (isPublic(req.path)) return next();
+  if (isPublic(req.path)) {return next();}
 
   const token = getSessionToken(req);
   const userId = verifySessionToken(token);
@@ -159,8 +157,6 @@ async function register(req, res) {
   const passwordHash = await bcrypt.hash(password, 10);
   db.createUser({ id, email: normalizedEmail, passwordHash });
 
-  // Onboarding: seed the new user's inbox with welcome messages (best-effort —
-  // a seeding failure must not break registration).
   try {
     db.seedWelcomeForUser(id);
   } catch (err) {

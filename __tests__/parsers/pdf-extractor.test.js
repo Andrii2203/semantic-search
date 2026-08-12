@@ -1,56 +1,51 @@
 'use strict';
 
-const { PDFParse } = require('pdf-parse');
+const { setPdfText, failNextParse, resetPdfFake } = require('pdf-parse');
 const { AppError } = require('../../src/errors');
 const { extractTextFromPDF, cleanText } = require('../../src/parsers/pdf-extractor');
 
-jest.mock('pdf-parse', () => ({ PDFParse: jest.fn() }));
-
-describe('pdf-extractor', () => {
+describe('src/parsers/pdf-extractor.js', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    resetPdfFake();
   });
 
   describe('cleanText', () => {
-    it('removes excessive newlines and spaces', () => {
+    test('collapses repeated spaces and blank lines into single separators', () => {
       const raw = 'Hello    World\n\n\nThis is a test\n  \nEnd';
-      const expected = 'Hello World\nThis is a test\nEnd';
-      expect(cleanText(raw)).toBe(expected);
+
+      expect(cleanText(raw)).toBe('Hello World\nThis is a test\nEnd');
     });
 
-    it('handles empty or null input', () => {
+    test('returns an empty string when the input is empty or null', () => {
       expect(cleanText('')).toBe('');
       expect(cleanText(null)).toBe('');
     });
   });
 
   describe('extractTextFromPDF', () => {
-    it('throws AppError if input is not a buffer', async () => {
+    test('rejects with AppError when the input is not a buffer', async () => {
       await expect(extractTextFromPDF('not a buffer')).rejects.toThrow(AppError);
-      await expect(extractTextFromPDF('not a buffer')).rejects.toThrow('Invalid input: Expected a Buffer containing PDF data.');
-      
+      await expect(extractTextFromPDF('not a buffer')).rejects.toThrow(
+        'Invalid input: Expected a Buffer containing PDF data.',
+      );
       await expect(extractTextFromPDF(null)).rejects.toThrow(AppError);
     });
 
-    it('extracts and cleans text from valid pdf buffer', async () => {
-      const getText = jest.fn().mockResolvedValue({ text: 'Mocked \n PDF   \n\n Content' });
-      PDFParse.mockImplementation(() => ({ getText, destroy: jest.fn() }));
-      const dummyBuffer = Buffer.from('dummy');
-      const text = await extractTextFromPDF(dummyBuffer);
+    test('returns the cleaned text of the parsed document', async () => {
+      setPdfText('Mocked \n PDF   \n\n Content');
 
-      expect(PDFParse).toHaveBeenCalledWith({ data: dummyBuffer });
+      const text = await extractTextFromPDF(Buffer.from('dummy'));
+
       expect(text).toBe('Mocked\nPDF\nContent');
     });
 
-    it('throws custom AppError if pdf-parse fails', async () => {
-      PDFParse.mockImplementation(() => ({
-        getText: jest.fn().mockRejectedValue(new Error('Corrupted file')),
-        destroy: jest.fn(),
-      }));
-      const dummyBuffer = Buffer.from('dummy');
+    test('rejects with AppError carrying the parser message when parsing fails', async () => {
+      failNextParse('Corrupted file');
 
-      await expect(extractTextFromPDF(dummyBuffer)).rejects.toThrow(AppError);
-      await expect(extractTextFromPDF(dummyBuffer)).rejects.toThrow('Failed to parse PDF: Corrupted file');
+      await expect(extractTextFromPDF(Buffer.from('dummy'))).rejects.toThrow(AppError);
+      await expect(extractTextFromPDF(Buffer.from('dummy'))).rejects.toThrow(
+        'Failed to parse PDF: Corrupted file',
+      );
     });
   });
 });

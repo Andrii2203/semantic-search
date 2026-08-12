@@ -16,7 +16,6 @@ export function ProfileEditor() {
   const [text, setText] = useState('')
   const [saved, setSaved] = useState(false)
 
-  // Sync the textarea once the saved profile loads (without clobbering edits)
   useEffect(() => {
     if (profile?.rawInput) setText(profile.rawInput)
   }, [profile?.rawInput])
@@ -31,7 +30,6 @@ export function ProfileEditor() {
       setSaved(true)
       setTimeout(() => setSaved(false), 4000)
     } catch {
-      // error surfaced via saveMutation.error below
     }
   }
 
@@ -83,7 +81,6 @@ export function ProfileEditor() {
           )}
         </div>
 
-        {/* Extracted keywords + last saved */}
         <div className="border-t border-border pt-6 space-y-3">
           <div className="text-[10px] font-mono uppercase tracking-wider text-fg-2">
             Extracted keywords

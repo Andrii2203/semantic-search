@@ -1,8 +1,10 @@
 'use strict';
 
+const fs = require('fs');
 const request = require('supertest');
 const { app } = require('../src/server');
 const db = require('../src/db');
+const config = require('../src/config');
 
 // Mock parsers (default is the generic document parser; resume is opt-in)
 jest.mock('../src/parsers', () => ({
@@ -128,6 +130,55 @@ describe('Upload API', () => {
     const saved = db.getItemById(res.body.items[0].id);
     expect(saved.user_id).toBe(userId);
     expect(saved.collection_id).toBe('files');
+  });
+
+  it('writes the incoming file to the temp directory instead of holding it in memory', async () => {
+    let filesOnDiskDuringParse = 0;
+    parsers.parseDocument.mockImplementation(async () => {
+      filesOnDiskDuringParse = fs.readdirSync(config.upload.tempDir).length;
+      return {
+        id: 'disk-storage-doc',
+        content: 'Parsed content',
+        type: 'document',
+        source: 'file-upload',
+        metadata: { fileName: 'on-disk.pdf' },
+      };
+    });
+
+    await request(app)
+      .post('/api/upload')
+      .set('Cookie', cookie)
+      .attach('files', Buffer.from('dummy pdf'), { filename: 'on-disk.pdf', contentType: 'application/pdf' });
+
+    expect(filesOnDiskDuringParse).toBeGreaterThan(0);
+  });
+
+  it('removes the temporary file after a successful upload', async () => {
+    parsers.parseDocument.mockResolvedValue({
+      id: 'cleanup-success',
+      content: 'Parsed content',
+      type: 'document',
+      source: 'file-upload',
+      metadata: { fileName: 'clean.pdf' },
+    });
+
+    await request(app)
+      .post('/api/upload')
+      .set('Cookie', cookie)
+      .attach('files', Buffer.from('dummy pdf'), { filename: 'clean.pdf', contentType: 'application/pdf' });
+
+    expect(fs.readdirSync(config.upload.tempDir)).toEqual([]);
+  });
+
+  it('removes the temporary file when parsing throws', async () => {
+    parsers.parseDocument.mockRejectedValue(new Error('Corrupt PDF'));
+
+    await request(app)
+      .post('/api/upload')
+      .set('Cookie', cookie)
+      .attach('files', Buffer.from('dummy pdf'), { filename: 'broken.pdf', contentType: 'application/pdf' });
+
+    expect(fs.readdirSync(config.upload.tempDir)).toEqual([]);
   });
 
   it('returns errors for files that failed to parse', async () => {

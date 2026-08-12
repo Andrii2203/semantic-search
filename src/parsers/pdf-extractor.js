@@ -3,9 +3,6 @@
 const { PDFParse } = require('pdf-parse');
 const { AppError, ErrorCodes } = require('../errors');
 
-/**
- * Cleans the raw text extracted from PDF
- */
 function cleanText(text) {
   if (!text) { return '' };
   return text
@@ -21,9 +18,6 @@ function cleanText(text) {
     .join('\n');
 }
 
-/**
- * Extracts raw text from a PDF Buffer
- */
 async function extractTextFromPDF(fileBuffer) {
   if (!fileBuffer || !Buffer.isBuffer(fileBuffer)) {
     throw new AppError(
@@ -35,7 +29,6 @@ async function extractTextFromPDF(fileBuffer) {
 
   let parser;
   try {
-    // pdf-parse v2 API: new PDFParse({ data }).getText()
     parser = new PDFParse({ data: fileBuffer });
     const result = await parser.getText();
     return cleanText(result.text);
@@ -47,7 +40,7 @@ async function extractTextFromPDF(fileBuffer) {
     );
   } finally {
     if (parser && typeof parser.destroy === 'function') {
-      try { await parser.destroy(); } catch { /* ignore cleanup errors */ }
+      try { await parser.destroy(); } catch { void 0; }
     }
   }
 }

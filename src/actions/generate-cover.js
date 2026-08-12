@@ -4,10 +4,6 @@ const config = require('../config');
 const logger = require('../logger');
 const { retry } = require('../retry');
 
-/**
- * Action: Generate Cover Letter
- * Takes a job IR item and generates a tailored cover letter via Groq LLM.
- */
 async function run(item, _profileContext) {
   logger.info({ itemId: item.id, type: item.type }, 'Generating cover letter');
 

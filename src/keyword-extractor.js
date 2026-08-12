@@ -3,8 +3,6 @@
 const { getGroqClient } = require('./groq-client');
 const logger = require('./logger');
 
-// ─── Stop Words ─────────────────────────────────────────────
-
 const STOP_WORDS = new Set([
   'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
   'of', 'with', 'by', 'from', 'is', 'are', 'was', 'were', 'be', 'been',
@@ -25,30 +23,21 @@ const STOP_WORDS = new Set([
   'new', 'year', 'years',
 ]);
 
-// ─── Fallback Keyword Extraction ────────────────────────────
-
-/**
- * Extract keywords using simple TF analysis (no AI required).
- * Returns instantly — used as first-pass before AI refinement.
- */
 function extractKeywordsFallback(text, maxKeywords = 15) {
-  if (!text || typeof text !== 'string') return [];
+  if (!text || typeof text !== 'string') {return [];}
 
-  // Tokenize: extract words and multi-word technical terms
   const words = text
     .toLowerCase()
     .replace(/[^\w\s.#+\-/]/g, ' ')
     .split(/\s+/)
     .filter(Boolean);
 
-  // Count term frequency
   const freq = new Map();
   for (const word of words) {
-    if (word.length < 2 || STOP_WORDS.has(word)) continue;
+    if (word.length < 2 || STOP_WORDS.has(word)) {continue;}
     freq.set(word, (freq.get(word) || 0) + 1);
   }
 
-  // Extract technical terms (patterns like "Node.js", "C++", "REST API")
   const techPatterns = text.match(
     /\b(?:[A-Z][a-z]+\.js|[A-Z][a-z]*(?:SQL|DB|API|UI|UX|CI|CD|ML|AI)|[A-Z]{2,}(?:\s+[A-Z][a-z]+)?|[A-Za-z]+\+\+|[A-Za-z]+#|[A-Za-z]+\.(?:js|py|ts|go|rs))\b/g,
   );
@@ -56,23 +45,16 @@ function extractKeywordsFallback(text, maxKeywords = 15) {
   if (techPatterns) {
     for (const term of techPatterns) {
       const key = term.toLowerCase();
-      freq.set(key, (freq.get(key) || 0) + 3); // Boost technical terms
+      freq.set(key, (freq.get(key) || 0) + 3);
     }
   }
 
-  // Sort by frequency and return top N
   return [...freq.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, maxKeywords)
     .map(([word]) => word);
 }
 
-// ─── AI Keyword Extraction ──────────────────────────────────
-
-/**
- * Extract keywords using Groq AI. More accurate but slower.
- * Falls back to extractKeywordsFallback on error.
- */
 async function extractKeywords(text, maxKeywords = 15) {
   if (!text || typeof text !== 'string' || text.trim().length < 10) {
     return extractKeywordsFallback(text, maxKeywords);

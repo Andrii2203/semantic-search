@@ -4,10 +4,6 @@ const startup = require('./startup');
 const scheduler = require('./scheduler');
 const config = require('./config');
 
-// Live module health, cached for 30s. Used by GET /api/health/full and the
-// Health dashboard. Cheap checks run live; the embedding status reuses the
-// startup result so we don't reload the MiniLM model on every poll.
-
 const TTL_MS = 30_000;
 let cache = null;
 let cachedAt = 0;
@@ -21,7 +17,6 @@ async function compute() {
     ? { ok: true, status: 'ok' }
     : { ok: false, status: 'warning', error: 'Groq API key not configured' };
 
-  // Reuse the last startup embedding result — re-embedding every 30s is wasteful
   const embeddingStatus = startup.getLastStatus().modules.embedding || 'unknown';
   const embedding = { status: embeddingStatus };
 

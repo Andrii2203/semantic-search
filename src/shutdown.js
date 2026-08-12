@@ -2,12 +2,45 @@
 
 const logger = require('./logger');
 
-/**
- * Graceful shutdown handler.
- * Closes HTTP server, DB connection, and any other resources.
- */
-/* istanbul ignore next */
-function createShutdownHandler(server, db) {
+const DEFAULT_POLL_INTERVAL_MS = 200;
+const DEFAULT_MAX_WAIT_MS = 30000;
+
+function closeServer(server) {
+  return new Promise((resolve) => {
+    server.close((err) => {
+      if (err) {
+        logger.error({ err }, 'Error closing HTTP server');
+      } else {
+        logger.info('HTTP server closed');
+      }
+      resolve();
+    });
+  });
+}
+
+async function waitForIdle(scheduler, pollIntervalMs, maxWaitMs) {
+  if (!scheduler || typeof scheduler.isRunning !== 'function') {
+    return;
+  }
+
+  const deadline = Date.now() + maxWaitMs;
+  while (scheduler.isRunning()) {
+    if (Date.now() >= deadline) {
+      logger.warn({ maxWaitMs }, 'Ingest cycle still running at the deadline, closing anyway');
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
+  }
+}
+
+function createShutdownHandler(server, db, options = {}) {
+  const {
+    scheduler = null,
+    exit = /* istanbul ignore next */ (code) => process.exit(code),
+    pollIntervalMs = DEFAULT_POLL_INTERVAL_MS,
+    maxWaitMs = DEFAULT_MAX_WAIT_MS,
+  } = options;
+
   let isShuttingDown = false;
 
   const shutdown = async (signal) => {
@@ -16,29 +49,19 @@ function createShutdownHandler(server, db) {
     }
     isShuttingDown = true;
 
-    logger.info({ signal }, 'Shutdown signal received, closing gracefully...');
+    logger.info({ signal }, 'Shutdown signal received, closing gracefully');
 
-    // 1. Stop accepting new connections
-    server.close((err) => {
-      if (err) {
-        logger.error({ err }, 'Error closing HTTP server');
-      } else {
-        logger.info('HTTP server closed');
-      }
-    });
+    await closeServer(server);
+    await waitForIdle(scheduler, pollIntervalMs, maxWaitMs);
 
-    // 2. Close database
     try {
       db.close();
+      logger.info('Database closed');
     } catch (err) {
       logger.error({ err }, 'Error closing database');
     }
 
-    // 3. Give ongoing requests time to finish (5s grace period)
-    setTimeout(() => {
-      logger.info('Grace period expired, forcing exit');
-      process.exit(0);
-    }, 5000);
+    exit(0);
   };
 
   process.on('SIGTERM', () => shutdown('SIGTERM'));

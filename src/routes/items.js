@@ -8,8 +8,6 @@ const events = require('../events');
 
 const router = express.Router();
 
-// ─── GET /api/items — list with cursor pagination ────────────
-
 router.get('/', (req, res, next) => {
   try {
     const parsed = validateItemQuery(req.query);
@@ -39,13 +37,9 @@ router.get('/', (req, res, next) => {
   }
 });
 
-// ─── GET /api/items/stats — counts by status ────────────────
-
 router.get('/stats', (req, res, next) => {
   try {
     const userId = req.userId;
-    // Inbox badges count only the internet collection — same as the inbox list.
-    // Files / __test__ items have their own views and must not inflate the badges.
     const collectionId = 'internet';
     res.json({
       total:    db.getItemCount({ collectionId, userId }),
@@ -59,10 +53,6 @@ router.get('/stats', (req, res, next) => {
     next(err);
   }
 });
-
-// ─── Status actions (approve / skip / star) ─────────────────
-// Personal status lives in user_matches for shared internet content (v7.1);
-// star/approve/skip also feed the learning loop (profile vector blend)
 
 const STATUS_ACTIONS = [
   { action: 'approve', status: 'approved', feedback: 'approve' },
@@ -83,7 +73,6 @@ for (const { action, status, feedback } of STATUS_ACTIONS) {
       db.setItemStatusForUser(id, req.userId, status);
       events.emit(`item.${status}`, { itemId: id, userId: req.userId });
 
-      // Feedback loop is best-effort: a failed blend must not fail the action
       try {
         const { applyFeedback } = require('../feedback');
         await applyFeedback(req.userId, item, feedback);
@@ -98,8 +87,6 @@ for (const { action, status, feedback } of STATUS_ACTIONS) {
     }
   });
 }
-
-// ─── POST /api/items/:id/generate — on-demand AI comment ───
 
 router.post('/:id/generate', async (req, res, next) => {
   try {
@@ -134,10 +121,6 @@ router.post('/:id/generate', async (req, res, next) => {
     next(err);
   }
 });
-
-// ─── DELETE /api/items/:id ──────────────────────────────────
-// Shared internet content: removes the user's match only (corpus row stays —
-// other users may still need it). Private items: physical delete with chunks.
 
 router.delete('/:id', (req, res, next) => {
   try {

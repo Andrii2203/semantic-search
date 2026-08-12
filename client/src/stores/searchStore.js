@@ -1,8 +1,6 @@
 import { create } from 'zustand'
 
-
 export const useSearchStore = create((set, get) => ({
-  // ── Search state ──────────────────────────────────────────
   query: '',
   keywords: [],
   results: [],
@@ -11,7 +9,6 @@ export const useSearchStore = create((set, get) => ({
   isSearching: false,
   error: null,
 
-  // ── Search config ─────────────────────────────────────────
   mode: 'sequential',
   bm25Weight: 0.4,
   semanticWeight: 0.6,
@@ -20,12 +17,10 @@ export const useSearchStore = create((set, get) => ({
   topN: 20,
   useReranker: false,
 
-  // ── Chunking config ───────────────────────────────────────
   chunkingStrategy: 'semantic',
   chunkSize: 200,
   overlap: 50,
 
-  // ── Actions ───────────────────────────────────────────────
   setQuery: (query) => set({ query }),
 
   setKeywords: (keywords) => set({ keywords }),
@@ -49,7 +44,6 @@ export const useSearchStore = create((set, get) => ({
   setChunkSize: (size) => set({ chunkSize: size }),
   setOverlap: (overlap) => set({ overlap }),
 
-  // ── API calls ─────────────────────────────────────────────
   search: async () => {
     const state = get()
     if (!state.query.trim()) return
@@ -106,7 +100,6 @@ export const useSearchStore = create((set, get) => ({
         })
       }
     } catch {
-      // Fail silently — use defaults
     }
   },
 
@@ -119,7 +112,6 @@ export const useSearchStore = create((set, get) => ({
         body: JSON.stringify({ strategy: chunkingStrategy, chunkSize, overlap }),
       })
     } catch {
-      // Fail silently
     }
   },
 

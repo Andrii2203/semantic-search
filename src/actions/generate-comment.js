@@ -4,10 +4,6 @@ const config = require('../config');
 const logger = require('../logger');
 const { retry } = require('../retry');
 
-/**
- * Action: Generate Comment
- * Takes a post IR item and generates a relevant comment via Groq LLM.
- */
 async function run(item) {
   logger.info({ itemId: item.id, type: item.type }, 'Generating comment');
 

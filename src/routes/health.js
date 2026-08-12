@@ -19,7 +19,6 @@ router.get('/', (req, res) => {
   });
 });
 
-// Detailed, live, cached (30s) per-module health for the Health dashboard
 router.get('/full', async (_req, res, next) => {
   try {
     const health = await healthChecker.getHealth();

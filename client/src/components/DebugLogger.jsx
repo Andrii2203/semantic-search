@@ -2,17 +2,14 @@ import { useEffect, useState, useRef } from 'react'
 
 export function DebugLogger() {
   const [logs, setLogs] = useState(() => {
-    // Завантажуємо логи з пам'яті при старті
     const saved = sessionStorage.getItem('debug_logs')
     return saved ? JSON.parse(saved) : []
   })
   const [isOpen, setIsOpen] = useState(true)
   const scrollRef = useRef(null)
 
-  // Збереження в пам'ять при кожній зміні логів
   useEffect(() => {
     sessionStorage.setItem('debug_logs', JSON.stringify(logs))
-    // Авто-прокрутка вниз
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
@@ -26,7 +23,7 @@ export function DebugLogger() {
         type,
         message
       }
-      setLogs(prev => [...prev, newLog].slice(-50)) // Тримаємо останні 50 подій
+      setLogs(prev => [...prev, newLog].slice(-50))
     }
 
     const handleClick = (e) => {

@@ -4,8 +4,6 @@ const Groq = require('groq-sdk');
 const config = require('./config');
 const logger = require('./logger');
 
-// ─── Shared Groq Client with Rate Limiter ────────────────────
-
 class GroqClient {
   constructor(options = {}) {
     this.client = new Groq({ apiKey: options.apiKey || config.groq.apiKey });
@@ -28,12 +26,6 @@ class GroqClient {
     this.timestamps.push(Date.now());
   }
 
-  /**
-   * Send a chat completion request with automatic rate limiting.
-   * @param {Array} messages - Chat messages array
-   * @param {Object} options - Override model, maxTokens, temperature
-   * @returns {Promise<string>} - Response content
-   */
   async chat(messages, options = {}) {
     await this.waitForSlot();
 
@@ -53,8 +45,6 @@ class GroqClient {
   }
 }
 
-// ─── Singleton ───────────────────────────────────────────────
-
 let instance = null;
 
 function getGroqClient() {
@@ -64,9 +54,6 @@ function getGroqClient() {
   return instance;
 }
 
-/**
- * Reset singleton (for testing).
- */
 function resetGroqClient() {
   instance = null;
 }

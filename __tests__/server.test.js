@@ -23,7 +23,7 @@ let authCookie;
 let testUserId;
 
 async function ensureAuth() {
-  if (authCookie) return authCookie;
+  if (authCookie) {return authCookie;}
   const res = await request(app)
     .post('/api/auth/register')
     .send({ email: 'server-test@example.com', password: 'password123' });

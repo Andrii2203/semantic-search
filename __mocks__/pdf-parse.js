@@ -1,20 +1,39 @@
 'use strict';
 
-// Mock for pdf-parse v2 (class API: new PDFParse({ data }).getText()).
+const state = {
+  text: 'Default PDF text',
+  failWith: null,
+};
+
 class PDFParse {
-  constructor({ data } = {}) {
-    this.data = data;
+  constructor(options = {}) {
+    this.data = options.data;
   }
 
   async getText() {
-    if (!this.data || !Buffer.isBuffer(this.data)) {
+    if (state.failWith) {
+      throw new Error(state.failWith);
+    }
+    if (!Buffer.isBuffer(this.data)) {
       throw new Error('Invalid PDF buffer');
     }
-    const text = this.data._mockText || 'Mocked PDF text content';
-    return { text };
+    return { text: this.data.pdfText || state.text };
   }
 
   async destroy() {}
 }
 
-module.exports = { PDFParse };
+function setPdfText(text) {
+  state.text = text;
+}
+
+function failNextParse(message) {
+  state.failWith = message;
+}
+
+function resetPdfFake() {
+  state.text = 'Default PDF text';
+  state.failWith = null;
+}
+
+module.exports = { PDFParse, setPdfText, failNextParse, resetPdfFake };

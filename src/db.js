@@ -11,8 +11,6 @@ const WELCOME_MESSAGES = require('./welcome');
 
 let db = null;
 
-// ─── Migrations ───────────────────────────────────────────────
-
 const migrations = [
   {
     name: '001_create_items',
@@ -161,13 +159,10 @@ const migrations = [
     `,
   },
   {
-    // v7.1: internet content is a shared corpus — collapse per-user duplicates,
-    // move personal status/score into user_matches, re-fingerprint by content hash
     name: '012_dedup_internet_corpus',
     up: (d) => backfillInternetCorpus(d),
   },
   {
-    // Phase 3: normalized key-value settings — typed, partial updates, simple migrations
     name: '013_create_settings',
     up: `
       CREATE TABLE IF NOT EXISTS settings (
@@ -190,7 +185,7 @@ function backfillInternetCorpus(d) {
       "SELECT id, user_id, score, status, content, created_at FROM items WHERE collection_id = 'internet' ORDER BY created_at ASC, id ASC",
     )
     .all();
-  if (items.length === 0) return;
+  if (items.length === 0) {return;}
 
   const upsertMatch = d.prepare(`
     INSERT INTO user_matches (user_id, item_id, score, status, created_at)
@@ -228,12 +223,9 @@ function backfillInternetCorpus(d) {
   );
 }
 
-// ─── Initialization ──────────────────────────────────────────
-
 function init(dbPath) {
   const resolvedPath = dbPath || config.dbPath;
 
-  // Ensure data directory exists (skip for in-memory)
   if (resolvedPath !== ':memory:') {
     const dir = path.dirname(resolvedPath);
     if (!fs.existsSync(dir)) {
@@ -243,7 +235,6 @@ function init(dbPath) {
 
   db = new Database(resolvedPath);
 
-  // Enable WAL mode for better concurrent read performance
   db.pragma('journal_mode = WAL');
   db.pragma('foreign_keys = ON');
   db.pragma('synchronous = NORMAL');
@@ -255,7 +246,6 @@ function init(dbPath) {
 }
 
 function runMigrations() {
-  // Bootstrap: ensure migrations table exists first
   db.exec(`
     CREATE TABLE IF NOT EXISTS migrations (
       id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -285,11 +275,6 @@ function runMigrations() {
   }
 }
 
-// ─── Helpers ─────────────────────────────────────────────────
-
-// v7.1: internet content is a shared corpus — fingerprint by content only, so the
-// same post from any source/user is stored and embedded once. Private collections
-// (files, __temp_*) include the owner in the hash for full isolation.
 function fingerprint(item, userId) {
   if ((item.collectionId || 'internet') === 'internet') {
     return contentHash(item.content);
@@ -305,9 +290,6 @@ function getDb() {
   return db;
 }
 
-// ─── CRUD Operations ─────────────────────────────────────────
-
-// Shared internet corpus rows have no owner; personal relevance lives in user_matches
 function itemOwnerId(item) {
   return (item.collectionId || 'internet') === 'internet' ? null : item.userId || null;
 }
@@ -414,9 +396,6 @@ function deserializeItem(row) {
   return { ...row, metadata: row.metadata ? JSON.parse(row.metadata) : {} };
 }
 
-// ─── Personal view over shared corpus (v7.1) ─────────────────
-// Internet items are shared rows; the user's own status/score live in user_matches.
-// Private items (files, __temp_*) belong to the user directly.
 const USER_ITEMS_VIEW = `
   SELECT i.*, um.status AS user_status, um.score AS user_score
     FROM items i JOIN user_matches um ON um.item_id = i.id
@@ -497,7 +476,6 @@ function getItems({ status, source, type, collectionId, userId, limit = 50, offs
   return d.prepare(sql).all(...params).map(deserializeItem);
 }
 
-// Cursor-based pagination — returns { items, nextCursor, hasMore }
 function getItemsPage({ status, source, type, collectionId, userId, limit = 50, cursor } = {}) {
   const d = getDb();
 
@@ -535,7 +513,6 @@ function getItemsPage({ status, source, type, collectionId, userId, limit = 50, 
   }
 
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
-  // Fetch one extra to detect hasMore
   params.push(limit + 1);
 
   const rows = d.prepare(`SELECT * FROM items ${where} ORDER BY created_at DESC, id DESC LIMIT ?`).all(...params);
@@ -582,7 +559,7 @@ function updateItemResponse(id, response, score) {
 function updateItemMetadata(id, metadataUpdate) {
   const d = getDb();
   const row = d.prepare('SELECT metadata FROM items WHERE id = ?').get(id);
-  if (!row) return false;
+  if (!row) {return false;}
   const existing = row.metadata ? JSON.parse(row.metadata) : {};
   const updated = { ...existing, ...metadataUpdate };
   d.prepare('UPDATE items SET metadata = ? WHERE id = ?').run(JSON.stringify(updated), id);
@@ -605,8 +582,6 @@ function getItemCount({ status, source, collectionId, userId } = {}) {
   return d.prepare(`SELECT COUNT(*) as count FROM items ${where}`).get(...params).count;
 }
 
-// ─── User matches CRUD (v7.1 dedup corpus) ───────────────────
-
 function upsertUserMatch({ userId, itemId, score = null, status = 'new' }) {
   const d = getDb();
   d.prepare(`
@@ -628,11 +603,9 @@ function deleteUserMatch(userId, itemId) {
   return d.prepare('DELETE FROM user_matches WHERE user_id = ? AND item_id = ?').run(userId, itemId).changes > 0;
 }
 
-// Personal status lives in user_matches for shared internet content;
-// private collections keep status on the item row itself
 function setItemStatusForUser(itemId, userId, status) {
   const item = getItemById(itemId);
-  if (!item) return false;
+  if (!item) {return false;}
   if (item.collection_id === 'internet' && userId) {
     upsertUserMatch({ userId, itemId, status });
     return true;
@@ -640,18 +613,11 @@ function setItemStatusForUser(itemId, userId, status) {
   return updateItemStatus(itemId, status);
 }
 
-// True if the user is allowed to act on this item:
-// shared internet content — anyone authenticated; private — owner only
 function userCanAccessItem(item, userId) {
-  if (!item) return false;
-  if (item.collection_id === 'internet') return true;
+  if (!item) {return false;}
+  if (item.collection_id === 'internet') {return true;}
   return !item.user_id || item.user_id === userId;
 }
-
-// ─── Onboarding (Phase 2.6) ──────────────────────────────────
-// Seed a new user's inbox with welcome messages on first login. Stored once in
-// the shared corpus (content-deduped, id is the PRIMARY KEY) — each user just
-// gets their own user_matches row, so messages appear per-user, never duplicated.
 
 function seedWelcomeForUser(userId) {
   for (const msg of WELCOME_MESSAGES) {
@@ -668,20 +634,16 @@ function seedWelcomeForUser(userId) {
   return WELCOME_MESSAGES.length;
 }
 
-// ─── Settings (Phase 3) ──────────────────────────────────────
-// Normalized key-value store with typed values. Partial updates, simple
-// migrations of individual keys. Read by config with .env fallback (Phase 3).
-
 function serializeSettingValue(value, type) {
-  if (value == null) return null;
-  if (type === 'json') return JSON.stringify(value);
+  if (value == null) {return null;}
+  if (type === 'json') {return JSON.stringify(value);}
   return String(value);
 }
 
 function parseSettingValue(row) {
-  if (!row) return undefined; // key not set
+  if (!row) {return undefined;}
   const { value, type } = row;
-  if (value == null) return null;
+  if (value == null) {return null;}
   switch (type) {
     case 'number':
       return Number(value);
@@ -738,8 +700,6 @@ function close() {
     logger.info('Database connection closed');
   }
 }
-
-// ─── Chunks CRUD ─────────────────────────────────────────────
 
 function insertChunk(chunk) {
   const d = getDb();
@@ -814,7 +774,7 @@ function chunksSearch(keywords, options = {}) {
     .map((k) => `"${k.replace(/"/g, '""')}"`)
     .join(' OR ');
 
-  if (!query.trim()) return [];
+  if (!query.trim()) {return [];}
 
   try {
     const whereClauses = ['chunks_fts MATCH ?'];
@@ -846,8 +806,6 @@ function chunksSearch(keywords, options = {}) {
   }
 }
 
-// ─── Profiles CRUD ───────────────────────────────────────────
-
 function saveProfile(profile) {
   const d = getDb();
   d.prepare(`
@@ -865,7 +823,7 @@ function saveProfile(profile) {
 function getProfile(id) {
   const d = getDb();
   const row = d.prepare('SELECT * FROM profiles WHERE id = ?').get(id);
-  if (!row) return null;
+  if (!row) {return null;}
   return {
     ...row,
     keywords: row.keywords ? JSON.parse(row.keywords) : [],
@@ -888,8 +846,6 @@ function deleteProfile(id) {
   return d.prepare('DELETE FROM profiles WHERE id = ?').run(id).changes > 0;
 }
 
-// ─── Users CRUD ──────────────────────────────────────────────
-
 function createUser({ id, email, passwordHash }) {
   const d = getDb();
   d.prepare('INSERT INTO users (id, email, password_hash) VALUES (?, ?, ?)').run(id, email, passwordHash);
@@ -911,12 +867,10 @@ function getAllUsers() {
   return d.prepare('SELECT * FROM users ORDER BY created_at ASC').all();
 }
 
-// ─── Per-user profiles ────────────────────────────────────────
-
 function getProfileByUserId(userId) {
   const d = getDb();
   const row = d.prepare('SELECT * FROM profiles WHERE user_id = ?').get(userId);
-  if (!row) return null;
+  if (!row) {return null;}
   return { ...row, keywords: row.keywords ? JSON.parse(row.keywords) : [] };
 }
 
@@ -945,8 +899,6 @@ function saveProfileForUser(userId, profile) {
   }
 }
 
-// ─── Chunking Config ─────────────────────────────────────────
-
 function getChunkingConfig() {
   const d = getDb();
   const row = d.prepare('SELECT * FROM chunking_config WHERE id = 1').get();
@@ -965,8 +917,6 @@ function updateChunkingConfig({ strategy, chunkSize, overlap }) {
   `).run(strategy || null, chunkSize || null, overlap || null);
 }
 
-// Visibility rule (v7.1): the internet corpus is shared between users;
-// private collections (files, __temp_*) are visible to their owner only.
 function appendVisibilityClauses(whereClauses, params, collectionId, userId) {
   if (collectionId === 'internet') {
     whereClauses.push("i.collection_id = 'internet'");
@@ -1007,8 +957,6 @@ function getAllChunksWithVectors(options = {}) {
     .map((row) => ({ ...row, metadata: row.metadata ? JSON.parse(row.metadata) : {} }));
 }
 
-// Last N chunk vectors of the shared internet corpus — the comparison window
-// for semantic near-dedup at ingest (v7.1)
 function getRecentInternetChunkVectors(limit = 200) {
   const d = getDb();
   return d
@@ -1036,8 +984,6 @@ function getActiveProfile() {
   };
 }
 
-// ─── Exports ─────────────────────────────────────────────────
-
 module.exports = {
   init,
   close,
@@ -1055,19 +1001,16 @@ module.exports = {
   updateItemMetadata,
   getItemCount,
   getSources,
-  // User matches (v7.1 dedup corpus)
   upsertUserMatch,
   getUserMatch,
   deleteUserMatch,
   setItemStatusForUser,
   userCanAccessItem,
   seedWelcomeForUser,
-  // Settings (Phase 3)
   getSetting,
   getAllSettings,
   setSetting,
   resetSettings,
-  // Chunks
   insertChunk,
   insertChunksBatch,
   getChunksByParent,
@@ -1075,7 +1018,6 @@ module.exports = {
   chunksSearch,
   getAllChunksWithVectors,
   getRecentInternetChunkVectors,
-  // Profiles
   saveProfile,
   getProfile,
   getAllProfiles,
@@ -1083,12 +1025,10 @@ module.exports = {
   getActiveProfile,
   getProfileByUserId,
   saveProfileForUser,
-  // Users
   createUser,
   findUserByEmail,
   findUserById,
   getAllUsers,
-  // Config
   getChunkingConfig,
   updateChunkingConfig,
 };

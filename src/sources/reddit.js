@@ -2,14 +2,12 @@
 
 const crypto = require('crypto');
 const logger = require('../logger');
+const { fetchWithTimeout } = require('../http');
 const { retry } = require('../retry');
 const { validateIRBatch } = require('../validation');
 const config = require('../config');
 
 const REDDIT_BASE = 'https://www.reddit.com';
-
-// ─── Simple Atom/RSS parser (no deps) ────────────────────────
-// Reddit serves an Atom feed; entries are well-structured XML.
 
 function parseAtomFeed(xml) {
   const entries = [];
@@ -19,15 +17,13 @@ function parseAtomFeed(xml) {
   while ((m = entryRe.exec(xml)) !== null) {
     const block = m[1];
 
-    // Extract inner text of a tag (strips CDATA wrappers)
     const text = (tag) => {
       const r = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`);
       const found = block.match(r);
-      if (!found) return '';
+      if (!found) {return '';}
       return found[1].replace(/<!\[CDATA\[|\]\]>/g, '').trim();
     };
 
-    // Extract an attribute value from a tag
     const attr = (tag, attrName) => {
       const r = new RegExp(`<${tag}[^>]+${attrName}="([^"]+)"`);
       const found = block.match(r);
@@ -48,8 +44,6 @@ function parseAtomFeed(xml) {
   return entries;
 }
 
-// Strip HTML tags and decode common HTML entities.
-// Entities are decoded first because the Atom content field is HTML-encoded.
 function stripHtml(html) {
   return html
     .replace(/&lt;/g, '<')
@@ -63,8 +57,6 @@ function stripHtml(html) {
     .trim();
 }
 
-// ─── Fetch ────────────────────────────────────────────────────
-
 async function fetch(options = {}) {
   const subreddits = config.reddit.subreddits.join('+');
   const limit = options.limit || config.reddit.limit;
@@ -76,7 +68,7 @@ async function fetch(options = {}) {
     entries = await retry(
       async () => {
         const url = `${REDDIT_BASE}/r/${subreddits}/hot.rss?limit=${limit}`;
-        const res = await globalThis.fetch(url, {
+        const res = await fetchWithTimeout(url, {
           headers: {
             'User-Agent': 'SemanticSearch/1.0',
             Accept: 'application/rss+xml, application/atom+xml, text/xml',

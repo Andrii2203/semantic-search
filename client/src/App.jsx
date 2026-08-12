@@ -72,7 +72,6 @@ function GmailLayout() {
 
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-bg">
-      {/* Top bar */}
       <header className="h-11 shrink-0 border-b border-border flex items-center px-4 gap-3 bg-surface">
         <span className="font-mono text-xs text-accent uppercase tracking-widest flex-1">
           Universal Matching Engine
@@ -81,9 +80,6 @@ function GmailLayout() {
       </header>
 
       <AlertBanner />
-
-      {/* Body: STATE A — no item selected → list fills width
-               STATE B — item selected   → reading pane fills width */}
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         {currentView === 'files' ? (
