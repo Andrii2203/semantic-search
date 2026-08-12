@@ -10,17 +10,13 @@ jobs:
   verify:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18, 20]
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 20, the version the production image runs
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
@@ -35,7 +31,6 @@ jobs:
           NODE_ENV: test
 
       - name: Upload coverage
-        if: matrix.node-version == 20
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report

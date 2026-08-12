@@ -19,8 +19,7 @@ router.get('/sources', (_req, res) => {
 });
 
 router.get('/sync/status', (_req, res) => {
-  const { isRunning, currentStep, cycleStartedAt, lastResult } = scheduler.getStatus();
-  res.json({ isRunning, currentStep, cycleStartedAt, lastResult });
+  res.json(scheduler.getStatus());
 });
 
 router.post('/sync', async (_req, res, next) => {

@@ -15,6 +15,7 @@ const chunker = require('./chunker/index');
 const profileVectors = new Map();
 let isRunning = false;
 let scheduledTask = null;
+let activeSchedule = null;
 let currentStep = null;
 let cycleStartedAt = null;
 let lastResult = null;
@@ -281,34 +282,55 @@ async function runCycle() {
   }
 }
 
-/* istanbul ignore next */
-function start() {
-  logger.info({ schedule: config.cronSchedule, profile: config.activeProfile }, 'Scheduler starting');
+function stopSchedule() {
+  if (scheduledTask) {
+    scheduledTask.stop();
+    scheduledTask = null;
+    activeSchedule = null;
+  }
+}
 
-  scheduledTask = cron.schedule(config.cronSchedule, async () => {
+function applySchedule() {
+  stopSchedule();
+
+  if (config.live('cronEnabled') === false) {
+    logger.info('Scheduler is switched off in settings, no cycle is scheduled');
+    return null;
+  }
+
+  const schedule = config.live('cronSchedule');
+  if (!cron.validate(schedule)) {
+    logger.warn({ schedule }, 'Cron expression is not valid, no cycle is scheduled');
+    return null;
+  }
+
+  scheduledTask = cron.schedule(schedule, async () => {
     try {
       await runCycle();
     } catch (err) {
       logger.error({ err }, 'Scheduled cycle failed');
     }
   });
+  activeSchedule = schedule;
 
-  logger.info('Scheduler started');
+  logger.info({ schedule }, 'Scheduler started');
   return scheduledTask;
 }
 
-/* istanbul ignore next */
+function start() {
+  logger.info({ profile: config.activeProfile }, 'Scheduler starting');
+  return applySchedule();
+}
+
 function stop() {
-  if (scheduledTask) {
-    scheduledTask.stop();
-    scheduledTask = null;
-    logger.info('Scheduler stopped');
-  }
+  stopSchedule();
+  logger.info('Scheduler stopped');
 }
 
 function getStatus() {
   return {
     status: scheduledTask ? 'ok' : 'stopped',
+    schedule: activeSchedule,
     isRunning,
     currentStep,
     cycleStartedAt,
@@ -322,6 +344,7 @@ function isCycleRunning() {
 
 module.exports = {
   runCycle,
+  applySchedule,
   invalidateProfileCache,
   start,
   stop,

@@ -3,6 +3,7 @@
 const express = require('express');
 const db = require('../db');
 const logger = require('../logger');
+const scheduler = require('../scheduler');
 const { AppError, ErrorCodes } = require('../errors');
 
 const router = express.Router();
@@ -72,6 +73,10 @@ router.post('/', (req, res, next) => {
     }
     const coerced = validateSetting(key, value);
     db.setSetting(key, coerced, SETTINGS_SCHEMA[key].type);
+
+    if (key.startsWith('cron')) {
+      scheduler.applySchedule();
+    }
 
     logger.info({ key }, 'Setting updated');
     res.json({ success: true, key, value: SETTINGS_SCHEMA[key].secret ? '********' : coerced });

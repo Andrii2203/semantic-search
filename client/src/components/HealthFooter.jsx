@@ -1,17 +1,22 @@
-import { useEffect, useState } from 'react'
 import { StatusDot } from '../icons'
+import { useHealthFull } from '../hooks/useItems'
+
+function moduleStatus(module) {
+  return typeof module === 'string' ? module : module?.status || 'unknown'
+}
+
+function moduleTooltip(name, module) {
+  const status = moduleStatus(module)
+  const error = typeof module === 'object' ? module?.error : null
+  return error ? `${name}: ${error}` : `${name}: ${status}`
+}
 
 export function HealthFooter() {
-  const [health, setHealth] = useState(null)
-
-  useEffect(() => {
-    fetch('/api/health').then(r => r.json()).then(setHealth).catch(() => {})
-  }, [])
+  const { data: health } = useHealthFull()
 
   if (!health) return null
 
-  const modules = health.modules || {}
-  const pairs = Object.entries(modules)
+  const pairs = Object.entries(health.modules || {})
 
   return (
     <div className="h-8 shrink-0 border-t border-border bg-surface flex items-center px-4 gap-4 text-[10px] font-mono text-fg-2">
@@ -22,10 +27,10 @@ export function HealthFooter() {
 
       {pairs.length > 0 && (
         <div className="flex items-center gap-3 border-l border-border pl-3">
-          {pairs.map(([key, val]) => (
-            <span key={key} className="flex items-center gap-1">
-              <StatusDot status={val === 'ok' ? 'ok' : 'error'} className="w-1.5 h-1.5" />
-              <span className="uppercase">{key}</span>
+          {pairs.map(([name, module]) => (
+            <span key={name} className="flex items-center gap-1" title={moduleTooltip(name, module)}>
+              <StatusDot status={moduleStatus(module) === 'ok' ? 'ok' : 'error'} className="w-1.5 h-1.5" />
+              <span className="uppercase">{name}</span>
             </span>
           ))}
         </div>

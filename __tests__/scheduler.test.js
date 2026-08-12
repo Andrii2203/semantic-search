@@ -224,3 +224,46 @@ describe('scheduler.runCycle', () => {
     expect(result.saved).toBeGreaterThanOrEqual(3);
   });
 });
+
+describe('scheduler schedule control', () => {
+  afterEach(() => {
+    scheduler.stop();
+  });
+
+  test('does not schedule anything while the scheduler is switched off in settings', () => {
+    db.setSetting('cronEnabled', false, 'boolean');
+
+    scheduler.applySchedule();
+
+    expect(scheduler.getStatus().status).toBe('stopped');
+  });
+
+  test('schedules with the expression stored in settings', () => {
+    db.setSetting('cronEnabled', true, 'boolean');
+    db.setSetting('cronSchedule', '0 3 * * *', 'string');
+
+    scheduler.applySchedule();
+
+    expect(scheduler.getStatus().status).toBe('ok');
+    expect(scheduler.getStatus().schedule).toBe('0 3 * * *');
+  });
+
+  test('stops a running schedule when the switch is turned off', () => {
+    db.setSetting('cronEnabled', true, 'boolean');
+    scheduler.applySchedule();
+
+    db.setSetting('cronEnabled', false, 'boolean');
+    scheduler.applySchedule();
+
+    expect(scheduler.getStatus().status).toBe('stopped');
+  });
+
+  test('stays stopped when the stored expression is not a valid cron', () => {
+    db.setSetting('cronEnabled', true, 'boolean');
+    db.setSetting('cronSchedule', 'every other tuesday', 'string');
+
+    scheduler.applySchedule();
+
+    expect(scheduler.getStatus().status).toBe('stopped');
+  });
+});
