@@ -12,11 +12,12 @@
     "test": "jest --forceExit",
     "test:coverage": "jest --forceExit --coverage",
     "test:smoke": "jest --config jest.smoke.config.js --no-coverage",
-    "verify": "npm run lint && npm run test:coverage",
+    "verify": "npm run lint && npm run test:coverage && npm run test:client",
     "lint": "eslint src/ __tests__/ scripts/",
     "lint:fix": "eslint src/ __tests__/ --fix",
     "format": "prettier --write \"src/**/*.js\" \"__tests__/**/*.js\"",
-    "format:check": "prettier --check \"src/**/*.js\" \"__tests__/**/*.js\""
+    "format:check": "prettier --check \"src/**/*.js\" \"__tests__/**/*.js\"",
+    "test:client": "npm --prefix client run test"
   },
   "keywords": [
     "semantic-search",
