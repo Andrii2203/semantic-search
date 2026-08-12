@@ -64,6 +64,13 @@ Practical rule: one fake per boundary, defined once under `__mocks__/` or `__tes
 redefined inline inside a test file. Inline `jest.doMock` of a boundary is forbidden. If a single
 test needs the boundary to fail, the shared fake exposes a way to make it fail.
 
+A contract test pins the shape the library declares, it does not execute the library. Importing the
+real dependency drags in its own dependencies, and those carry their own environment requirements:
+`pdf-parse` pulls in pdfjs, which needs the browser global `DOMMatrix` and fails to load under plain
+Node. That failure says nothing about our code. Read the installed package manifest and its type
+declaration instead, which is exactly where the API contract is written down, and assert the fake
+against the same shape.
+
 ## 5. Naming and location
 
 - The test file mirrors the source path: `src/routes/items.js` is tested by
