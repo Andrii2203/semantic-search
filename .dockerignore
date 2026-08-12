@@ -1,0 +1,8 @@
+node_modules
+client/node_modules
+client/dist
+coverage
+.git
+.env
+scratch
+npm-debug.log

@@ -21,6 +21,13 @@ router.get('/sources', (_req, res) => {
 });
 
 
+// ─── GET /api/sync/status — is cycle running? ───────────────
+
+router.get('/sync/status', (_req, res) => {
+  const { isRunning, currentStep, cycleStartedAt, lastResult } = scheduler.getStatus();
+  res.json({ isRunning, currentStep, cycleStartedAt, lastResult });
+});
+
 // ─── POST /api/sync — trigger manual fetch cycle ────────────
 
 router.post('/sync', async (_req, res, next) => {

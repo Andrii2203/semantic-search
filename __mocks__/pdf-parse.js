@@ -1,10 +1,20 @@
 'use strict';
 
-module.exports = jest.fn((buffer) => {
-  if (!buffer || !Buffer.isBuffer(buffer)) {
-    return Promise.reject(new Error('Invalid PDF buffer'));
+// Mock for pdf-parse v2 (class API: new PDFParse({ data }).getText()).
+class PDFParse {
+  constructor({ data } = {}) {
+    this.data = data;
   }
-  // Return mock text based on buffer content hint (for tests)
-  const text = buffer._mockText || 'Mocked PDF text content';
-  return Promise.resolve({ text });
-});
+
+  async getText() {
+    if (!this.data || !Buffer.isBuffer(this.data)) {
+      throw new Error('Invalid PDF buffer');
+    }
+    const text = this.data._mockText || 'Mocked PDF text content';
+    return { text };
+  }
+
+  async destroy() {}
+}
+
+module.exports = { PDFParse };

@@ -14,6 +14,14 @@ const itemsRouter = require('./routes/items');
 const syncRouter = require('./routes/sync');
 const { router: exportRouter } = require('./routes/export');
 const uploadRouter = require('./routes/upload');
+const searchRouter = require('./routes/search');
+const profilesRouter = require('./routes/profiles');
+const seedRouter = require('./routes/seed');
+const { router: settingsRouter } = require('./routes/settings');
+const configRouter = require('./routes/config-routes');
+const authRouter = require('./routes/auth');
+const clientErrorRouter = require('./routes/client-error');
+const { requireAuth } = require('./middleware/auth');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -44,29 +52,29 @@ app.use(express.static('public'));
 
 // ─── Health Check ────────────────────────────────────────────
 
-app.get('/api/health', (_req, res) => {
-  let dbStatus = 'disconnected';
-  try {
-    db.getDb();
-    dbStatus = 'connected';
-  } catch (_e) {
-    // DB not initialized
-  }
+const healthRouter = require('./routes/health');
+app.use('/api/health', healthRouter);
 
-  res.json({
-    status: 'ok',
-    uptime: Math.floor(process.uptime()),
-    db: dbStatus,
-    timestamp: new Date().toISOString(),
-  });
-});
+// ─── Auth (public — no requireAuth) ──────────────────────────
 
-// ─── Routes ──────────────────────────────────────────────────
+app.use('/api/auth', authRouter);
+app.use('/api/client-error', clientErrorRouter);
+
+// ─── Auth guard for all remaining /api/* routes ───────────────
+
+app.use(requireAuth);
+
+// ─── Protected Routes ─────────────────────────────────────────
 
 app.use('/api/items', itemsRouter);
 app.use('/api', syncRouter);
 app.use('/api/export', exportRouter);
 app.use('/api/upload', uploadRouter);
+app.use('/api/search', searchRouter);
+app.use('/api/profiles', profilesRouter);
+app.use('/api/seed-test-data', seedRouter);
+app.use('/api/settings', settingsRouter);
+app.use('/api/config', configRouter);
 
 // ─── 404 for unknown routes ──────────────────────────────────
 
@@ -96,9 +104,20 @@ app.use((err, _req, res, _next) => {
 
 // ─── Start ───────────────────────────────────────────────────
 
-function start() {
+const startup = require('./startup');
+const scheduler = require('./scheduler');
+
+async function start() {
   // Initialize database
   db.init();
+  
+  // Run startup diagnostics before fully booting
+  try {
+    await startup.runStartupChecks();
+  } catch (err) {
+    logger.fatal('Failed to pass startup checks, shutting down.');
+    process.exit(1);
+  }
 
   const server = app.listen(config.port, () => {
     logger.info({ port: config.port, env: config.nodeEnv }, 'Server started');
@@ -107,8 +126,10 @@ function start() {
   createShutdownHandler(server, db);
 
   // Start scheduler (cron) + run first cycle immediately
-  // scheduler.start();
-  // scheduler.runCycle().catch((err) => logger.error({ err }, 'Initial cycle failed'));
+  scheduler.start();
+  // We can let the first cycle run asynchronously
+  scheduler.runCycle().catch((err) => logger.error({ err }, 'Initial cycle failed'));
+  
   logger.info('Server ready. Use "Fetch Posts" button to sync manually.');
   
   return server;

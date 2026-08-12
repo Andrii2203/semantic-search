@@ -86,6 +86,19 @@ const config = Object.freeze({
   // Search
   similarityThreshold: envFloat('SIMILARITY_THRESHOLD', 0.35),
 
+  // Semantic near-dedup at ingest (v7.1): skip chunks almost identical to recent
+  // corpus chunks (same story from HN and Reddit is embedded once)
+  dedupThreshold: envFloat('DEDUP_THRESHOLD', 0.95),
+  dedupWindow: envInt('DEDUP_WINDOW', 200),
+
+  // File uploads (per request; the library itself grows unbounded across uploads).
+  // Not unlimited — memoryStorage holds every file in RAM, so a huge single
+  // request would blow memory / time out. Large batches → upload in chunks.
+  upload: Object.freeze({
+    maxFiles: envInt('UPLOAD_MAX_FILES', 200),
+    maxFileSizeMb: envInt('UPLOAD_MAX_FILE_MB', 10),
+  }),
+
   // Scheduler
   cronSchedule: env('CRON_SCHEDULE', '*/30 * * * *'),
 
@@ -95,8 +108,59 @@ const config = Object.freeze({
   // CORS
   corsOrigin: env('CORS_ORIGIN', 'http://localhost:3000'),
 
+  // Auth — Internet Mode lock
+  internetModePassword: env('INTERNET_MODE_PASSWORD', ''),
+  sessionSecret: env('SESSION_SECRET', 'change-me-in-production'),
+
   // Logging
   logLevel: env('LOG_LEVEL', 'info'),
+
+  // Chunking
+  chunking: Object.freeze({
+    defaultStrategy: env('CHUNKING_STRATEGY', 'semantic'),
+    chunkSize: envInt('CHUNK_SIZE', 200),
+    overlap: envInt('CHUNK_OVERLAP', 50),
+  }),
+
+  // Search
+  search: Object.freeze({
+    defaultMode: env('SEARCH_MODE', 'sequential'),
+    bm25Weight: envFloat('BM25_WEIGHT', 0.4),
+    semanticWeight: envFloat('SEMANTIC_WEIGHT', 0.6),
+    batchSize: envInt('EMBEDDING_BATCH_SIZE', 20),
+    maxBm25Results: envInt('MAX_BM25_RESULTS', 100),
+    // Phase 2.5 ranking — both free, always-on by default.
+    // Rollback switches: USE_RRF=false → weighted sum; MMR_LAMBDA=1.0 → no diversity.
+    useRrf: env('USE_RRF', 'true') !== 'false',
+    rrfK: envInt('RRF_K', 60),
+    mmrLambda: envFloat('MMR_LAMBDA', 0.5),
+  }),
+
+  // Phase 3: live settings resolver. A value set via the settings table
+  // overrides the .env/default below. `db` is lazy-required to avoid the
+  // db <-> config require cycle, and a missing/uninitialized DB falls back.
+  live(key) {
+    const defaults = {
+      searchThreshold:          this.similarityThreshold,
+      searchMode:               this.search.defaultMode,
+      bm25Weight:               this.search.bm25Weight,
+      semanticWeight:           this.search.semanticWeight,
+      topN:                     20,
+      cronEnabled:              true,
+      cronSchedule:             this.cronSchedule,
+      groqModel:                this.groq.model,
+      chunkingStrategy:         this.chunking.defaultStrategy,
+      useHyde:                  false,
+      groqApiKey:               this.groq.apiKey,
+    };
+    let stored;
+    try {
+      stored = require('./db').getSetting(key);
+    } catch {
+      stored = undefined;
+    }
+    return stored === undefined ? defaults[key] : stored;
+  },
 });
 
 module.exports = config;
