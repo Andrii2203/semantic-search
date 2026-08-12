@@ -2,7 +2,7 @@
 
 ---
 
-# PDF Resume Parser Module — PLAN v1.0
+# PDF Resume Parser Module: PLAN v1.0
 
 ## 1. ЩО БУДУЄМО
 Окремий модуль парсингу PDF-резюме, який:
@@ -19,9 +19,9 @@
 - Показати результати з поясненням
 
 ## 2. НАВІЩО
-Версія 1.0 — рекрутер завантажує 50 PDF, вводить «Node.js senior AWS» → бачить топ-10 кандидатів.
-Версія 1.1 — додається semantic search для смислової близькості.
-Версія 2.0 — AI-структурування для креативних резюме (fallback).
+Версія 1.0: рекрутер завантажує 50 PDF, вводить «Node.js senior AWS» → бачить топ-10 кандидатів.
+Версія 1.1: додається semantic search для смислової близькості.
+Версія 2.0: AI-структурування для креативних резюме (fallback).
 
 ## 3. АРХІТЕКТУРА МОДУЛЯ
 
@@ -29,14 +29,14 @@
 ```
 /src
   /parsers
-    index.js              — реєстр парсерів, parseResume(fileBuffer, fileName)
-    pdf-extractor.js      — витягує сирий текст з PDF (pdf-parse)
-    section-detector.js   — словники маркерів + логіка розбиття на секції
-    skills-extractor.js   — KNOWN_TECH + парсинг списків через кому
-    experience-parser.js  — datePattern + підрахунок років
-    ir-builder.js         — складає фінальний IR об'єкт
+    index.js: реєстр парсерів, parseResume(fileBuffer, fileName)
+    pdf-extractor.js: витягує сирий текст з PDF (pdf-parse)
+    section-detector.js: словники маркерів + логіка розбиття на секції
+    skills-extractor.js: KNOWN_TECH + парсинг списків через кому
+    experience-parser.js: datePattern + підрахунок років
+    ir-builder.js: складає фінальний IR об'єкт
   /sources
-    file-upload.js        — приймає файли, викликає parsers/index.js
+    file-upload.js: приймає файли, викликає parsers/index.js
 ```
 
 ### 3.2 Pipeline обробки
@@ -153,8 +153,8 @@ const KNOWN_TECH = [
 
 ### 4.3 Патерн дат (experience-parser.js)
 ```javascript
-const DATE_PATTERN = /(\d{4})\s*[-–—to]+\s*(present|тепер|настоящее|по настоящее)/i
-const DATE_PATTERN_STATIC = /(\d{4})\s*[-–—]+\s*(\d{4})/
+const DATE_PATTERN = /(\d{4})\s*[-–, to]+\s*(present|тепер|настоящее|по настоящее)/i
+const DATE_PATTERN_STATIC = /(\d{4})\s*[-–, ]+\s*(\d{4})/
 
 // Витягує:
 // "2020 - 2023" → { yearsFrom: 2020, yearsTo: 2023, duration: 3 }
@@ -233,25 +233,25 @@ const ResumeIRSchena = IRSchema.extend({
 
 ## 8. ACCEPTANCE CRITERIA
 
-### Фаза 1 — pdf-extractor
+### Фаза 1: pdf-extractor
 - [ ] `npm install pdf-parse`
 - [ ] Модуль витягує текст з PDF без помилок
 - [ ] Clean-функція прибирає зайві пробіли та символи
 - [ ] Тест на 3 реальних резюме проходить
 
-### Фаза 2 — section-detector
+### Фаза 2: section-detector
 - [ ] Словники маркерів покривають EN/UA/RU
 - [ ] Розбиття на секції працює на стандартних резюме
-- [ ] Якщо секція не знайдена — текст потрапляє в header
+- [ ] Якщо секція не знайдена: текст потрапляє в header
 - [ ] Тести проходять
 
-### Фаза 3 — skills-extractor + experience-parser
+### Фаза 3: skills-extractor + experience-parser
 - [ ] KNOWN_TECH покриває основні технології
 - [ ] Навички витягуються з різних форматів (коми, списки, буліти)
 - [ ] Досвід парситься з різними форматами дат
 - [ ] Тести проходять
 
-### Фаза 4 — ir-builder + інтеграція
+### Фаза 4: ir-builder + інтеграція
 - [ ] IR об'єкт проходить Zod валідацію
 - [ ] file-upload.js викликає parseResume() і отримує IR
 - [ ] IR потрапляє в загальний pipeline (DB + SearchEngine)

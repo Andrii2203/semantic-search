@@ -10,13 +10,13 @@ The chosen design follows the aesthetic of a classic Ubuntu Linux terminal. It c
 
 | Element | Value | Description |
 | :--- | :--- | :--- |
-| **Primary Background** | `#300a24` | Classic Ubuntu Aubergine |
-| **Header Bar** | `#5e2750` | Darker top border (28px height) |
-| **Primary Accent** | `#e95420` | Ubuntu Orange (Buttons) |
-| **Secondary Accent** | `#c74416` | Darker Orange (Button Hover) |
-| **Prompt Color** | `text-orange-500` | Command line prompt (`andrii@ubuntu:~$`) |
-| **Typography** | `font-mono` | Monospace for all terminal inputs/outputs |
-| **Window Controls** | Red, Yellow, Green | Decorative dots in the top-left corner |
+| Primary Background | `#300a24` | Classic Ubuntu Aubergine |
+| Header Bar | `#5e2750` | Darker top border (28px height) |
+| Primary Accent | `#e95420` | Ubuntu Orange (Buttons) |
+| Secondary Accent | `#c74416` | Darker Orange (Button Hover) |
+| Prompt Color | `text-orange-500` | Command line prompt (`andrii@ubuntu:~$`) |
+| Typography | `font-mono` | Monospace for all terminal inputs/outputs |
+| Window Controls | Red, Yellow, Green | Decorative dots in the top-left corner |
 
 ### 🛠 Reference Implementation (React)
 
@@ -52,7 +52,7 @@ const StyleLinux = () => (
 ```
 
 ## 📐 Design Principles
-1. **Authenticity:** The UI must feel like a real terminal session.
-2. **Focus:** No unnecessary borders or boxes around text inputs.
-3. **Responsiveness:** The "Window" container should scale while maintaining the aspect of a terminal.
-4. **Interaction:** Use the "Subtle Magnet" effect for all primary action buttons.
+1. Authenticity: The UI must feel like a real terminal session.
+2. Focus: No unnecessary borders or boxes around text inputs.
+3. Responsiveness: The "Window" container should scale while maintaining the aspect of a terminal.
+4. Interaction: Use the "Subtle Magnet" effect for all primary action buttons.

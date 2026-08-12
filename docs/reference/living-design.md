@@ -9,10 +9,10 @@ The UI is not static; it evolves slowly and naturally. It functions like a store
 
 ### 1. The "Brain": `useLivingDesign` Hook
 Located in `src/hooks/useLivingDesign.js`, this hook orchestrates all calculations.
-- **SSR Safety:** Checks for `window` and `document` to prevent server-side crashes.
-- **Caching:** Weather data is cached in `localStorage` for 1 hour to prevent API rate limiting.
-- **Sync:** Uses `visibilitychange` to refresh the UI immediately when the user returns to the tab.
-- **Interval:** Performs a silent update every 10 minutes.
+- SSR Safety: Checks for `window` and `document` to prevent server-side crashes.
+- Caching: Weather data is cached in `localStorage` for 1 hour to prevent API rate limiting.
+- Sync: Uses `visibilitychange` to refresh the UI immediately when the user returns to the tab.
+- Interval: Performs a silent update every 10 minutes.
 
 ### 2. The "Atmosphere": CSS Integration
 The hook injects dynamic values into the CSS root (`:root`) as variables:
@@ -30,17 +30,17 @@ The hook injects dynamic values into the CSS root (`:root`) as variables:
 
 ### 🌑 Lunar Cycle
 We calculate the phase of the moon based on a 29.5-day cycle.
-- **Effect:** The `.moon-glow` class adds a white halo around components. It is strongest during a Full Moon.
-- **CSS Usage:** `box-shadow: 0 0 calc(var(--moon-intensity) * 50px) rgba(255,255,255,0.15)`
+- Effect: The `.moon-glow` class adds a white halo around components. It is strongest during a Full Moon.
+- CSS Usage: `box-shadow: 0 0 calc(var(--moon-intensity) * 50px) rgba(255,255,255,0.15)`
 
 ### ☁️ Weather Integration (Kyiv by default)
 Using the Open-Meteo API (no key required):
-- **Clouds:** Desaturate the entire UI.
-- **Wind:** Blurs the orbital background elements.
+- Clouds: Desaturate the entire UI.
+- Wind: Blurs the orbital background elements.
 
 ### ⚛️ Organic Noise (Daily Jitter)
 A Perlin-like pseudo-random noise is generated daily. 
-- **Effect:** Prevents the orbital paths from being perfectly mathematical. It adds "human" imperfection to the movement.
+- Effect: Prevents the orbital paths from being perfectly mathematical. It adds "human" imperfection to the movement.
 
 ## 🛠 How to Use
 
