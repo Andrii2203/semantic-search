@@ -36,12 +36,24 @@ jest.mock('../src/search-engine', () => ({
 
 jest.mock('../src/sources/index', () => ({
   fetchAll: jest.fn(),
+  fetchOne: jest.fn(async () => []),
   getRegisteredSources: jest.fn(() => ['mock-source']),
 }));
+
+jest.mock('../src/sources/rss', () => ({ fetchFeed: jest.fn(async () => []) }));
 
 const db = require('../src/db');
 const sources = require('../src/sources/index');
 const scheduler = require('../src/scheduler');
+const { fetchFeed: feedFetch } = require('../src/sources/rss');
+
+async function createUser(email) {
+  const bcrypt = require('bcryptjs');
+  const crypto = require('crypto');
+  const id = crypto.randomUUID();
+  db.createUser({ id, email, passwordHash: await bcrypt.hash('pass', 4) });
+  return id;
+}
 
 // ─── Setup / Teardown ────────────────────────────────────────
 
@@ -265,5 +277,65 @@ describe('scheduler schedule control', () => {
     scheduler.applySchedule();
 
     expect(scheduler.getStatus().status).toBe('stopped');
+  });
+});
+
+describe('scheduler source selection', () => {
+  const feedItems = [
+    {
+      id: 'feed-item-1',
+      content: 'A long enough article about distributed systems and consensus protocols in practice',
+      type: 'post',
+      source: 'rss',
+      metadata: { title: 'Consensus in practice', url: 'https://example.test/1', feedUrl: 'https://example.test/feed.xml' },
+    },
+  ];
+
+  test('fetches a feed once even when several people subscribe to it', async () => {
+    const second = await createUser('second@example.com');
+    db.addUserSource({ userId: testUserId, type: 'rss', url: 'https://example.test/feed.xml', label: 'Shared' });
+    db.addUserSource({ userId: second, type: 'rss', url: 'https://example.test/feed.xml', label: 'Shared' });
+    feedFetch.mockResolvedValue(feedItems);
+
+    await scheduler.runCycle();
+
+    expect(feedFetch).toHaveBeenCalledTimes(1);
+  });
+
+  test('does not fetch a source that its only subscriber switched off', async () => {
+    const source = db.addUserSource({ userId: testUserId, type: 'rss', url: 'https://example.test/off.xml', label: 'Off' });
+    db.setUserSourceEnabled({ id: source.id, userId: testUserId, enabled: false });
+    feedFetch.mockResolvedValue(feedItems);
+
+    await scheduler.runCycle();
+
+    expect(feedFetch).not.toHaveBeenCalled();
+  });
+
+  test('keeps the cycle running when one source fails', async () => {
+    db.addUserSource({ userId: testUserId, type: 'rss', url: 'https://broken.test/feed.xml', label: 'Broken' });
+    db.addUserSource({ userId: testUserId, type: 'rss', url: 'https://example.test/feed.xml', label: 'Good' });
+    feedFetch.mockImplementation(async (url) => {
+      if (url.startsWith('https://broken.test')) { throw new Error('feed is down'); }
+      return feedItems;
+    });
+
+    const result = await scheduler.runCycle();
+
+    expect(result.saved).toBe(1);
+  });
+
+  test('matches a person only against items from the sources they enabled', async () => {
+    const second = await createUser('outsider@example.com');
+    db.addUserSource({ userId: testUserId, type: 'rss', url: 'https://example.test/feed.xml', label: 'Mine' });
+    db.addUserSource({ userId: second, type: 'rss', url: 'https://other.test/feed.xml', label: 'Theirs' });
+    feedFetch.mockImplementation(async (url) =>
+      url.startsWith('https://example.test') ? feedItems : [],
+    );
+
+    await scheduler.runCycle();
+
+    expect(db.getUserMatch(testUserId, 'feed-item-1')).not.toBeNull();
+    expect(db.getUserMatch(second, 'feed-item-1')).toBeNull();
   });
 });

@@ -16,6 +16,7 @@ const uploadRouter = require('./routes/upload');
 const searchRouter = require('./routes/search');
 const profilesRouter = require('./routes/profiles');
 const seedRouter = require('./routes/seed');
+const sourcesRouter = require('./routes/sources');
 const { router: settingsRouter } = require('./routes/settings');
 const configRouter = require('./routes/config-routes');
 const authRouter = require('./routes/auth');
@@ -62,6 +63,7 @@ app.use('/api/upload', uploadRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/profiles', profilesRouter);
 app.use('/api/seed-test-data', seedRouter);
+app.use('/api/sources', sourcesRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/config', configRouter);
 

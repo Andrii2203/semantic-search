@@ -55,6 +55,15 @@ async function fetchAll(options = {}) {
   return results;
 }
 
+async function fetchOne(name) {
+  const source = sources.get(name);
+  if (!source) {
+    logger.warn({ source: name }, `Unknown built in source: ${name}`);
+    return [];
+  }
+  return source.fetch();
+}
+
 function clearSources() {
   sources.clear();
 }
@@ -66,5 +75,6 @@ register(require('./djinni'));
 module.exports = {
   register,
   fetchAll,
+  fetchOne,
   clearSources,
 };

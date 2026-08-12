@@ -109,6 +109,7 @@ export function Sidebar() {
         <NavItem icon={SearchIcon}      label="Search"  view="search"                          collapsed={sidebarCollapsed} />
         <NavItem icon={FileIcon}        label="Files"   view="files"                           collapsed={sidebarCollapsed} />
         <NavItem icon={SparkleIcon}     label="My Profile" view="profile"                       collapsed={sidebarCollapsed} />
+        <NavItem icon={RefreshIcon}     label="Sources" view="sources"                         collapsed={sidebarCollapsed} />
         <Divider />
         <NavItem icon={GearIcon}        label="Settings" view="settings"                       collapsed={sidebarCollapsed} />
         <NavItem icon={SystemIcon}      label="System"  view="system"                          collapsed={sidebarCollapsed} />

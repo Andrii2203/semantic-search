@@ -231,3 +231,45 @@ export function useHealthFull() {
     staleTime: 15_000,
   })
 }
+
+export function useSources() {
+  return useQuery({
+    queryKey: ['sources'],
+    queryFn: () => apiFetch('/api/sources').then((d) => d.sources),
+    staleTime: 30_000,
+  })
+}
+
+export function useAddSource() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (url) =>
+      apiFetch('/api/sources', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, label: url }),
+      }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['sources'] }),
+  })
+}
+
+export function useToggleSource() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, enabled }) =>
+      apiFetch(`/api/sources/${id}/toggle`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled }),
+      }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['sources'] }),
+  })
+}
+
+export function useDeleteSource() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (id) => apiFetch(`/api/sources/${id}`, { method: 'DELETE' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['sources'] }),
+  })
+}

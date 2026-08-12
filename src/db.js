@@ -173,6 +173,22 @@ const migrations = [
       );
     `,
   },
+  {
+    name: '014_create_user_sources',
+    up: `
+      CREATE TABLE IF NOT EXISTS user_sources (
+        id         TEXT PRIMARY KEY,
+        user_id    TEXT NOT NULL REFERENCES users(id),
+        type       TEXT NOT NULL,
+        url        TEXT NOT NULL,
+        label      TEXT,
+        enabled    INTEGER NOT NULL DEFAULT 1,
+        created_at TEXT NOT NULL DEFAULT (datetime('now')),
+        UNIQUE (user_id, type, url)
+      );
+      CREATE INDEX IF NOT EXISTS idx_user_sources_user ON user_sources(user_id, enabled);
+    `,
+  },
 ];
 
 function contentHash(content) {
@@ -619,6 +635,61 @@ function userCanAccessItem(item, userId) {
   return !item.user_id || item.user_id === userId;
 }
 
+const BUILTIN_SOURCES = ['hn', 'reddit', 'djinni'];
+
+function rowToSource(row) {
+  return row ? { ...row, enabled: row.enabled === 1 } : null;
+}
+
+function addUserSource({ userId, type, url, label = null }) {
+  const d = getDb();
+  const id = crypto.randomUUID();
+  d.prepare(
+    'INSERT OR IGNORE INTO user_sources (id, user_id, type, url, label) VALUES (?, ?, ?, ?, ?)',
+  ).run(id, userId, type, url, label);
+
+  return rowToSource(
+    d
+      .prepare('SELECT * FROM user_sources WHERE user_id = ? AND type = ? AND url = ?')
+      .get(userId, type, url),
+  );
+}
+
+function getUserSources(userId) {
+  return getDb()
+    .prepare('SELECT * FROM user_sources WHERE user_id = ? ORDER BY type, created_at')
+    .all(userId)
+    .map(rowToSource);
+}
+
+function getEnabledSources() {
+  return getDb()
+    .prepare('SELECT * FROM user_sources WHERE enabled = 1')
+    .all()
+    .map(rowToSource);
+}
+
+function setUserSourceEnabled({ id, userId, enabled }) {
+  return (
+    getDb()
+      .prepare('UPDATE user_sources SET enabled = ? WHERE id = ? AND user_id = ?')
+      .run(enabled ? 1 : 0, id, userId).changes > 0
+  );
+}
+
+function deleteUserSource({ id, userId }) {
+  return (
+    getDb().prepare('DELETE FROM user_sources WHERE id = ? AND user_id = ?').run(id, userId)
+      .changes > 0
+  );
+}
+
+function seedBuiltinSourcesForUser(userId) {
+  for (const name of BUILTIN_SOURCES) {
+    addUserSource({ userId, type: 'builtin', url: name, label: name });
+  }
+}
+
 function seedWelcomeForUser(userId) {
   for (const msg of WELCOME_MESSAGES) {
     insertItem({
@@ -1007,6 +1078,12 @@ module.exports = {
   setItemStatusForUser,
   userCanAccessItem,
   seedWelcomeForUser,
+  addUserSource,
+  getUserSources,
+  getEnabledSources,
+  setUserSourceEnabled,
+  deleteUserSource,
+  seedBuiltinSourcesForUser,
   getSetting,
   getAllSettings,
   setSetting,

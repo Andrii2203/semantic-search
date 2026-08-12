@@ -7,6 +7,7 @@ import { ItemList } from './components/ItemList'
 import { ProfileEditor } from './components/ProfileEditor'
 import { FilesMode } from './components/FilesMode'
 import { SettingsPage } from './components/SettingsPage'
+import { SourcesPage } from './components/SourcesPage'
 import { SystemHealth } from './components/SystemHealth'
 import { AlertBanner } from './components/AlertBanner'
 import { ReadingPane } from './components/ReadingPane'
@@ -85,6 +86,10 @@ function GmailLayout() {
         {currentView === 'files' ? (
           <ErrorBoundary>
             <FilesMode />
+          </ErrorBoundary>
+        ) : currentView === 'sources' ? (
+          <ErrorBoundary>
+            <SourcesPage />
           </ErrorBoundary>
         ) : currentView === 'settings' ? (
           <ErrorBoundary>

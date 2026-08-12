@@ -5,6 +5,7 @@ const config = require('./config');
 const logger = require('./logger');
 const db = require('./db');
 const sources = require('./sources/index');
+const rss = require('./sources/rss');
 const searchEngine = require('./search-engine');
 const { validateIRBatch } = require('./validation');
 const fs = require('fs');
@@ -163,6 +164,49 @@ async function indexNewItems(newItems) {
   return { itemVectors, totalChunked };
 }
 
+function sourceKeyOfItem(item) {
+  return item.source === 'rss' ? `rss:${item.metadata?.feedUrl}` : item.source;
+}
+
+function sourceKeyOfRow(row) {
+  return row.type === 'rss' ? `rss:${row.url}` : row.url;
+}
+
+async function fetchFromSource(row) {
+  return row.type === 'rss' ? rss.fetchFeed(row.url) : sources.fetchOne(row.url);
+}
+
+async function fetchFromUserSources() {
+  const enabled = db.getEnabledSources();
+  if (enabled.length === 0) {
+    return sources.fetchAll();
+  }
+
+  const distinct = new Map();
+  for (const row of enabled) {
+    distinct.set(sourceKeyOfRow(row), row);
+  }
+
+  const items = [];
+  for (const [key, row] of distinct) {
+    try {
+      items.push(...(await fetchFromSource(row)));
+    } catch (err) {
+      logger.warn({ err, source: key }, 'Source failed, the cycle continues');
+    }
+  }
+
+  return items;
+}
+
+function allowedSourceKeys(userId) {
+  const rows = db.getUserSources(userId);
+  if (rows.length === 0) {
+    return null;
+  }
+  return new Set(rows.filter((row) => row.enabled).map(sourceKeyOfRow));
+}
+
 async function matchUsers(users, newItems, itemVectors) {
   const matchThreshold = config.live('searchThreshold');
   let totalMatches = 0;
@@ -170,9 +214,13 @@ async function matchUsers(users, newItems, itemVectors) {
   for (const user of users) {
     currentStep = `Matching items for ${user.email}...`;
     const userVector = await loadProfileForUser(user.id);
+    const allowed = allowedSourceKeys(user.id);
     let matched = 0;
 
     for (const item of newItems) {
+      if (allowed && !allowed.has(sourceKeyOfItem(item))) {
+        continue;
+      }
       const score = searchEngine.cosineSimilarity(itemVectors.get(item.id), userVector);
       if (score >= matchThreshold) {
         db.upsertUserMatch({ userId: user.id, itemId: item.id, score, status: 'new' });
@@ -228,7 +276,7 @@ function finishCycle(result) {
 
 async function ingest(startTime) {
   currentStep = 'Fetching from sources...';
-  const rawItems = await sources.fetchAll();
+  const rawItems = await fetchFromUserSources();
   logger.info({ count: rawItems.length }, 'Fetched items from sources');
 
   if (rawItems.length === 0) {

@@ -71,32 +71,6 @@ describe('src/routes/sync.js', () => {
     jest.resetModules();
   });
 
-  describe('GET /api/sources', () => {
-    test('returns list of registered sources from DB', async () => {
-      const res = await request(app).get('/api/sources').expect(200);
-
-      expect(res.body).toHaveProperty('sources');
-      expect(Array.isArray(res.body.sources)).toBe(true);
-      expect(res.body.sources).toContain('hackernews');
-    });
-
-    test('returns empty array when DB has no items', async () => {
-      db.close();
-      db.init(':memory:'); // Fresh empty DB
-
-      const res = await request(app).get('/api/sources').expect(200);
-      expect(res.body.sources).toEqual([]);
-    });
-
-    test('handles DB error gracefully', async () => {
-      // Force DB error by closing connection before request
-      db.close();
-
-      const res = await request(app).get('/api/sources').expect(500);
-      expect(res.body).toHaveProperty('error');
-    });
-  });
-
   describe('POST /api/sync', () => {
     test('triggers manual sync and returns success', async () => {
       const scheduler = require('../src/scheduler');
