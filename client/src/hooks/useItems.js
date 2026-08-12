@@ -181,22 +181,43 @@ export function useResetSettings() {
   })
 }
 
+function newBatchId() {
+  return `batch-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
+}
+
+async function uploadOneFile(file, batchId) {
+  const fd = new FormData()
+  fd.append('files', file)
+  fd.append('batchId', batchId)
+
+  const res = await fetch('/api/upload', { method: 'POST', body: fd })
+  if (res.status === 401) {
+    useUIStore.getState().setShowLockScreen(true)
+    throw new Error('UNAUTHORIZED')
+  }
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(body?.error?.message || `HTTP ${res.status}`)
+  }
+  return res.json()
+}
+
 export function useUploadFiles() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async (files) => {
-      const fd = new FormData()
-      for (const f of files) fd.append('files', f)
-      const res = await fetch('/api/upload', { method: 'POST', body: fd })
-      if (res.status === 401) {
-        useUIStore.getState().setShowLockScreen(true)
-        throw new Error('UNAUTHORIZED')
+    mutationFn: async ({ files, onProgress }) => {
+      const batchId = newBatchId()
+      const items = []
+      const errors = []
+
+      for (const file of files) {
+        const res = await uploadOneFile(file, batchId)
+        items.push(...(res.items || []))
+        errors.push(...(res.errors || []))
+        onProgress?.(items.length + errors.length, files.length)
       }
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
-        throw new Error(body?.error?.message || `HTTP ${res.status}`)
-      }
-      return res.json()
+
+      return { batchId, processed: items.length, failed: errors.length, items, errors }
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['items'] }),
   })

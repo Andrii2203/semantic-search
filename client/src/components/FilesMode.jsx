@@ -26,16 +26,23 @@ export function FilesMode() {
   const [lastBatchId, setLastBatchId] = useState(null)
   const [results, setResults] = useState([])
   const [error, setError] = useState(null)
+  const [progress, setProgress] = useState(null)
 
   async function handleUpload(e) {
     const files = Array.from(e.target.files || [])
     if (!files.length) return
     setError(null)
+    setProgress({ done: 0, total: files.length })
     try {
-      const res = await upload.mutateAsync(files)
+      const res = await upload.mutateAsync({
+        files,
+        onProgress: (done, total) => setProgress({ done, total }),
+      })
       setLastBatchId(res.batchId)
     } catch (err) {
       setError(err.message)
+    } finally {
+      setProgress(null)
     }
     if (fileRef.current) fileRef.current.value = ''
   }
@@ -77,7 +84,7 @@ export function FilesMode() {
           <div className="flex items-center gap-3">
             <input ref={fileRef} type="file" accept="application/pdf" multiple onChange={handleUpload} className="hidden" id="file-input" />
             <label htmlFor="file-input" className="px-3 py-1.5 rounded-sm text-xs bg-accent/10 text-accent hover:bg-accent/20 cursor-pointer transition-colors">
-              {upload.isPending ? 'Uploading…' : 'Choose PDFs'}
+              {progress ? `Processing ${progress.done} of ${progress.total}` : 'Choose PDFs'}
             </label>
             {upload.data && (
               <span className="text-[11px] text-fg-2">
