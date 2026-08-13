@@ -339,3 +339,24 @@ describe('scheduler source selection', () => {
     expect(db.getUserMatch(second, 'feed-item-1')).toBeNull();
   });
 });
+
+describe('scheduler junk filter', () => {
+  test('keyword stuffed items are counted as pre-filtered and never reach the corpus', async () => {
+    const stuffed = 'rust async tokio rust async await futures rust concurrency rust async guide rust async tokio rust async tutorial rust async rust async rust';
+    sources.fetchAll.mockResolvedValue([
+      ...makeSourceItems(2),
+      {
+        id: 'stuffed-item',
+        content: stuffed,
+        type: 'post',
+        source: 'mock-source',
+        metadata: { title: 'RUST ASYNC TOKIO rust async best rust async', url: 'https://spam.test/1' },
+      },
+    ]);
+
+    const result = await scheduler.runCycle();
+
+    expect(result.preFiltered).toBe(1);
+    expect(result.saved).toBe(2);
+  });
+});

@@ -10,6 +10,7 @@ const searchEngine = require('./search-engine');
 const { validateIRBatch } = require('./validation');
 const fs = require('fs');
 const events = require('./events');
+const { isKeywordStuffed } = require('./junk-filter');
 
 const chunker = require('./chunker/index');
 
@@ -83,7 +84,10 @@ function passesPreFilter(item) {
   if (content.length < 50) {
     return false;
   }
-  return !(title && title === content);
+  if (title && title === content) {
+    return false;
+  }
+  return !isKeywordStuffed(`${title} ${content}`);
 }
 
 function saveToCorpus(items) {
