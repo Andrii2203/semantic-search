@@ -110,13 +110,16 @@ async function embedQuery(index, queryText, configuration) {
 
 function fuse(lexical, dense, configuration, limit) {
   if (configuration.fusion === 'weighted') {
-    return weightedFusion([lexical, dense], [constants.bm25Weight, constants.semanticWeight]);
+    const weights = configuration.weights || [constants.bm25Weight, constants.semanticWeight];
+    return weightedFusion([lexical, dense], weights);
   }
 
+  const rankConstant =
+    configuration.rankConstant === undefined ? constants.rrfK : configuration.rankConstant;
   const lexicalRanking = byScore(lexical).slice(0, limit).map((row) => row.id);
   const denseRanking = byScore(dense).slice(0, limit).map((row) => row.id);
 
-  return reciprocalRankFusion([lexicalRanking, denseRanking], constants.rrfK);
+  return reciprocalRankFusion([lexicalRanking, denseRanking], rankConstant);
 }
 
 function rankWith(context, configuration, limit) {

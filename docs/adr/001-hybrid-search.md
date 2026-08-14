@@ -1,5 +1,10 @@
 # ADR-001: Hybrid Search через SQLite FTS5
 
+Status: partly superseded by `docs/adr/008-parallel-candidate-generation.md` at
+2026-08-14 19:52:18 +0200. The choice of SQLite FTS5 and of running two branches stands. The
+sequential default, and the claim that it economises CPU at an acceptable cost, is superseded by
+measurement recorded in `docs/eval/beir-axes-a-b.md`.
+
 ## Проблема
 Pure cosine similarity погано матчить точні технічні терміни. "Node.js" в запиті може не знайти "Node.js" в резюме якщо embedding вектори різні через контекст.
 

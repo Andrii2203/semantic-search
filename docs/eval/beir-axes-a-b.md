@@ -97,12 +97,62 @@ ADR-001 bought is under three seconds per pass and the cost is a third of recall
 Weighted fusion at 0.4 and 0.6 beats reciprocal rank fusion on SciFact and is indistinguishable from
 it on NFCorpus. There is no collection where rank fusion is measurably ahead.
 
-That result deserves a caution rather than a celebration. The weights 0.4 and 0.6 are recorded as
-arbitrary in `docs/reference/search-constants.md`, and a configuration with two free parameters
-beating one with a fixed constant on one collection out of two is the weakest kind of win. The
-rank constant of 60 was also never tuned, and its published optimum is flat. Axis B should be called
-undecided until FiQA lands and until the weights are varied, which is a matter of minutes now that
-the vectors are cached.
+That result deserved a caution rather than a celebration, because the weights 0.4 and 0.6 are recorded
+as arbitrary in `docs/reference/search-constants.md` and the rank constant of 60 had never been
+varied here. Both were swept at 2026-08-14 19:46:15 +0200, which the cached vectors made cheap.
+
+### 7.1 Both free parameters, swept
+
+| Rank constant | SciFact nDCG@10 | NFCorpus nDCG@10 |
+|---|---|---|
+| 10 | 0.7142 | 0.3469 |
+| 20 | 0.7050 | 0.3462 |
+| 60 | 0.6948 | 0.3438 |
+| 100 | 0.6930 | 0.3423 |
+| 200 | 0.6927 | 0.3417 |
+
+| Lexical weight | SciFact nDCG@10 | NFCorpus nDCG@10 |
+|---|---|---|
+| 0.2 | 0.7170 | 0.3346 |
+| 0.3 | 0.7292 | 0.3405 |
+| 0.4, what this repository ships | 0.7229 | 0.3388 |
+| 0.5 | 0.7168 | 0.3337 |
+| 0.6 | 0.7065 | 0.3306 |
+| 0.7 | 0.6982 | 0.3244 |
+| 0.8 | 0.6926 | 0.3174 |
+
+Three readings, and the third is a warning about method rather than a result.
+
+The rank constant moves the score monotonically and smaller is better, but the whole sweep from 10 to
+200 spans 0.0215 on SciFact and 0.0052 on NFCorpus. Both are at or under the resolution of those
+collections. The published claim that the optimum is flat survives contact with this data, and 60
+against 10 is not a difference this bench can defend.
+
+The weights peak at 0.3 lexical and 0.7 dense on both collections, which is the same answer twice on
+two unrelated subject areas. Against the shipped 0.4, that peak is worth +0.0063 on SciFact and
++0.0017 on NFCorpus, and both intervals contain zero. The arbitrary constant in this repository is
+indistinguishable from the best value found by sweeping. It stays.
+
+The warning: picking 0.3 because it peaked on these collections would be tuning on the collection the
+result is then reported on, which is the mistake BEIR exists to prevent, and this project already
+recorded the equivalent mistake once in `docs/plans/evaluation-corpus.md` section 12. The sweep is
+usable as evidence that the curve is flat near the shipped value, not as a licence to move the value
+to the peak.
+
+### 7.2 Axis B, at each method's best
+
+| Comparison | Dataset | Difference | 95 percent interval |
+|---|---|---|---|
+| `parallel-weighted-30` over `parallel-rrf-k10` | SciFact | +0.0150 | [0.0022, 0.0280] |
+| `parallel-weighted-30` over `parallel-rrf-k10` | NFCorpus | -0.0064 | [-0.0162, 0.0022] |
+
+Even at each method's best setting the two collections disagree: weighted fusion wins on SciFact, and
+on NFCorpus the interval contains zero with rank fusion nominally ahead. Axis B stays undecided, and
+that is the finding rather than a gap in it. Two fusion methods that cannot be separated on two
+collections are not the place to spend the next week.
+
+What changes for the product is only this: nothing. The shipped weights are already at the flat part
+of the curve, and the choice between the two fusion methods is below what this bench can resolve.
 
 ## 8. What dense retrieval alone says
 

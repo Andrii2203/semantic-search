@@ -57,6 +57,22 @@ const CONFIGURATIONS = {
   },
 };
 
+function parallelVariant(extra) {
+  return { ...CONFIGURATIONS['parallel-rrf'], ...extra };
+}
+
+for (const rankConstant of [10, 20, 60, 100, 200]) {
+  CONFIGURATIONS[`parallel-rrf-k${rankConstant}`] = parallelVariant({ rankConstant });
+}
+
+for (const lexicalWeight of [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]) {
+  const name = `parallel-weighted-${Math.round(lexicalWeight * 100)}`;
+  CONFIGURATIONS[name] = parallelVariant({
+    fusion: 'weighted',
+    weights: [lexicalWeight, 1 - lexicalWeight],
+  });
+}
+
 function resolveConfiguration(name) {
   const configuration = CONFIGURATIONS[name];
   if (!configuration) {
