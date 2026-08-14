@@ -54,7 +54,7 @@ const config = Object.freeze({
 
   groq: Object.freeze({
     apiKey: env('GROQ_API_KEY', ''),
-    model: env('GROQ_MODEL', 'llama-3.1-70b-versatile'),
+    model: env('GROQ_MODEL', 'llama-3.3-70b-versatile'),
     maxTokens: envInt('GROQ_MAX_TOKENS', 512),
     rateLimit: envInt('GROQ_RATE_LIMIT', 10),
   }),

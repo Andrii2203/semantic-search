@@ -28,6 +28,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.116.0",
     "@huggingface/transformers": "^4.2.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^11.7.0",
