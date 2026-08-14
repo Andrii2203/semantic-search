@@ -1,0 +1,6687 @@
+{
+  "poolDepth": 10,
+  "items": [
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "3a1f883fc7e5c3cd",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "3b62cd8cabe8b398",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "41c54b1b80ac0290",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "4e9c4136b38e4a7e",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "5188e55b5c0a97c3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "57cef2871ae85003",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "6bd96cd735b95973",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "6d067d07ed99d343",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "83ffabca6116d71e",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "9fd2950e3c87ec51",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "a21550ba1517c1db",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "b7aa0be6cddd449a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "c5ded292f38c5187",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "c89dd901f4a1f6c4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "cde33f46b09587c6",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "e75edb9533ef0414",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "e9f47b535ffdd335",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "f8c3c87bc4262511",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "fca3310e102345c1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "00d52c32ee43aa3c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "0fc69aa3b3c3fbd2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "1d992e18a479c7bb",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "22af99599cd7c8ae",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "375e3a888f4824f4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "45e029914ecb661a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "4e17e25639aad922",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "54838c577ab53894",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "60ca504dfac0fedc",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "71c93c85201dffd3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "79febebede829f69",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "813ab1258fbf1e2b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "82a74fbcdf4b4c53",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "8464d3795c535d44",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "9b8ff17cac40ae68",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "9f40115e93fd493a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "a42816fff5a38d18",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "ac5c2183e0f7af26",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "bf127613add833b4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "c0a51a0103c3e404",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "02538412c57e32ec",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "14e75c7e324723d3",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "233c28770361942c",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "3794164a4814b750",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "4bc3f0af42f6ec9a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "572540556d381bd4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "5f8fbbc0af0c8fd5",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "723282f604245032",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "7553f96dceaf6dbc",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "95246ab654449317",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "a3c0203492b20a80",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "ae0e3802bd895ff3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "cb472eb2c06257bd",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "d65b1d4833e6fa46",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "d710ca6ca6067548",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "e166502cd0d7bce1",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "ed2bb57d6e624b53",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "ee6c0b257392b4fd",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "eefa3c31cad59ae1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "f864f821645c8b37",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "0850262fdb5eee9f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "3f1b9948be2357e2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "4b1784be02fcb9c7",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "57cef2871ae85003",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "60fb997d4357b804",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "61fbf4627cadc731",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "687dc6f78b4370cc",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "756b7fa170859932",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "8ba23b7cdd8283c8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "8c91f4a5f025cb21",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "9f40115e93fd493a",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "a4a441d81183803d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "bd50f0e69f3f059b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "c0a51a0103c3e404",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "d9792c648019ce92",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "dcb6876368ababd0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "e411f74388a91b48",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "ee6c0b257392b4fd",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "fca3310e102345c1",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "1e798a2f10d131ce",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "3cb2606653de5a0c",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "454e899dbb66816e",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "486caacfe0b9885c",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "48b7c14b4604e435",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "4b7f35e39b4503a5",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "524e3e057dc9c3c0",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "56849a095c2ac071",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "6d367ea8ce2a3f83",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "98159c71b574d13f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "9ce6a190725d2461",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "a384810c390bf4fd",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "b891d050a24de536",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "cba94d4043e43c3b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "e6ee691f52985ac8",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "e80f29f85403f1e2",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "f940f68ab9e6875d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "01be3346c01aec8c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "1fae4b9d4bf02646",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "47126202c6c6eb39",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "5449d62a63f4d696",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "5ecf0f5ea355af2b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "682a901be22f46b6",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "7d7fea8be61c365c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "8b14a0dca695631d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "9a20926417eb5f6f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "9f40115e93fd493a",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "a25906a52d2d06f7",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "a4a441d81183803d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "aa8d8b1a28520a6b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "b35827ab19ff859d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "caf80b1d84d413c7",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "cc14c7037c54fffe",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "cead5498778a0b35",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "e8e3efd8947539d0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "ee6c0b257392b4fd",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "04889559e8bc096e",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "096e917efbc38aa9",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "0d5d3f72d4e69b6a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "20494ad9e982b62c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "3e0aa0fa5ee09c99",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "3e1105a0c83387e7",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "42110e5af7f38106",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "425758933e890bdb",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "454ee365bd89aeef",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "4b7f35e39b4503a5",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "51e66a924fc87a64",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "5fb743e5883a7414",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "663a5409a61caf65",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "8c9ed5127f08a683",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "92798226a1016502",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "a2bb8962a58145ec",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "cdfe791e9e85893c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "d2046f4351834f80",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "d2d7024b474ef05c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "dfca6ea67c79e56c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "0e3b32864fe0af52",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "24560e0e496daf1d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "37887815a2eb5ced",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "3db90a0163095ddf",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "55620ee5158fd44e",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "70f8fe573d8fe2c2",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "788c7428401119f0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "81b6a1c2c344bdda",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "863b6e2c8e70156b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "8db955ae64f53a07",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "8e06063602d8c70b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "8f60349d03a02933",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "95dd3c0f37182b20",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "a02f69a132d8f13b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "b6890285ef9b44f6",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "d1eff5d8b3d23fe8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "dc92663c84313f96",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "e0a794a70473f6ba",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "ee6c0b257392b4fd",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "f23937fb6ef004ec",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "375e3a888f4824f4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "3f1b9948be2357e2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "3f64af7c9ac5d989",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "47aa976f4904526d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "5ecf0f5ea355af2b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "68a0aa5b232f2b69",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "756b7fa170859932",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "9390cb5e808e7cb3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "9adbd5c69c19d89f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "a42816fff5a38d18",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "a5ae29e4b2333035",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "b12f506e741069f8",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "bbbcbb44bb1eb73b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "bf127613add833b4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "cfeb69e2e5ecfd07",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "e0a794a70473f6ba",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "e76fbc16a1048c35",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "e7b834311fcd1078",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "e9f47b535ffdd335",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "f2c8f4456524e921",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "0ed5e42142d847d9",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "1287cec38848e177",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "1300bed50606077f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "1af7053781602622",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "20494ad9e982b62c",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "3c645511cd3a3a79",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "3fa63d4660848e9a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "5dae1104a53e86a2",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "689df919cfd86fc1",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "6af88fb714b92a53",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "8c91f4a5f025cb21",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "9141967106e8c7b5",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "d07df8ba809ade54",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "dfca6ea67c79e56c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "edf69196c29cd86f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "ee9e0ee6157e56bb",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "f2a52cd7932887d6",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "f37e1a559761d2fc",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "19770194534b4b48",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "1c84682876b5d029",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "24560e0e496daf1d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "2b93e514196ac215",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "34e66a000b84ba64",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "41c54b1b80ac0290",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "42b842617b73ed7a",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "4e62465ca3264966",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "52b2091197329fe1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "5fa303d149fc1c67",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "756b7fa170859932",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "aad42771345f2627",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "cfeb69e2e5ecfd07",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "d5ef55143b5cd67c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "e6962198a1a07575",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "f3bb824cb78333e6",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "11522d2fc3078a40",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "28fc266b2bbd2fc0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "32f79352420aa706",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "3f1b9948be2357e2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "3fa63d4660848e9a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "4200e953f76ce681",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "42fcafc02e5c2d26",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "4a8e3d5a232a5e56",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "4b75a74b7e45a9f4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "504dc79132a5c487",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "682a901be22f46b6",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "70f8fe573d8fe2c2",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "8318be325ee101de",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "9bf369cbd0998100",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "caf80b1d84d413c7",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "e0386bf141e7aa86",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "e9f47b535ffdd335",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "ee152911ea27145b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "eee83d340d1962da",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "eefa3c31cad59ae1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "19369cc6a1dbb401",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "233c28770361942c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "315a07761bd3c7f6",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "321656caf3e4eb54",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "325ac78dee374a9d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "3560312a0a7e77a3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "3a07bebd96292a8e",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "4784465a71b9571b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "51fb0a2b688a4add",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "71431308ccacb42c",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "9dcb1dc84d0b73f0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "a6a8fe62f7eca7a4",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "c05b3e7aa2679aa8",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "c2e9283ff0c0ff2a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "ceaab1424dfb2cb6",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "da8aabe42d1b5f9d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "ff42a249690b391a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "119846b5a3ece9b3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "1fae4b9d4bf02646",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "28009cf9d9f4abe8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "3f64af7c9ac5d989",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "42fcafc02e5c2d26",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "4b75a74b7e45a9f4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "687dc6f78b4370cc",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "8ba23b7cdd8283c8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "a0505ebcbc14a8cb",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "a5ae29e4b2333035",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "ac4abc1d063bdf7a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "b8f7e9177989e631",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "bf127613add833b4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "d15d4f712ca84505",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "dc4d5da3547ae276",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "dc62150bfeea7565",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "e0a794a70473f6ba",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "e429172b166da97e",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "ed0515d64b5efdb8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "3b9beedf95650f70",
+      "articleId": "fad3fb8c839efbec",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "0e59074fade4b405",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "1fae4b9d4bf02646",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "28fc266b2bbd2fc0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "734968228a522d97",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "742dd2a221b4c370",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "788c7428401119f0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "7a0cf44f1b7ff3a3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "7d086c869bca8c16",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "8db955ae64f53a07",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "9e7a30beb8f0cf40",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "b22f6e3503b999d3",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "b88cb6ddce16586f",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "caf80b1d84d413c7",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "d02ad034645ce943",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "d65b1d4833e6fa46",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "ed2bb57d6e624b53",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "00ad10cc83f1c559",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "11522d2fc3078a40",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "14b4cb8a2f512ad7",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "1a67c9ae4e5fca22",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "34c6459c42cc3326",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "3eea8ea8178a6516",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "3f0bad8c6496c428",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "55d5b5f287bc9851",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "864ba465ba70f079",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "8b17d5c706eee816",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "8db955ae64f53a07",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "9263734dfef48c26",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "9390cb5e808e7cb3",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "a94cadf1884a5582",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "ab84f895b9ad03c1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "b12f506e741069f8",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "b13390ef73afbe68",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "b35827ab19ff859d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "b3974362c0ef3536",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "46675847f99bb786",
+      "articleId": "dd66159e0f961c24",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "10c9ef4c407518f2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "1af7053781602622",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "1b9a16e4480738a2",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "1c26bdf66ae55ecf",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "208d72b21c356811",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "28c9a6f742dc37b0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "3a1f883fc7e5c3cd",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "3f0bad8c6496c428",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "3f1b9948be2357e2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "4b75a74b7e45a9f4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "5dbbd85d5270681a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "82784b48e2a49152",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "8940138676f2ed3e",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "8db955ae64f53a07",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "8e832e6092c5eedc",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "cead5498778a0b35",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "d65b1d4833e6fa46",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "e0386bf141e7aa86",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "e0a794a70473f6ba",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "48aec702025e35b3",
+      "articleId": "eeca8408d06b3bfa",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "1a3bfa3d5c61516c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "298cd74f0119afed",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "370cccce4e4fdfd0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "3f64af7c9ac5d989",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "4d7d4e9840bcf910",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "4d91809910c2cb2e",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "55d5b5f287bc9851",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "565d8437bae13b92",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "60ca504dfac0fedc",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "788c7428401119f0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "813ab1258fbf1e2b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "9390cb5e808e7cb3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "955150035d98f76b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "9f40115e93fd493a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "a6a8fe62f7eca7a4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "c0a51a0103c3e404",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "daee278848e45acd",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "dbb743e995c67b8f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "fc6e2586a34caad0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "fd25662444b81009",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "04b9fd767052dfec",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "18a537e602f81794",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "1a3bfa3d5c61516c",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "23287930eee5cfb7",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "23b0299664f1b263",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "3f1b9948be2357e2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "458dc44b0d44c2bf",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "5ecf0f5ea355af2b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "769434c78715a31b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "8318be325ee101de",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "8a38230082732a8a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "99f825459c2d695a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "9ad8cf8c06245671",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "9f40115e93fd493a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "a4a441d81183803d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "ae0e3802bd895ff3",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "b8f7e9177989e631",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "cead5498778a0b35",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "e0386bf141e7aa86",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "54c014d1703cb2a4",
+      "articleId": "ee6c0b257392b4fd",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "02db2d96173a779e",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "04fdf046e859d065",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "0c0d8e9bf263ccd0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "12d2fe688e79d1b0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "1486d54621694481",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "1c1aeeee05d1a34b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "1fb4dacea1861b58",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "280fe07b94e46eb9",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "44e0824a201e6521",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "4bd88ec28e5a1494",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "4c8e90f99704a3d1",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "4deee54367bb9f81",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "5ca3e4d391300722",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "6bd41cd042baa24a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "6c1a7348fa89e65f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "6d03c22ba3b1965a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "a2b82e25ee4a28fc",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "aa8d8b1a28520a6b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "d64ded66bb61e977",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5b9148dc4fb80ea8",
+      "articleId": "e0a794a70473f6ba",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "01be3346c01aec8c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "1c84682876b5d029",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "1fae4b9d4bf02646",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "375e3a888f4824f4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "41c54b1b80ac0290",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "47126202c6c6eb39",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "4e62465ca3264966",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "5ecf0f5ea355af2b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "6f21380f76a4ca0a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "8a38230082732a8a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "9f40115e93fd493a",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "a42816fff5a38d18",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "a4a441d81183803d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "aacdb9dde19134d4",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "bbbcbb44bb1eb73b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "cc14c7037c54fffe",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "5db6498ba40aab05",
+      "articleId": "cead5498778a0b35",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "17d33f7747e57989",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "1e798a2f10d131ce",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "228b0ae524dbdbea",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "298cd74f0119afed",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "3f64af7c9ac5d989",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "55620ee5158fd44e",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "5f55745a9e479839",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "68a0aa5b232f2b69",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "6bd96cd735b95973",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "94ab3ba9f97a1efa",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "9e3358f5bd86922c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "a6826d42dcfcb737",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "ac8fa8bc0084fac4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "bd69f89e9be7550e",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "bea89949e7c05eb0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "c28b2d669c5f2c0c",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "d8beaddfe0746a09",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "dc3e06d5945aff79",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "e06abcfa2e2a11a0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "621c953dd7d3d760",
+      "articleId": "e76fbc16a1048c35",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "01be3346c01aec8c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "1d992e18a479c7bb",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "1fae4b9d4bf02646",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "375e3a888f4824f4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "3f1b9948be2357e2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "3fa63d4660848e9a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "447240214a530f41",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "455dd9e7266d66b6",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "47aa976f4904526d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "481ec0a67ee00128",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "5ecf0f5ea355af2b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "9adbd5c69c19d89f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "9c90614eb515e2d1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "a4a441d81183803d",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "b35827ab19ff859d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "c04a2bf44dce6e21",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "dd66159e0f961c24",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "ef9a2f4847953378",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6769fabf1d43a6a5",
+      "articleId": "f5dda2a11c1d04f8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "05e8128f97803873",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "0fb6660cc2beac77",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "34c6459c42cc3326",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "3cb2606653de5a0c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "5cc7efa74eaade5d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "606f433d045f576b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "60fb997d4357b804",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "687f09b043d5baf0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "6d367ea8ce2a3f83",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "71cfcdea13824aa4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "8464d3795c535d44",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "8744ce6ddc4b7324",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "8b6613379cfbdd90",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "8c59fa78e0eb17d0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "9390cb5e808e7cb3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "97a765e36bc41ee4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "ba093e97c2a44977",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "cde33f46b09587c6",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "e236d3d58245e224",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "6943e4d87b6d2bd9",
+      "articleId": "ef9a2f4847953378",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "027acca0bc1cd4fa",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "18e4432cc1ef02fa",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "21baf3f398a784ed",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "2ec0497cdffef8de",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "35dc7af70fb572a9",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "38374962bd00a6cb",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "39ae251f18293a92",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "3fefccdbcdf53df1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "4658c1dbeea6de2a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "565199870d1d32bc",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "5e82faa6a5494798",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "6eb6199b767d4341",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "8cacfd9d376b9eea",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "94e941f8398c7218",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "a1fcc21a932766f9",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "b22f6e3503b999d3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "71ef1314f776f81d",
+      "articleId": "b614ab6871f23a2f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "047b2e3218dfddd0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "091399820c988f97",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "1c84682876b5d029",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "28fc266b2bbd2fc0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "2ea1cd867dbde884",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "3a1f883fc7e5c3cd",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "3f0bad8c6496c428",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "41c54b1b80ac0290",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "42110e5af7f38106",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "4e62465ca3264966",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "57cef2871ae85003",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "5fe7a4e98f49ced0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "7c951e863599f242",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "9a20926417eb5f6f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "a4ba8b6601bd1971",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "aa3a07b9c5465ef0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "aacdb9dde19134d4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "bd9ff2237d54e202",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7682c27f5d331992",
+      "articleId": "e75edb9533ef0414",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "07dc1b4fd4856e61",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "28fc266b2bbd2fc0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "323f99bdcc0b72aa",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "34aed7be39724984",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "36f5769bd9d5ae3c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "3d5c6216bf3464f2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "420d2ce2dc87455d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "6378c78f822366a3",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "687f09b043d5baf0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "864b8ebef34c02bc",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "9ce6a190725d2461",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "9f40115e93fd493a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "a1ff8c52b8d1a7f1",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "b37ec453bc7d5ada",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "c3e5a070ec64be32",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "c782cd5ff85bb390",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "f25e9fac76586efc",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "f65af39093d4387d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "7a772e9f9a6950fd",
+      "articleId": "fd66bb6a715682c5",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "1c26bdf66ae55ecf",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "2fa3d87907241e62",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "30642ae581996e9a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "3f1b9948be2357e2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "524e31ea1607ae39",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "52d6108547c869e4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "5ecf0f5ea355af2b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "688332589180aca1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "7ab07988e8434ed9",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "81b6a1c2c344bdda",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "82f573c53d0e5235",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "8318be325ee101de",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "9f40115e93fd493a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "ad896fd3ac2ac0cb",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "adc93cb58a87453b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "b8f7e9177989e631",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "e3c51caf00e5e147",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "eefa3c31cad59ae1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "f34e5dcc3575c0b4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8568539331c22c6f",
+      "articleId": "f85539d7c0c1fcb2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "0355cce084fc3051",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "08268e013ab7d734",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "2de02b50dd2fab31",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "432a3a82803d7708",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "454ee365bd89aeef",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "57e4ade61f148fbb",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "6139b7d0c987584a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "99e1a2bd320c5bc0",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "9ce6a190725d2461",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "a22d9f6bcfab6133",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "ad896bcd9678425e",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "af808560051877da",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "b369e74f921a7600",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "b6098da773c5da49",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "c8603e08bea6c13f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "d651e75153d84c1a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "ee1a422601c8444f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "f2db54e035698e3c",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "f3bb824cb78333e6",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "0f4c91d93be35dc5",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "1f51e16633900805",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "285df558e733f131",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "2905c638ca065b0c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "2df2de04a53a16b9",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "464edc18881b1393",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "55d5b5f287bc9851",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "57cef2871ae85003",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "60fb997d4357b804",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "863b6e2c8e70156b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "92798226a1016502",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "9390cb5e808e7cb3",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "9dc4cdd64b7c2576",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "ac31835def12d0b4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "c425adedc33b9b9a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "cc14c7037c54fffe",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "e411f74388a91b48",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "ed3db0d404bde05b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "edb50710a73f1734",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "fec35fc6e2c2a743",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "0d785f3166a04981",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "0dc8c7aa19d7a449",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "119846b5a3ece9b3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "218311688dce0209",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "28222ddc189ee196",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "285bacdc8f56c660",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "354a7db9a9d453be",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "44752953c15a5460",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "6a786554dbc643c8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "7912b5bc9a2eaa11",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "b23e406b78185e91",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "ba01911ca335af72",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "bf2757ea48f204dd",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "c29075d254f49ad1",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "c453cc0d21edd3f0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "cbe6016bc0f651d8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "cf95463d17e97ef5",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "e3c51caf00e5e147",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "ee1a422601c8444f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "f4f7df5c3b221f59",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "0dc8c7aa19d7a449",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "1b9a16e4480738a2",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "38c749d85808554f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "3adfa61ea5afc824",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "42fcafc02e5c2d26",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "49754aae17d4d452",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "504dc79132a5c487",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "549748606880bad8",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "56c8a639226b77f9",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "5fae41d2f6094a49",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "62030e4f51444658",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "6526475002fbeb9f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "9072492d9729909d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "983e400c9189cde4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "a30e0c41bff0d6d3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "b372c2ea32b2eb90",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "b8f7e9177989e631",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "c940efeca63efdd7",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "d2b3b5e5093a4958",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "e236d3d58245e224",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "256e044f36f6a8a9",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "2b0e784a9f184706",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "330bbd04835d17a4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "3538dbc844ba8352",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "3ce0f89699f53d6d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "3f1b9948be2357e2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "42fcafc02e5c2d26",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "47aa976f4904526d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "542d75171584b98a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "5fe7a4e98f49ced0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "654b01f01ec1ac6d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "687f09b043d5baf0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "829b5126a4847f9e",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "97cfe5990b70aa1e",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "a6a8fe62f7eca7a4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "b35827ab19ff859d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "baf177e6e307e17c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "bd50f0e69f3f059b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "c8603e08bea6c13f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "e0a794a70473f6ba",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "07dc1b4fd4856e61",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "0fe397f4f5e36e48",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "1fae4b9d4bf02646",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "228b0ae524dbdbea",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "2d7a8732b69ed940",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "3c1d6ba718bbae86",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "3f1b9948be2357e2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "42fcafc02e5c2d26",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "455dd9e7266d66b6",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "4b7f35e39b4503a5",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "4f65f602ef46a4b4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "60fb997d4357b804",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "77ab8aeb407249e0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "7e38446541496603",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "b35827ab19ff859d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "bd50f0e69f3f059b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "c33f189a5e398288",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "e9f47b535ffdd335",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "eed6120202781812",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a65ff4cc38784847",
+      "articleId": "f08f914fd6a784f6",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "1112a3fc5220dac6",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "1c26bdf66ae55ecf",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "34f0b0f35b7c3d39",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "386868f34d676e82",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "4d83531155091237",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "59813c717491b17c",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "77f6c4ca4c298846",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "796068cdd9ea9f4e",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "84bbd8c4160f15a3",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "8ba23b7cdd8283c8",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "9ad8cf8c06245671",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "9fd2950e3c87ec51",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "b042f42c732e704a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "b982e4d7775e14cd",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "c89dd901f4a1f6c4",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "d12b3095d5a5f7c1",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "a81455a0c470e7ee",
+      "articleId": "d1f93b835d68df61",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "05bc42b57ef2bdb7",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "242b209c44a97b12",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "58d1e4b122d7a775",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "5dbbd85d5270681a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "5e82faa6a5494798",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "5fc67ee192f117b5",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "7a0cf44f1b7ff3a3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "7d7fea8be61c365c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "7f25eeae1df3ede4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "8a5b0741545a47fb",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "8ba23b7cdd8283c8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "8db955ae64f53a07",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "94a5c1fdaef474d7",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "9f40115e93fd493a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "b88cb6ddce16586f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "b8de1729440280ac",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "d65b1d4833e6fa46",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "e1b155b3647e5182",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "ed2bb57d6e624b53",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "f5dda2a11c1d04f8",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "0b776adb3ca33f91",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "0df4d4ed21464347",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "121a7ff04d96dbf3",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "1708684c665118ce",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "183263de282ec412",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "2953afc37c088796",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "2d5f25f0700c9520",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "3426c6a4f9e2f9d3",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "3eea8ea8178a6516",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "5da4155062261ea2",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "886d24f6389fa39b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "9e490214bebb93c4",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "b8c2252f838eb966",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "d7bd55f0cd153aa5",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "dd5eb22c6298a2f3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "e2fe998c9b4e1410",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "e336194ab19d02eb",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "b4fe43c187fde3f0",
+      "articleId": "f8f36b6158e8dbc6",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "244bb009ca49e5ed",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "3567325494d957aa",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "3ce0f89699f53d6d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "3ee5428e45b6a524",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "3eea8ea8178a6516",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "42fcafc02e5c2d26",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "4313c41c0f84f06b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "49868881adf6b3ad",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "4bc3f0af42f6ec9a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "5fb743e5883a7414",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "704655606f2e8e35",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "7213131772344a13",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "7327c9ba67bc7d22",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "7bb6bffec7479f79",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "9263734dfef48c26",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "b35827ab19ff859d",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "baf52e929a9be2a9",
+      "articleId": "e9f47b535ffdd335",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "0336fd0a48f9fc78",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "047b2e3218dfddd0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "1fae4b9d4bf02646",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "35d2d151db73fdf8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "5013be75e14e4d87",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "54cb08587bfd4fbe",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "5ffd48b9dec15503",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "83fdd4cd4e2e3156",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "93caba1cf809d68f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "a040ebd9b6d41f76",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "a0c4825723dbac5f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "a2b82e25ee4a28fc",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "ad0bc33eab096c9d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "b6a0afe11be9f146",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "caf80b1d84d413c7",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "da20e43364db4973",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "dbe1d27caa05bc3c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "de23be549aca1067",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "e0a794a70473f6ba",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c3f5a7a1c5d98295",
+      "articleId": "f0e2e308dd31edec",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "1ed4f4108041a220",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "28c9a6f742dc37b0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "32f79352420aa706",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "375e3a888f4824f4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "3e86088eb4fff752",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "43b319ce46fd48f1",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "53328fb970905294",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "55f5bae78fc7bb80",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "9072492d9729909d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "94e941f8398c7218",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "9c90614eb515e2d1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "9e7a30beb8f0cf40",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "9f40115e93fd493a",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "aa8d8b1a28520a6b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "e1b155b3647e5182",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "e8e3efd8947539d0",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "f0c591cdbbb2ad9a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "fda74360538d680c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "c4fd69abdb51fadc",
+      "articleId": "fec35fc6e2c2a743",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "1a3bfa3d5c61516c",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "208d72b21c356811",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "23bbf8e5f11085a2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "2e7b15b49e6f1478",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "3bcf22d62f590b75",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "442c329b2611f926",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "481ec0a67ee00128",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "5fc67ee192f117b5",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "68a0aa5b232f2b69",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "68b8c0070b0d4977",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "740da2e8f040a333",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "aad42771345f2627",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "acd2758d41a03b75",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "ad7eff34ad127bc2",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "cfeb69e2e5ecfd07",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "dd66159e0f961c24",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "ef9a2f4847953378",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "f0e2e308dd31edec",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "ccc4d22a28237669",
+      "articleId": "f3bb824cb78333e6",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "1fae4b9d4bf02646",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "28fc266b2bbd2fc0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "2ea1cd867dbde884",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "34c6459c42cc3326",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "35977af6cf84365b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "3a1f883fc7e5c3cd",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "5ffd48b9dec15503",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "61fbf4627cadc731",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "68a0aa5b232f2b69",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "6e8b9d468b8f97f9",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "958f3a727a2c91bb",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "95dd3c0f37182b20",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "96ee988dc1afb8da",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "9adbd5c69c19d89f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "bd50f0e69f3f059b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "ca832a0242b3861e",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "caf80b1d84d413c7",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "d9792c648019ce92",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "e76fbc16a1048c35",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d0252105b9da3cd2",
+      "articleId": "fec35fc6e2c2a743",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "02dac237deef6b07",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "11522d2fc3078a40",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "32f79352420aa706",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "35a8b4c855e9715d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "36f5769bd9d5ae3c",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "38374962bd00a6cb",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "3f01709da636cbb5",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "4200e953f76ce681",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "5b4ee4e002c0e46e",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "5ed18cab1985548f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "6eb6199b767d4341",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "70f8fe573d8fe2c2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "8940138676f2ed3e",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "983e400c9189cde4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "a1fcc21a932766f9",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "a25906a52d2d06f7",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "b0a258500607adca",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "d1eff5d8b3d23fe8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "d2de3f86859166bd",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d3f778e9090f698d",
+      "articleId": "d6022ce9dee3521d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "0439b9cd6c34e4e3",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "0fb6660cc2beac77",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "188c48ab8a2d2a6d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "1b9a16e4480738a2",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "1c26bdf66ae55ecf",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "2ee4bdaa708e72fd",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "3c645511cd3a3a79",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "3f1b9948be2357e2",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "45b98165d121b76f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "54a642aec9138dd6",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "5b2998932c2df3bb",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "5fae41d2f6094a49",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "8528fa45c7c548a2",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "a42816fff5a38d18",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "b0a258500607adca",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "b46dbe49b5e34144",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "bf1f5574c66cdb63",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "cb80000235a1fba8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "dc92663c84313f96",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "d9c793f0f4ee3058",
+      "articleId": "e9f47b535ffdd335",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "1fb4dacea1861b58",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "219ff724b133cbe1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "499f33d68c9e7d55",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "5fa303d149fc1c67",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "5fe7a4e98f49ced0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "6984368abfb06048",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "9e2ab8516cbfbce8",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "a9d9490f2fcda47f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "b313a601f87e3046",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "b32c35d1dfdb08d7",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "b917e6d2eac4e80b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "c89dd901f4a1f6c4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "dbb58a7ea0c24a40",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "e4e988c4df1af35a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "de2be18c14e1a761",
+      "articleId": "edf69196c29cd86f",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "07cc8d07f411ecb2",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "0e19c4f81b5ba442",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "3475dbdbb0c47a5e",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "35dc7af70fb572a9",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "4186d61110702d31",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "4658c1dbeea6de2a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "4bd88ec28e5a1494",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "524e3e057dc9c3c0",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "606b6054598bc961",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "8cd2df0f59ae04f4",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "99504109a10e9215",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "9db317dfe848a023",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "9e295dc0ca8d8243",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "af9f5aea45deb797",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "b614ab6871f23a2f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "cb575261a19d3963",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "d81435266de08e09",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "dbf2d0e6786f0261",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e6a88dfb8c7761ba",
+      "articleId": "e30feaa7756e0198",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "01be3346c01aec8c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "1c26bdf66ae55ecf",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "35977af6cf84365b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "3fa63d4660848e9a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "43b319ce46fd48f1",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "447240214a530f41",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "5ecf0f5ea355af2b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "6e8b9d468b8f97f9",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "6f21380f76a4ca0a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "74e5aebc06fafa6c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "813ab1258fbf1e2b",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "99f825459c2d695a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "9a20926417eb5f6f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "9f40115e93fd493a",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "aad42771345f2627",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "b35827ab19ff859d",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "bd50f0e69f3f059b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "cead5498778a0b35",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "fd710ab17aa56e15",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "e836e6bb0fec3182",
+      "articleId": "fe03ce9827354e0c",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "0157f3c7f4d71eba",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "0d0ad2bc4bb5f758",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "38976aa488ca9753",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "432a3a82803d7708",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "4f80b304d88c9ee3",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "54a642aec9138dd6",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "5ee9ec3ac2e09cfa",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "6139b7d0c987584a",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "6d203f66fef58a19",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "99e1a2bd320c5bc0",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "a0505ebcbc14a8cb",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "a2696be92a89a6b4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "b6098da773c5da49",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "bf2e63527e1ce8d2",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "c61062d99d4b656c",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "c6eae817d50da188",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "c8603e08bea6c13f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "eea6c983b9173e7c",
+      "articleId": "fdfe957381770b57",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "06394c1f0f1be3b8",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "0850262fdb5eee9f",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "090a563418aa26d3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "11522d2fc3078a40",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "11dbe69467569e90",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "1c84682876b5d029",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "22a6f59a4b4226f3",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "315a07761bd3c7f6",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "47aa976f4904526d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "485872fc786137ee",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "4b2670405423bc9b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "6da594c85bd1d138",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "756b7fa170859932",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "82bc3aafadc43ccb",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "9576e1a92ed05cdd",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "aacdb9dde19134d4",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "bd50f0e69f3f059b",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "e05aa498fd17e34f",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "e0a794a70473f6ba",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "f3d36373e11bffac",
+      "articleId": "e77db7209b1cf3f9",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "090a563418aa26d3",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "1c84682876b5d029",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "1ea17526b6320f0e",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "1fd938dd6d006526",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "2ea1cd867dbde884",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "3a1f883fc7e5c3cd",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "418f89c3eb4233e5",
+      "sources": [
+        "bm25"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "435b50dd4cc1a516",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "456116bf88ef8f1d",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "79f0754caa5b4aa8",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "7c951e863599f242",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "98de19ce90c53f97",
+      "sources": [
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "aacdb9dde19134d4",
+      "sources": [
+        "bm25",
+        "semantic"
+      ]
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "f3bb824cb78333e6",
+      "sources": [
+        "bm25"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2921 @@
+{
+  "note": "Independent second opinion from another model family. Not part of the answer key. See docs/adr/007-judge-on-anthropic.md.",
+  "items": [
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "3a1f883fc7e5c3cd",
+      "grade": 0,
+      "reason": "The article discusses an AI tool, not the Zapscape KVM guest-to-host escape vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:16:19.616Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "3b62cd8cabe8b398",
+      "grade": 0,
+      "reason": "The article is about AI model cyber risks, not the Zapscape KVM vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:16:47.213Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "41c54b1b80ac0290",
+      "grade": 0,
+      "reason": "The article discusses AI agents hacking, not the Zapscape KVM guest-to-host escape vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:16:52.331Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "4e9c4136b38e4a7e",
+      "grade": 0,
+      "reason": "The article is about AI-generated hotel reviews, not the Zapscape KVM vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:16:57.395Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "5188e55b5c0a97c3",
+      "grade": 0,
+      "reason": "The article discusses taxonomy, not the Zapscape KVM vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:17:02.488Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "57cef2871ae85003",
+      "grade": 0,
+      "reason": "The article is about a laptop review, unrelated to the Zapscape vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:17:08.805Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "6bd96cd735b95973",
+      "grade": 0,
+      "reason": "The article discusses a political tech visit, not the Zapscape KVM vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:17:12.957Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "6d067d07ed99d343",
+      "grade": 0,
+      "reason": "The article discusses cruise ship infection risks, not the Zapscape KVM vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:17:18.482Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "83ffabca6116d71e",
+      "grade": 0,
+      "reason": "The article is about a fighter jet programme, unrelated to the Zapscape vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:17:23.567Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "9fd2950e3c87ec51",
+      "grade": 0,
+      "reason": "The article is about a snake puzzle, not the Zapscape KVM vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:17:29.830Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "a21550ba1517c1db",
+      "grade": 0,
+      "reason": "The article is about Volkswagen job cuts, unrelated to Zapscape vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:17:34.969Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "b7aa0be6cddd449a",
+      "grade": 0,
+      "reason": "The article discusses a VAT tax break for children's meals, unrelated to the Zapscape KVM guest-to-host escape vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:17:40.014Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "c5ded292f38c5187",
+      "grade": 0,
+      "reason": "The article discusses Meta AI account hijacking, not the Zapscape KVM guest-to-host escape vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:17:50.534Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "c89dd901f4a1f6c4",
+      "grade": 0,
+      "reason": "The article is about a transportation tunnel, not the Zapscape KVM vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:17:55.563Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "cde33f46b09587c6",
+      "grade": 0,
+      "reason": "The article is about a snake puzzle, unrelated to the Zapscape vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:18:00.404Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "e75edb9533ef0414",
+      "grade": 0,
+      "reason": "The article does not discuss Zapscape or the CVE vulnerability at all.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:18:05.555Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "e9f47b535ffdd335",
+      "grade": 0,
+      "reason": "The article discusses phone-free events, not the Zapscape vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:18:12.059Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "f8c3c87bc4262511",
+      "grade": 0,
+      "reason": "The article is about a NASA eclipse mission, unrelated to the Zapscape vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:18:15.990Z"
+    },
+    {
+      "intentId": "00351b9da56bd12c",
+      "articleId": "fca3310e102345c1",
+      "grade": 0,
+      "reason": "The article discusses AI self-replication, not the Zapscape KVM guest-to-host escape vulnerability.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:18:21.646Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "00d52c32ee43aa3c",
+      "grade": 1,
+      "reason": "The article mentions Microsoft’s cloud growth but does not address the question of choosing the Microsoft stack for greenfield projects.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:18:26.985Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "0fc69aa3b3c3fbd2",
+      "grade": 0,
+      "reason": "The article discusses UK AI infrastructure, not Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:18:33.011Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "1d992e18a479c7bb",
+      "grade": 0,
+      "reason": "The article discusses AI debates and open-source models, not Microsoft stack adoption or its value proposition for greenfield projects.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:18:38.038Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "22af99599cd7c8ae",
+      "grade": 0,
+      "reason": "The article discusses SpaceX and AI investments, not Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:18:50.430Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "375e3a888f4824f4",
+      "grade": 0,
+      "reason": "The article discusses AI market trends and stock performance, not Microsoft stack adoption or its value proposition.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:18:55.555Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "45e029914ecb661a",
+      "grade": 0,
+      "reason": "The article discusses the AI market and stock trends, not Microsoft stack adoption for greenfield projects.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:19:00.660Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "4e17e25639aad922",
+      "grade": 0,
+      "reason": "The article is about a legal dispute unrelated to Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:19:05.702Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "54838c577ab53894",
+      "grade": 0,
+      "reason": "The article discusses Nvidia's AI chip revenue, not Microsoft's stack or its value proposition.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:19:12.101Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "60ca504dfac0fedc",
+      "grade": 0,
+      "reason": "The article discusses AI translation and AWS partnership, not Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:19:16.106Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "71c93c85201dffd3",
+      "grade": 0,
+      "reason": "The article discusses an iPad review, unrelated to Microsoft stack decisions.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:19:21.732Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "79febebede829f69",
+      "grade": 0,
+      "reason": "The article is about AI wealth inequality, not Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:19:26.770Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "813ab1258fbf1e2b",
+      "grade": 0,
+      "reason": "The article discusses OpenAI funding, not Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:19:33.333Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "82a74fbcdf4b4c53",
+      "grade": 0,
+      "reason": "The article discusses halo stocks and infrastructure, not Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:19:38.176Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "8464d3795c535d44",
+      "grade": 0,
+      "reason": "The article discusses UK energy policy, not Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:19:50.563Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "9b8ff17cac40ae68",
+      "grade": 0,
+      "reason": "The article discusses Google layoffs, not Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:19:55.642Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "9f40115e93fd493a",
+      "grade": 0,
+      "reason": "The article discusses Amazon's AI tool usage, not Microsoft stack or its value proposition.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:20:00.954Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "a42816fff5a38d18",
+      "grade": 0,
+      "reason": "The article discusses AI training and worker impacts, not Microsoft stack choices.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:20:05.789Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "ac5c2183e0f7af26",
+      "grade": 0,
+      "reason": "The article discusses AI and thinking, not Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:20:12.118Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "bf127613add833b4",
+      "grade": 0,
+      "reason": "The article discusses AI-driven layoffs and management changes, not Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:20:16.340Z"
+    },
+    {
+      "intentId": "009b38ad8c4f8cad",
+      "articleId": "c0a51a0103c3e404",
+      "grade": 0,
+      "reason": "The article discusses an AI datacentre firm and funding, not Microsoft stack adoption.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:20:21.809Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "02538412c57e32ec",
+      "grade": 0,
+      "reason": "The article discusses TikTok child skincare influencers, not Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:20:26.887Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "14e75c7e324723d3",
+      "grade": 0,
+      "reason": "The article is about SpaceX and Amazon, not about Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:20:33.174Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "233c28770361942c",
+      "grade": 0,
+      "reason": "The article discusses a tin can phone, not Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:20:38.483Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "3794164a4814b750",
+      "grade": 0,
+      "reason": "The article discusses GoHenry, not Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:20:50.535Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "4bc3f0af42f6ec9a",
+      "grade": 0,
+      "reason": "The article discusses parental phone use and child anxiety, not Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:20:55.822Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "572540556d381bd4",
+      "grade": 0,
+      "reason": "The article is about store security gates, not about Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:21:00.914Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "5f8fbbc0af0c8fd5",
+      "grade": 0,
+      "reason": "The article discusses Apple Siri AI, not Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:21:05.777Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "723282f604245032",
+      "grade": 0,
+      "reason": "The article is about SpaceX and Gina Rinehart, not Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:21:12.316Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "7553f96dceaf6dbc",
+      "grade": 0,
+      "reason": "The article discusses AI toys, not Rx Kids",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:21:16.341Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "95246ab654449317",
+      "grade": 0,
+      "reason": "The article discusses UK welfare policy, not Rx Kids",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:21:21.856Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "a3c0203492b20a80",
+      "grade": 0,
+      "reason": "The article is about Reddit's fine, not about Rx Kids",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:21:26.971Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "ae0e3802bd895ff3",
+      "grade": 0,
+      "reason": "The article discusses small business retirement, not Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:21:33.196Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "cb472eb2c06257bd",
+      "grade": 0,
+      "reason": "The article discusses delivery robots, not Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:21:38.364Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "d65b1d4833e6fa46",
+      "grade": 0,
+      "reason": "The article is about child abuse material on X, not about Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:21:50.791Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "d710ca6ca6067548",
+      "grade": 0,
+      "reason": "The article discusses TikTok skincare videos for toddlers, not Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:21:55.842Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "e166502cd0d7bce1",
+      "grade": 0,
+      "reason": "The article does not address Rx Kids at all",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:22:00.689Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "ed2bb57d6e624b53",
+      "grade": 0,
+      "reason": "The article is unrelated to Rx Kids",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:22:05.961Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "ee6c0b257392b4fd",
+      "grade": 0,
+      "reason": "The article is about AI-assisted DIY, not about Rx Kids",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:22:12.179Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "eefa3c31cad59ae1",
+      "grade": 0,
+      "reason": "The article is about AI experiments, not Rx Kids",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:22:16.337Z"
+    },
+    {
+      "intentId": "056dac0dfc2588a3",
+      "articleId": "f864f821645c8b37",
+      "grade": 0,
+      "reason": "The article is about Instagram's parental alerts, not about Rx Kids.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:22:21.941Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "0850262fdb5eee9f",
+      "grade": 0,
+      "reason": "The article is about a monitor review, unrelated to the RAW to HDRI stacker in Lisp.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:22:27.118Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "3f1b9948be2357e2",
+      "grade": 0,
+      "reason": "The article is about AI journalling, unrelated to the RAW to HDRI stacker topic.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:22:33.389Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "4b1784be02fcb9c7",
+      "grade": 0,
+      "reason": "The article discusses AI unwrapping ancient scrolls, unrelated to RAW to HDRI stacking or Lisp.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:22:38.424Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "57cef2871ae85003",
+      "grade": 0,
+      "reason": "The article is about a laptop review, unrelated to the RAW to HDRI stacker topic.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:22:50.877Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "60fb997d4357b804",
+      "grade": 0,
+      "reason": "The article is about a smartphone review, unrelated to the RAW to HDRI stacker topic.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:22:56.034Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "61fbf4627cadc731",
+      "grade": 0,
+      "reason": "The article is about a supercomputer construction site, not related to the RAW to HDRI stacker or Lisp.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:23:01.194Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "687dc6f78b4370cc",
+      "grade": 0,
+      "reason": "The article discusses a MacBook review, unrelated to the RAW to HDRI stacker topic.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:23:06.197Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "756b7fa170859932",
+      "grade": 0,
+      "reason": "The article discusses OpenAI's video generator, unrelated to the RAW to HDRI Lisp tool.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:23:12.613Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "8ba23b7cdd8283c8",
+      "grade": 0,
+      "reason": "The article is about DeepMind leadership, not about a Lisp RAW to HDRI stacker.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:23:16.641Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "8c91f4a5f025cb21",
+      "grade": 0,
+      "reason": "The article is about diesel engine repair, not RAW to HDRI stacking or Lisp.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:23:22.207Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "9f40115e93fd493a",
+      "grade": 0,
+      "reason": "The article is about Amazon's AI tools, not about RAW to HDRI stacking or Lisp.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:23:27.333Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "a4a441d81183803d",
+      "grade": 0,
+      "reason": "The article discusses AI's impact on software engineering, not the RAW to HDRI stacker project.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:23:33.483Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "bd50f0e69f3f059b",
+      "grade": 0,
+      "reason": "The article is about Apple products, not the Lisp HDRI stacker.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:23:38.638Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "c0a51a0103c3e404",
+      "grade": 0,
+      "reason": "The article is about an AI datacentre company, unrelated to the RAW to HDRI stacker in Lisp.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:23:51.041Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "d9792c648019ce92",
+      "grade": 0,
+      "reason": "The article is about AI materials startup funding, unrelated to the RAW to HDRI stacker project.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:23:56.247Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "dcb6876368ababd0",
+      "grade": 0,
+      "reason": "The article is about AI data crowdsourcing, not about RAW to HDRI stacking or Lisp.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:24:01.333Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "e411f74388a91b48",
+      "grade": 0,
+      "reason": "The article discusses a smartphone review, unrelated to the RAW to HDRI stacker topic.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:24:06.081Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "ee6c0b257392b4fd",
+      "grade": 0,
+      "reason": "The article discusses AI-assisted DIY renovations, unrelated to the RAW to HDRI Lisp stacker.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:24:12.658Z"
+    },
+    {
+      "intentId": "0c594e81ad4cbc97",
+      "articleId": "fca3310e102345c1",
+      "grade": 0,
+      "reason": "The article is about AI self-replication, unrelated to the RAW to HDRI Lisp tool.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:24:16.466Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "1e798a2f10d131ce",
+      "grade": 0,
+      "reason": "The article is about a meteorite impact, not bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:24:22.208Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "3cb2606653de5a0c",
+      "grade": 0,
+      "reason": "The article is about a math zine, not related to bulldozers or Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:24:27.302Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "454e899dbb66816e",
+      "grade": 0,
+      "reason": "The article is about utility front groups, not bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:24:33.496Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "486caacfe0b9885c",
+      "grade": 0,
+      "reason": "The article is about an AI datacentre in the UK, unrelated to bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:24:38.787Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "48b7c14b4604e435",
+      "grade": 0,
+      "reason": "The article discusses UK car parks, not bulldozers or Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:24:51.089Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "4b7f35e39b4503a5",
+      "grade": 0,
+      "reason": "The article discusses Tesla Cybertruck crashes, not bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:24:56.025Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "524e3e057dc9c3c0",
+      "grade": 0,
+      "reason": "The article is about a Tesla Cybertruck incident, not about bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:25:01.008Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "56849a095c2ac071",
+      "grade": 0,
+      "reason": "The article discusses UK forestry tax schemes, not the Texas park bulldozer incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:25:06.132Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "6d367ea8ce2a3f83",
+      "grade": 0,
+      "reason": "The article discusses math puzzles, not bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:25:12.694Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "98159c71b574d13f",
+      "grade": 0,
+      "reason": "The article discusses Google's gas plant project, not bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:25:16.740Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "9ce6a190725d2461",
+      "grade": 0,
+      "reason": "The article is about a meteor, not bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:25:22.213Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "a384810c390bf4fd",
+      "grade": 0,
+      "reason": "The article is about Dallas finance, not bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:25:27.398Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "b891d050a24de536",
+      "grade": 0,
+      "reason": "The article is about UK rail shutdowns, not bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:25:33.685Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "cba94d4043e43c3b",
+      "grade": 0,
+      "reason": "The article is about a media merger, not bulldozers or Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:25:38.695Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "e6ee691f52985ac8",
+      "grade": 0,
+      "reason": "The article is about a Starbucks Korea controversy, unrelated to bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:25:51.216Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "e80f29f85403f1e2",
+      "grade": 0,
+      "reason": "The article is about a Scottish brewery's land sale, unrelated to bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:25:56.283Z"
+    },
+    {
+      "intentId": "0e44fe061788c4d1",
+      "articleId": "f940f68ab9e6875d",
+      "grade": 0,
+      "reason": "The article is about AI scenarios in Europe, unrelated to bulldozers in Big Bend National Park.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:26:01.419Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "01be3346c01aec8c",
+      "grade": 1,
+      "reason": "The article mentions Claude Code but does not discuss flow, organization, or managing agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:26:06.508Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "1fae4b9d4bf02646",
+      "grade": 0,
+      "reason": "The article discusses AI jailbreakers and mental health, not flow or organization when coding with multiple agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:26:13.131Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "47126202c6c6eb39",
+      "grade": 0,
+      "reason": "The article discusses tech layoffs and AI impact, not flow or organization in AI-assisted coding.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:26:16.874Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "5449d62a63f4d696",
+      "grade": 0,
+      "reason": "The article is about BP leadership, unrelated to coding or workflow management.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:26:22.417Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "5ecf0f5ea355af2b",
+      "grade": 0,
+      "reason": "The article discusses AI's impact on jobs, not flow or organization with coding agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:26:27.770Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "682a901be22f46b6",
+      "grade": 0,
+      "reason": "The article discusses self‑driving taxis, which is unrelated to maintaining coding flow with AI agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:26:33.694Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "7d7fea8be61c365c",
+      "grade": 0,
+      "reason": "The article discusses corporate AI tool usage and promotions, not personal coding flow or agent management.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:26:38.776Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "8b14a0dca695631d",
+      "grade": 0,
+      "reason": "The article discusses AI use in banking, not maintaining coding flow with multiple agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:26:51.340Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "9a20926417eb5f6f",
+      "grade": 0,
+      "reason": "The article discusses an AI agent causing a data deletion disaster, not strategies for maintaining flow or organizing multiple coding agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:26:56.308Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "9f40115e93fd493a",
+      "grade": 2,
+      "reason": "Article discusses AI coding tools and productivity challenges, which is related but doesn't address flow‑maintaining strategies.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:27:01.629Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "a25906a52d2d06f7",
+      "grade": 0,
+      "reason": "The article discusses a bank's AI hiring initiative, not personal strategies for managing coding agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:27:06.529Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "a4a441d81183803d",
+      "grade": 1,
+      "reason": "The article discusses AI in software engineering broadly but does not address flow or organization when managing multiple coding agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:27:13.025Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "aa8d8b1a28520a6b",
+      "grade": 0,
+      "reason": "The article is about mosquito releases, not about coding flow or AI agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:27:16.937Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "b35827ab19ff859d",
+      "grade": 0,
+      "reason": "The article discusses dumbphones and offline challenges, which is unrelated to coding flow or managing AI agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:27:22.350Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "caf80b1d84d413c7",
+      "grade": 0,
+      "reason": "The article is about an AI bot party and unrelated events, not about maintaining flow or managing AI coding agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:27:27.523Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "cc14c7037c54fffe",
+      "grade": 0,
+      "reason": "The article discusses a code leak, not workflow or flow management with Claude Code agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:27:33.852Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "cead5498778a0b35",
+      "grade": 0,
+      "reason": "The article discusses AI use in small businesses, not personal workflow or managing Claude Code agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:27:39.305Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "e8e3efd8947539d0",
+      "grade": 0,
+      "reason": "The article discusses AI policy and safety, not workflow or coding with Claude agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:27:51.501Z"
+    },
+    {
+      "intentId": "16d09d0cb3339f46",
+      "articleId": "ee6c0b257392b4fd",
+      "grade": 0,
+      "reason": "The article discusses AI-assisted DIY home renovation, not maintaining flow with coding agents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:27:56.524Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "04889559e8bc096e",
+      "grade": 0,
+      "reason": "The article is about a rocket explosion, not horseshoe crab blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:28:01.485Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "096e917efbc38aa9",
+      "grade": 0,
+      "reason": "The article is about moss and forensic evidence, not horseshoe crab blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:28:06.410Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "0d5d3f72d4e69b6a",
+      "grade": 0,
+      "reason": "The article discusses Antarctic sea creatures, not horseshoe crab blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:28:13.043Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "20494ad9e982b62c",
+      "grade": 0,
+      "reason": "The article discusses a python blood molecule, not the horseshoe crab's blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:28:16.963Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "3e0aa0fa5ee09c99",
+      "grade": 0,
+      "reason": "The article is about dingo burials, not horseshoe crab blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:28:22.632Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "3e1105a0c83387e7",
+      "grade": 0,
+      "reason": "The article discusses gene therapy for blindness, not the horseshoe crab's blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:28:27.678Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "42110e5af7f38106",
+      "grade": 0,
+      "reason": "The article is about rogue AI agents, not about horseshoe crab blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:28:33.946Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "425758933e890bdb",
+      "grade": 0,
+      "reason": "The article discusses bioluminescent algae, not the blue blood of horseshoe crabs.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:28:39.197Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "454ee365bd89aeef",
+      "grade": 0,
+      "reason": "The article is about Stephen Hawking's father and unrelated to horseshoe crab blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:28:51.478Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "4b7f35e39b4503a5",
+      "grade": 0,
+      "reason": "The article is about Tesla crashes, not horseshoe crab blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:28:56.319Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "51e66a924fc87a64",
+      "grade": 0,
+      "reason": "The article is about stem cell transplants, not horseshoe crab blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:29:01.619Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "5fb743e5883a7414",
+      "grade": 0,
+      "reason": "The article is about a national emergency alert test, not about horseshoe crab blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:29:06.696Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "663a5409a61caf65",
+      "grade": 0,
+      "reason": "The article discusses astronomy, not horseshoe crabs or their blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:29:13.024Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "8c9ed5127f08a683",
+      "grade": 0,
+      "reason": "The article discusses a moon-Venus conjunction, not the horseshoe crab's blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:29:17.190Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "92798226a1016502",
+      "grade": 0,
+      "reason": "The article is about a smart ring launch, unrelated to horseshoe crab blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:29:22.752Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "a2bb8962a58145ec",
+      "grade": 0,
+      "reason": "The article is about gin and allergens, not horseshoe crab blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:29:27.806Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "cdfe791e9e85893c",
+      "grade": 0,
+      "reason": "The article discusses archaeology, not horseshoe crab blood or its medical uses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:29:33.836Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "d2046f4351834f80",
+      "grade": 0,
+      "reason": "The article is about bird skulls and dinosaur cognition, unrelated to horseshoe crab blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:29:39.236Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "d2d7024b474ef05c",
+      "grade": 0,
+      "reason": "The article is about a UFO encounter, not about horseshoe crab blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:29:51.604Z"
+    },
+    {
+      "intentId": "1714138947205168",
+      "articleId": "dfca6ea67c79e56c",
+      "grade": 0,
+      "reason": "The article does not discuss horseshoe crabs or their blue blood.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:29:56.446Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "0e3b32864fe0af52",
+      "grade": 1,
+      "reason": "The article discusses privacy and disclosure habits, which is loosely related, but it doesn't directly address defending one's brain against enshittification.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:30:02.075Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "24560e0e496daf1d",
+      "grade": 1,
+      "reason": "The article touches on AI influencing perception, but does not address defending one's brain against enshittification.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:30:07.190Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "37887815a2eb5ced",
+      "grade": 1,
+      "reason": "Mentions enshittification but does not give personal strategies for defending one's mind",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:30:13.295Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "3db90a0163095ddf",
+      "grade": 1,
+      "reason": "The article discusses platform regulation of intimate image abuse, which is only tangentially related to defending one's own mind from harmful online content.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:30:17.419Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "55620ee5158fd44e",
+      "grade": 2,
+      "reason": "The article covers AI misinformation, relevant to protecting one's mind, but focuses on regulation rather than personal defense tactics.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:30:23.104Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "70f8fe573d8fe2c2",
+      "grade": 1,
+      "reason": "The article discusses AI toxicity, which is only loosely related to protecting one's mind from harmful content.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:30:28.141Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "788c7428401119f0",
+      "grade": 1,
+      "reason": "The article discusses AI chatbots enabling harmful actions, which is loosely related to AI safety but does not address personal brain protection.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:30:34.388Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "81b6a1c2c344bdda",
+      "grade": 3,
+      "reason": "The article directly describes a person defending his own brain by undergoing experimental treatment for brain cancer.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:30:39.410Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "863b6e2c8e70156b",
+      "grade": 0,
+      "reason": "The article is about hyperphantasia, not about defending the brain from degradation.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:30:51.943Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "8db955ae64f53a07",
+      "grade": 3,
+      "reason": "Directly discusses AI chatbots' impact on mental health and safeguards, matching the interest in protecting one's brain.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:30:56.992Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "8e06063602d8c70b",
+      "grade": 0,
+      "reason": "The article discusses national cyber threats, not personal mental protection.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:31:01.932Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "8f60349d03a02933",
+      "grade": 0,
+      "reason": "The obituary does not address defending one's brain against enshittification.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:31:06.868Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "95dd3c0f37182b20",
+      "grade": 3,
+      "reason": "Directly discusses protecting critical thinking and brain health against AI's negative impact",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:31:13.361Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "a02f69a132d8f13b",
+      "grade": 1,
+      "reason": "The article discusses deceptive retail practices, a related topic, but doesn't address personal strategies for defending one's mind against enshittification.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:31:17.765Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "b6890285ef9b44f6",
+      "grade": 0,
+      "reason": "The article discusses hedge fund tactics and regulator action, not brain protection.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:31:23.010Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "d1eff5d8b3d23fe8",
+      "grade": 1,
+      "reason": "The article is about AI consciousness, not directly about protecting one's mind from degradation.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:31:28.238Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "dc92663c84313f96",
+      "grade": 1,
+      "reason": "The article discusses brain injury and rehabilitation, which is related to brain health but does not address personal defense against brain degradation.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:31:34.451Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "e0a794a70473f6ba",
+      "grade": 3,
+      "reason": "Directly addresses defending against enshittification with alternatives to big tech",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:31:39.525Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "ee6c0b257392b4fd",
+      "grade": 0,
+      "reason": "The article discusses AI-assisted DIY projects, not defending one's brain against enshittification.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:31:52.118Z"
+    },
+    {
+      "intentId": "207435b46be9a5e0",
+      "articleId": "f23937fb6ef004ec",
+      "grade": 1,
+      "reason": "The article discusses psychedelic effects on the brain, which is loosely related but does not address defending the brain against degradation.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:31:57.068Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "375e3a888f4824f4",
+      "grade": 0,
+      "reason": "The article discusses AI market trends, not the Shumai open-source Frame.io alternative.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:32:01.943Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "3f1b9948be2357e2",
+      "grade": 0,
+      "reason": "The article discusses AI journalling, which is unrelated to the Shumai open‑source Frame.io alternative.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:32:07.059Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "3f64af7c9ac5d989",
+      "grade": 0,
+      "reason": "The article discusses datacenter projects and AI infrastructure, not the Shumai open-source Frame.io alternative.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:32:13.369Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "47aa976f4904526d",
+      "grade": 0,
+      "reason": "The article discusses the revived Vine app, not the Shumai open-source platform.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:32:17.622Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "5ecf0f5ea355af2b",
+      "grade": 0,
+      "reason": "The article is about AI's impact on jobs, not about Shumai or open-source creative tools.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:32:23.115Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "68a0aa5b232f2b69",
+      "grade": 0,
+      "reason": "The article discusses Nvidia's AI superchip, unrelated to the Shumai open-source platform.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:32:28.215Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "756b7fa170859932",
+      "grade": 0,
+      "reason": "The article is about OpenAI's Sora shutdown, unrelated to Shumai.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:32:34.397Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "9390cb5e808e7cb3",
+      "grade": 0,
+      "reason": "The article discusses a foldable phone, unrelated to the Shumai open-source Frame.io alternative.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:32:39.554Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "9adbd5c69c19d89f",
+      "grade": 0,
+      "reason": "The article discusses AI competition, not the Shumai project.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:32:51.968Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "a42816fff5a38d18",
+      "grade": 0,
+      "reason": "The article discusses AI labor impacts, not the Shumai open-source platform.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:32:57.042Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "a5ae29e4b2333035",
+      "grade": 0,
+      "reason": "The article discusses US datacenter challenges, not the Shumai open-source Frame.io alternative.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:33:02.007Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "b12f506e741069f8",
+      "grade": 0,
+      "reason": "The article is about a portable speaker, unrelated to Shumai or open-source creative tools.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:33:07.111Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "bbbcbb44bb1eb73b",
+      "grade": 0,
+      "reason": "The article discusses AI openness in China, unrelated to Shumai.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:33:13.457Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "bf127613add833b4",
+      "grade": 0,
+      "reason": "The article discusses AI-driven layoffs and management changes, unrelated to Shumai.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:33:17.566Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "cfeb69e2e5ecfd07",
+      "grade": 0,
+      "reason": "The article is about OpenAI model release, not the Shumai project.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:33:23.135Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "e0a794a70473f6ba",
+      "grade": 0,
+      "reason": "The article discusses big‑tech alternatives, not the Shumai open‑source Frame.io alternative.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:33:28.285Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "e76fbc16a1048c35",
+      "grade": 0,
+      "reason": "The article is about Meta's AI chip deal, unrelated to Shumai.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:33:34.449Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "e7b834311fcd1078",
+      "grade": 0,
+      "reason": "The article is about AI data scraping, not the Shumai open-source Frame.io alternative.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:33:39.427Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "e9f47b535ffdd335",
+      "grade": 0,
+      "reason": "The article discusses phone-free retreats, not the Shumai open-source platform.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:33:52.110Z"
+    },
+    {
+      "intentId": "26d96bcb08183805",
+      "articleId": "f2c8f4456524e921",
+      "grade": 0,
+      "reason": "The article discusses Australian datacentres, not the Shumai open-source platform.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:33:57.247Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "0ed5e42142d847d9",
+      "grade": 0,
+      "reason": "The article is about bird communication, not horses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:34:01.862Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "1287cec38848e177",
+      "grade": 0,
+      "reason": "The article is about AI and graduation, unrelated to 'The Ultimate Horse'.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:34:06.985Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "1300bed50606077f",
+      "grade": 0,
+      "reason": "The article discusses a zoo poem and animals, not horses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:34:13.577Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "1af7053781602622",
+      "grade": 0,
+      "reason": "The article is about de‑extincting a moa, not about horses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:34:17.718Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "20494ad9e982b62c",
+      "grade": 0,
+      "reason": "The article discusses pythons, not horses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:34:23.149Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "3c645511cd3a3a79",
+      "grade": 0,
+      "reason": "The article is about AI and tech, not about horses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:34:28.270Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "3fa63d4660848e9a",
+      "grade": 0,
+      "reason": "The article is about a suicide and ChatGPT, unrelated to horses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:34:34.540Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "5dae1104a53e86a2",
+      "grade": 0,
+      "reason": "The article discusses wildlife on banknotes, not horses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:34:39.767Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "689df919cfd86fc1",
+      "grade": 0,
+      "reason": "The article is about bike investments, not horses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:34:52.123Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "6af88fb714b92a53",
+      "grade": 0,
+      "reason": "The article is about a financial crime and mentions horse saddles only incidentally, not about a horse.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:34:57.320Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "8c91f4a5f025cb21",
+      "grade": 0,
+      "reason": "The article is about diesel engine repair, not about horses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:35:02.220Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "9141967106e8c7b5",
+      "grade": 1,
+      "reason": "Only a brief mention of horse racing tax, not about a specific horse.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:35:07.385Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "d07df8ba809ade54",
+      "grade": 1,
+      "reason": "Only a brief mention of horse riding, not about the ultimate horse itself",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:35:13.831Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "dfca6ea67c79e56c",
+      "grade": 0,
+      "reason": "The article is unrelated to horses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:35:17.659Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "edf69196c29cd86f",
+      "grade": 0,
+      "reason": "The article is about AI facial recognition, not about horses.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:35:23.273Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "ee9e0ee6157e56bb",
+      "grade": 0,
+      "reason": "The article discusses a banking lawsuit, not the topic of 'The Ultimate Horse'.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:35:28.590Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "f2a52cd7932887d6",
+      "grade": 1,
+      "reason": "Only a brief mention of horse racing tax, not about the specific horse.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:35:34.814Z"
+    },
+    {
+      "intentId": "287812b82f0a24e1",
+      "articleId": "f37e1a559761d2fc",
+      "grade": 1,
+      "reason": "Only tangentially mentions the Ferrari horse logo, not about horses themselves",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:35:40.100Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "19770194534b4b48",
+      "grade": 0,
+      "reason": "The article discusses a Molotov attack on Sam Altman's home, not the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:35:52.359Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "1c84682876b5d029",
+      "grade": 0,
+      "reason": "The article discusses a different AI hacking incident, not the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:35:57.421Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "24560e0e496daf1d",
+      "grade": 0,
+      "reason": "The article discusses AI-generated faces in cosmetic surgery, not the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:36:02.363Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "2b93e514196ac215",
+      "grade": 3,
+      "reason": "The article directly covers the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:36:07.478Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "34e66a000b84ba64",
+      "grade": 1,
+      "reason": "The article discusses Anthropic and the Pentagon, only briefly mentioning Hugging Face, and does not address the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:36:14.009Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "41c54b1b80ac0290",
+      "grade": 3,
+      "reason": "The article directly discusses the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:36:17.863Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "42b842617b73ed7a",
+      "grade": 3,
+      "reason": "Directly discusses the OpenAI–Hugging Face incident",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:36:23.456Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "4e62465ca3264966",
+      "grade": 2,
+      "reason": "The article mentions the OpenAI–Hugging Face incident but focuses on Astra and broader security measures.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:36:28.633Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "52b2091197329fe1",
+      "grade": 1,
+      "reason": "Mentions OpenAI but does not discuss the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:36:34.943Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "5fa303d149fc1c67",
+      "grade": 0,
+      "reason": "The article is about a police facial recognition error, not the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:36:39.919Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "756b7fa170859932",
+      "grade": 0,
+      "reason": "The article discusses OpenAI shutting down Sora, not the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:36:52.263Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "aad42771345f2627",
+      "grade": 0,
+      "reason": "The article is about a stake deal with the US government, not the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:36:57.282Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "cfeb69e2e5ecfd07",
+      "grade": 0,
+      "reason": "The article discusses a government‑requested release delay, not the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:37:02.536Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "d5ef55143b5cd67c",
+      "grade": 0,
+      "reason": "The article discusses an AI‑generated fake image in Thailand, not the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:37:07.601Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "e6962198a1a07575",
+      "grade": 0,
+      "reason": "The article discusses a UK data breach and only briefly mentions AI, not the OpenAI–Hugging Face incident.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:37:13.944Z"
+    },
+    {
+      "intentId": "2fc18f5656212d1c",
+      "articleId": "f3bb824cb78333e6",
+      "grade": 3,
+      "reason": "Directly discusses the OpenAI–Hugging Face incident",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:37:17.885Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "11522d2fc3078a40",
+      "grade": 0,
+      "reason": "The article discusses voice cues for detecting lies, not AI-driven call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:37:23.577Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "28fc266b2bbd2fc0",
+      "grade": 1,
+      "reason": "The article discusses AI and automation in manufacturing, not AI-driven call centre experiences.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:37:28.703Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "32f79352420aa706",
+      "grade": 0,
+      "reason": "The article discusses AI accountability in warfare, not AI-driven call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:37:34.708Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "3f1b9948be2357e2",
+      "grade": 0,
+      "reason": "The article discusses AI journalling, which is unrelated to AI-driven call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:37:40.258Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "3fa63d4660848e9a",
+      "grade": 0,
+      "reason": "The article discusses a personal tragedy involving ChatGPT, not AI-driven call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:37:52.828Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "4200e953f76ce681",
+      "grade": 0,
+      "reason": "The article discusses chatbot friendliness and misinformation, not AI-driven call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:37:57.358Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "42fcafc02e5c2d26",
+      "grade": 0,
+      "reason": "The article discusses AI smartglasses, not AI-driven call centre experiences.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:38:02.746Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "4a8e3d5a232a5e56",
+      "grade": 2,
+      "reason": "The article discusses AI chatbots in call centres, but from a corporate policy angle, not the personal experience described.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:38:07.811Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "4b75a74b7e45a9f4",
+      "grade": 1,
+      "reason": "The article discusses AI chatbots in retail, not the user's specific experience with an AI‑driven call centre.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:38:14.107Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "504dc79132a5c487",
+      "grade": 0,
+      "reason": "The article discusses voice notes, not AI-driven call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:38:18.071Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "682a901be22f46b6",
+      "grade": 0,
+      "reason": "The article discusses self‑driving taxis, not AI‑driven call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:38:23.577Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "70f8fe573d8fe2c2",
+      "grade": 0,
+      "reason": "The article discusses ChatGPT's abusive behavior, not AI-driven call centre interactions.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:38:28.788Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "8318be325ee101de",
+      "grade": 0,
+      "reason": "The article discusses AI-driven job interviews, not AI-powered call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:38:35.112Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "9bf369cbd0998100",
+      "grade": 1,
+      "reason": "The article discusses AI chatbots in general, not the specific experience of AI-driven call centre interactions.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:38:42.157Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "caf80b1d84d413c7",
+      "grade": 0,
+      "reason": "The article discusses AI bots organizing events, not AI-driven call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:38:52.675Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "e0386bf141e7aa86",
+      "grade": 1,
+      "reason": "The article discusses AI‑assisted human interaction in therapy, which is a related topic but does not address AI‑driven call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:38:57.759Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "e9f47b535ffdd335",
+      "grade": 0,
+      "reason": "The article discusses offline events and phone lockboxes, unrelated to AI-driven call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:39:02.544Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "ee152911ea27145b",
+      "grade": 1,
+      "reason": "The article discusses AI chatbot misbehavior generally, not the specific experience of AI‑driven call centre interactions.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:39:08.044Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "eee83d340d1962da",
+      "grade": 0,
+      "reason": "The article discusses AI voice dictation for work, not AI-driven call centre interactions.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:39:14.044Z"
+    },
+    {
+      "intentId": "327e3f0781b5721c",
+      "articleId": "eefa3c31cad59ae1",
+      "grade": 0,
+      "reason": "The article is about personal AI experiments, not about AI-driven call centres.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:39:18.063Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "19369cc6a1dbb401",
+      "grade": 0,
+      "reason": "The article discusses parental smartphone controls, not KidScreen or a YouTube shelf.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:39:23.841Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "233c28770361942c",
+      "grade": 1,
+      "reason": "Both discuss parental control of kids' media, but the article is about a phone, not KidScreen's YouTube shelf.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:39:29.034Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "315a07761bd3c7f6",
+      "grade": 0,
+      "reason": "The article is about Disney and TikTok, unrelated to KidScreen or a YouTube shelf for parents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:39:35.210Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "321656caf3e4eb54",
+      "grade": 0,
+      "reason": "The article is about a UK social media curfew, unrelated to KidScreen.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:39:40.045Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "325ac78dee374a9d",
+      "grade": 0,
+      "reason": "The article discusses overall YouTube viewership trends, not the KidScreen parental shelf.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:39:52.829Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "3560312a0a7e77a3",
+      "grade": 1,
+      "reason": "The article discusses YouTube and child safety generally, but does not address the KidScreen product.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:39:57.774Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "3a07bebd96292a8e",
+      "grade": 1,
+      "reason": "The article is about YouTube and child safety but does not address the KidScreen finite shelf concept.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:40:02.723Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "4784465a71b9571b",
+      "grade": 0,
+      "reason": "The article discusses TV as a YouTube device, not the KidScreen shelf for parents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:40:07.936Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "51fb0a2b688a4add",
+      "grade": 0,
+      "reason": "The article covers a social media addiction lawsuit, not the KidScreen parental tool.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:40:14.271Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "71431308ccacb42c",
+      "grade": 0,
+      "reason": "The article discusses AI film-making, not the KidScreen YouTube shelf for parents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:40:18.101Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "9dcb1dc84d0b73f0",
+      "grade": 0,
+      "reason": "The article discusses a legal case, not the KidScreen YouTube shelf for parents.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:40:23.978Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "a6a8fe62f7eca7a4",
+      "grade": 0,
+      "reason": "The article discusses legal cases about Meta and YouTube addiction, not the KidScreen Show HN topic.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:40:28.935Z"
+    },
+    {
+      "intentId": "38d65116d40eacdd",
+      "articleId": "ceaab1424dfb2cb6",
+      "grade": 0,
+      "reason": "The article discusses government screen‑time guidance, not the KidScreen product.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:41:08.089Z"
+    },
+    {
+      "intentId": "41c81381ce49dbd7",
+      "articleId": "9e7a30beb8f0cf40",
+      "grade": 1,
+      "reason": "Discusses chatbots generally, but does not address Grok Bot specifically",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:44:31.182Z"
+    },
+    {
+      "intentId": "50558cbd38bc4e87",
+      "articleId": "565d8437bae13b92",
+      "grade": 0,
+      "reason": "The article discusses a video doorbell, unrelated to DeepSeek costs or DGX break‑even analysis.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-13T21:49:55.819Z"
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "af808560051877da",
+      "grade": 0,
+      "reason": "The article discusses space datacenters and pollution, not locating radiation sources.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:07:51.182Z"
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "b369e74f921a7600",
+      "grade": 0,
+      "reason": "The article discusses radio astronomy funding, not locating radiation sources.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:07:54.084Z"
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "b6098da773c5da49",
+      "grade": 0,
+      "reason": "The article discusses Martian organics, not locating radiation sources.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:07:57.051Z"
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "c8603e08bea6c13f",
+      "grade": 0,
+      "reason": "The article discusses alien detection guidelines, not locating radiation sources.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:07:59.943Z"
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "d651e75153d84c1a",
+      "grade": 0,
+      "reason": "The article discusses air pollution lawsuits, not locating radiation sources.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:08:24.469Z"
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "ee1a422601c8444f",
+      "grade": 0,
+      "reason": "The article discusses water billing issues, not radiation source location.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:08:52.572Z"
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "f2db54e035698e3c",
+      "grade": 0,
+      "reason": "The article is about a cyber-attack, not radiation source location.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:08:55.452Z"
+    },
+    {
+      "intentId": "86403d54febb1692",
+      "articleId": "f3bb824cb78333e6",
+      "grade": 0,
+      "reason": "The article is about AI hacking, not radiation source location.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:08:58.341Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "0f4c91d93be35dc5",
+      "grade": 0,
+      "reason": "The article is about Jeremy Bentham's manuscript archive, not Nokia design.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:09:01.229Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "1f51e16633900805",
+      "grade": 0,
+      "reason": "The article discusses Samsung's Galaxy S26, not Nokia's design archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:09:04.132Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "285df558e733f131",
+      "grade": 0,
+      "reason": "The article discusses Sony headphones, not Nokia design archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:09:06.927Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "2905c638ca065b0c",
+      "grade": 0,
+      "reason": "The article is about an iPhone review, unrelated to Nokia Design Archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:09:09.793Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "2df2de04a53a16b9",
+      "grade": 0,
+      "reason": "The article discusses arts and cultural engagement, not the Nokia Design Archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:09:12.651Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "464edc18881b1393",
+      "grade": 0,
+      "reason": "The article is about astronomy, not Nokia design.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:09:15.321Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "55d5b5f287bc9851",
+      "grade": 0,
+      "reason": "The article discusses Samsung's folding phone, not Nokia's design archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:09:18.211Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "57cef2871ae85003",
+      "grade": 0,
+      "reason": "The article is about a Microsoft laptop, not Nokia design.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:09:27.564Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "60fb997d4357b804",
+      "grade": 0,
+      "reason": "The article is about Samsung phones, not Nokia design archive",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:09:55.492Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "863b6e2c8e70156b",
+      "grade": 0,
+      "reason": "The article discusses hyperphantasia, not Nokia design archive",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:09:58.177Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "92798226a1016502",
+      "grade": 1,
+      "reason": "Only a brief mention of former Nokia engineers; the article does not discuss Nokia's design archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:10:01.603Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "9390cb5e808e7cb3",
+      "grade": 0,
+      "reason": "The article is about a different phone brand and does not address Nokia design archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:10:04.478Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "9dc4cdd64b7c2576",
+      "grade": 0,
+      "reason": "The article is unrelated to Nokia Design Archive",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:10:07.351Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "ac31835def12d0b4",
+      "grade": 0,
+      "reason": "The article discusses Apple, not Nokia or its design archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:10:10.310Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "c425adedc33b9b9a",
+      "grade": 0,
+      "reason": "The article is about Samsung's folding phone, not Nokia design archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:10:13.196Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "cc14c7037c54fffe",
+      "grade": 0,
+      "reason": "The article is about Anthropic's code leak, unrelated to Nokia Design Archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:10:16.087Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "e411f74388a91b48",
+      "grade": 0,
+      "reason": "The article discusses Nothing's phone design, not the Nokia Design Archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:10:19.079Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "ed3db0d404bde05b",
+      "grade": 0,
+      "reason": "The article discusses stock markets and AI tech firms, not Nokia design archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:10:27.629Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "edb50710a73f1734",
+      "grade": 0,
+      "reason": "The article discusses internet slang, not the Nokia Design Archive.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:10:55.759Z"
+    },
+    {
+      "intentId": "8cae974696e6d07f",
+      "articleId": "fec35fc6e2c2a743",
+      "grade": 0,
+      "reason": "The article is about AI agents, not Nokia design.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:10:58.660Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "0d785f3166a04981",
+      "grade": 0,
+      "reason": "The article discusses road tunnel funding, not Banksy artwork costs.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:11:01.426Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "0dc8c7aa19d7a449",
+      "grade": 0,
+      "reason": "The article does not discuss Banksy or related art costs.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:11:04.424Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "119846b5a3ece9b3",
+      "grade": 0,
+      "reason": "The article is about a sewage plant, not Banksy works or their cost.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:11:07.523Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "218311688dce0209",
+      "grade": 0,
+      "reason": "The article is about interest rates and consumer spending, not about Banksy works or their cost.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:11:10.465Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "28222ddc189ee196",
+      "grade": 0,
+      "reason": "The article is about a NHS contract, not about Banksy works or their cost.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:11:13.391Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "285bacdc8f56c660",
+      "grade": 0,
+      "reason": "The article discusses bank taxes, not Banksy artwork costs.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:11:16.302Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "354a7db9a9d453be",
+      "grade": 0,
+      "reason": "The article discusses fiscal policy and borrowing, not Banksy works or their cost.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:11:19.602Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "44752953c15a5460",
+      "grade": 0,
+      "reason": "The article discusses UK borrowing, not Banksy artwork costs.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:11:27.749Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "6a786554dbc643c8",
+      "grade": 0,
+      "reason": "The article discusses bank profits and tax, not Banksy artwork costs.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:11:56.007Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "7912b5bc9a2eaa11",
+      "grade": 0,
+      "reason": "The article discusses HS2 costs, not Banksy works.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:11:58.953Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "b23e406b78185e91",
+      "grade": 0,
+      "reason": "The article is about water company fines, not Banksy works.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:12:01.950Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "ba01911ca335af72",
+      "grade": 0,
+      "reason": "The article discusses bank profits and tax, not Banksy artwork costs.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:12:04.862Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "bf2757ea48f204dd",
+      "grade": 0,
+      "reason": "The article discusses JP Morgan office negotiations, not Banksy works or their cost.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:12:07.821Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "c29075d254f49ad1",
+      "grade": 0,
+      "reason": "The article discusses UK borrowing and fiscal policy, not Banksy works or their cost.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:12:10.790Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "c453cc0d21edd3f0",
+      "grade": 0,
+      "reason": "The article is about water usage restrictions, not about Banksy works or their cost.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:12:13.731Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "cbe6016bc0f651d8",
+      "grade": 0,
+      "reason": "The article is about JP Morgan HQ plans, not Banksy works cost.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:12:16.596Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "cf95463d17e97ef5",
+      "grade": 0,
+      "reason": "The article is about a bank's job cuts and AI investment, unrelated to Banksy works cost.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:12:19.477Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "e3c51caf00e5e147",
+      "grade": 0,
+      "reason": "The article discusses UK property and economic impacts of Trump, not Banksy artwork costs.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:12:27.724Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "ee1a422601c8444f",
+      "grade": 0,
+      "reason": "The article discusses water bills, not Banksy artwork costs.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:12:56.128Z"
+    },
+    {
+      "intentId": "9403a0b18e530472",
+      "articleId": "f4f7df5c3b221f59",
+      "grade": 0,
+      "reason": "The article is about a Tesla union dispute, not Banksy works or their cost.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:12:59.083Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "0dc8c7aa19d7a449",
+      "grade": 0,
+      "reason": "The article discusses politics and economics, unrelated to the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:13:02.097Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "1b9a16e4480738a2",
+      "grade": 0,
+      "reason": "The article discusses teen text abbreviations, unrelated to the Navajo MSPSS translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:13:05.035Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "38c749d85808554f",
+      "grade": 0,
+      "reason": "The article is about immigration policy, not about a Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:13:07.968Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "3adfa61ea5afc824",
+      "grade": 0,
+      "reason": "The article discusses family caregiving, not the Navajo translation validation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:13:11.071Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "42fcafc02e5c2d26",
+      "grade": 0,
+      "reason": "The article is about Meta smartglasses, not the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:13:14.168Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "49754aae17d4d452",
+      "grade": 0,
+      "reason": "The article discusses conversational narcissism, not the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:13:17.225Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "504dc79132a5c487",
+      "grade": 0,
+      "reason": "The article discusses voice notes, not the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:13:20.159Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "549748606880bad8",
+      "grade": 0,
+      "reason": "The article is about slang and military tweets, not about the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:13:28.171Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "56c8a639226b77f9",
+      "grade": 0,
+      "reason": "The article is about BP board actions, not the Navajo MSPSS translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:13:56.271Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "5fae41d2f6094a49",
+      "grade": 0,
+      "reason": "The article discusses accents and social judgments, not the Navajo translation validation of the MSPSS.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:13:59.414Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "62030e4f51444658",
+      "grade": 0,
+      "reason": "The article discusses a gas tax debate, unrelated to the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:14:02.475Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "6526475002fbeb9f",
+      "grade": 0,
+      "reason": "The article discusses Australian wellbeing poverty, not the Navajo translation of the MSPSS.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:14:05.580Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "9072492d9729909d",
+      "grade": 0,
+      "reason": "The article is about smartglasses, not the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:14:08.622Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "983e400c9189cde4",
+      "grade": 0,
+      "reason": "The article discusses language filler words, not the Navajo MSPSS translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:14:11.570Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "a30e0c41bff0d6d3",
+      "grade": 0,
+      "reason": "The article is about private equity takeovers, unrelated to the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:14:14.646Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "b372c2ea32b2eb90",
+      "grade": 0,
+      "reason": "The article is about social media moderation, not the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:14:17.720Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "b8f7e9177989e631",
+      "grade": 0,
+      "reason": "The article is about Stewart Brand and unrelated topics, not the Navajo MSPSS translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:14:20.571Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "c940efeca63efdd7",
+      "grade": 0,
+      "reason": "The article is about corporate jargon, not about the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:14:28.266Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "d2b3b5e5093a4958",
+      "grade": 0,
+      "reason": "The article is about Elon Musk's social media posts, unrelated to the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:14:56.401Z"
+    },
+    {
+      "intentId": "95951792bf679fc5",
+      "articleId": "e236d3d58245e224",
+      "grade": 0,
+      "reason": "The article discusses peptide testing, not the Navajo translation study.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:14:59.489Z"
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "256e044f36f6a8a9",
+      "grade": 0,
+      "reason": "The article discusses social media pressure and additive bias, not SETI@Home or public science engagement.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:15:02.385Z"
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "2b0e784a9f184706",
+      "grade": 0,
+      "reason": "The article discusses NASA's Artemis II mission, not SETI@Home or related public engagement.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:15:05.516Z"
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "330bbd04835d17a4",
+      "grade": 0,
+      "reason": "The article is about a historic bank brand, not SETI@Home.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:15:08.635Z"
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "3538dbc844ba8352",
+      "grade": 0,
+      "reason": "The article discusses AI companies and policy, not SETI@Home or related public engagement.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:15:11.559Z"
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "3ce0f89699f53d6d",
+      "grade": 0,
+      "reason": "The article discusses smart home cameras and surveillance, which is unrelated to SETI@Home.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:15:14.588Z"
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "3f1b9948be2357e2",
+      "grade": 0,
+      "reason": "The article discusses AI journalling, which is unrelated to SETI@Home.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:15:18.075Z"
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "42fcafc02e5c2d26",
+      "grade": 0,
+      "reason": "The article discusses Meta smartglasses, not SETI@Home or related public engagement.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:15:20.994Z"
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "47aa976f4904526d",
+      "grade": 0,
+      "reason": "The article discusses Vine's revival, not SETI@Home or related public science projects.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:15:28.363Z"
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "542d75171584b98a",
+      "grade": 0,
+      "reason": "The article is about a human-authored book logo, unrelated to SETI@Home.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:15:56.424Z"
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "5fe7a4e98f49ced0",
+      "grade": 0,
+      "reason": "The article is about Instagram's AI image generator, unrelated to SETI@Home.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:15:59.541Z"
+    },
+    {
+      "intentId": "9bb1cbe679c57f32",
+      "articleId": "c8603e08bea6c13f",
+      "grade": 1,
+      "reason": "The article is about SETI research but does not discuss SETI@Home or its public engagement aspects.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:17:46.962Z"
+    },
+    {
+      "intentId": "b476c85f078214cd",
+      "articleId": "7f25eeae1df3ede4",
+      "grade": 0,
+      "reason": "The article does not mention Grok 4.6 or its AI Index score",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:22:44.467Z"
+    },
+    {
+      "intentId": "fa3edf936f51c2cb",
+      "articleId": "090a563418aa26d3",
+      "grade": 2,
+      "reason": "The article covers Mythos AI but focuses on its cybersecurity impact, not the social engineering aspect the user seeks.",
+      "model": "openai/gpt-oss-120b",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T06:48:09.015Z"
+    }
+  ]
+}

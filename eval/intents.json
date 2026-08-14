@@ -1,0 +1,304 @@
+{
+  "items": [
+    {
+      "id": "00351b9da56bd12c",
+      "group": "short-post",
+      "split": "dev",
+      "title": "Zapscape (CVE-2026-64561): Guest-to-Host Escape in KVM/x86"
+    },
+    {
+      "id": "056dac0dfc2588a3",
+      "group": "short-post",
+      "split": "dev",
+      "title": "About Rx Kids"
+    },
+    {
+      "id": "0e44fe061788c4d1",
+      "group": "short-post",
+      "split": "locked",
+      "title": "Bulldozers Plow Through Big Bend National Park, Sparking Fury in Texas"
+    },
+    {
+      "id": "1714138947205168",
+      "group": "short-post",
+      "split": "dev",
+      "title": "The lifesaving secret hidden inside a horseshoe crab's blue blood"
+    },
+    {
+      "id": "207435b46be9a5e0",
+      "group": "short-post",
+      "split": "dev",
+      "title": "Defending my own brain against enshittification"
+    },
+    {
+      "id": "287812b82f0a24e1",
+      "group": "short-post",
+      "split": "locked",
+      "title": "The Ultimate Horse"
+    },
+    {
+      "id": "2fc18f5656212d1c",
+      "group": "short-post",
+      "split": "dev",
+      "title": "The OpenAI–Hugging Face Incident [video]"
+    },
+    {
+      "id": "38d65116d40eacdd",
+      "group": "short-post",
+      "split": "dev",
+      "title": "Show HN: KidScreen, a finite YouTube shelf chosen by parents"
+    },
+    {
+      "id": "41c81381ce49dbd7",
+      "group": "short-post",
+      "split": "locked",
+      "title": "Grok Bot"
+    },
+    {
+      "id": "46675847f99bb786",
+      "group": "short-post",
+      "split": "dev",
+      "title": "Lost my phone at the office. Claude suggested tracking Bluetooth signal strength"
+    },
+    {
+      "id": "50558cbd38bc4e87",
+      "group": "short-post",
+      "split": "dev",
+      "title": "DeepSeek costs OpenCode Go user $1.14/day; dual DGX breaks even in 24 years"
+    },
+    {
+      "id": "5b9148dc4fb80ea8",
+      "group": "short-post",
+      "split": "locked",
+      "title": "Updated GPG Key for Signing Firefox and Thunderbird Releases"
+    },
+    {
+      "id": "621c953dd7d3d760",
+      "group": "short-post",
+      "split": "dev",
+      "title": "Noctua finds more than half of PC cases misstate CPU cooler clearances"
+    },
+    {
+      "id": "6943e4d87b6d2bd9",
+      "group": "short-post",
+      "split": "dev",
+      "title": "There Are Magic Hexagons of Every Order"
+    },
+    {
+      "id": "71ef1314f776f81d",
+      "group": "short-post",
+      "split": "locked",
+      "title": "Lawyers using \"AI\" could face sanctions including costs for fake citations"
+    },
+    {
+      "id": "7a772e9f9a6950fd",
+      "group": "short-post",
+      "split": "dev",
+      "title": "Glaciers on the Climate Dashboard"
+    },
+    {
+      "id": "86403d54febb1692",
+      "group": "short-post",
+      "split": "dev",
+      "title": "Locating an unknown source of radiation in a heterogeneous environment (2019)"
+    },
+    {
+      "id": "8cae974696e6d07f",
+      "group": "short-post",
+      "split": "locked",
+      "title": "Nokia Design Archive"
+    },
+    {
+      "id": "9403a0b18e530472",
+      "group": "short-post",
+      "split": "dev",
+      "title": "Banksy works cost public almost £150k"
+    },
+    {
+      "id": "9bb1cbe679c57f32",
+      "group": "short-post",
+      "split": "dev",
+      "title": "SETI@Home was the coolest thing"
+    },
+    {
+      "id": "a81455a0c470e7ee",
+      "group": "short-post",
+      "split": "locked",
+      "title": "The Human Is the Loop"
+    },
+    {
+      "id": "b476c85f078214cd",
+      "group": "short-post",
+      "split": "dev",
+      "title": "Grok 4.6 scores 61 on the Artificial Analysis Intelligence Index"
+    },
+    {
+      "id": "baf52e929a9be2a9",
+      "group": "short-post",
+      "split": "dev",
+      "title": "My phone detects going on a run as “someone snatching my phone and running off”"
+    },
+    {
+      "id": "c4fd69abdb51fadc",
+      "group": "short-post",
+      "split": "locked",
+      "title": "I'm Done Using AI"
+    },
+    {
+      "id": "ccc4d22a28237669",
+      "group": "short-post",
+      "split": "dev",
+      "title": "OpenAI launches ChatGPT desktop app for Linux"
+    },
+    {
+      "id": "d3f778e9090f698d",
+      "group": "short-post",
+      "split": "dev",
+      "title": "Emergent Introspective Awareness in Large Language Models"
+    },
+    {
+      "id": "de2be18c14e1a761",
+      "group": "short-post",
+      "split": "locked",
+      "title": "London Underground begins scanning passengers' faces"
+    },
+    {
+      "id": "e6a88dfb8c7761ba",
+      "group": "short-post",
+      "split": "dev",
+      "title": "50k Boat Names"
+    },
+    {
+      "id": "eea6c983b9173e7c",
+      "group": "short-post",
+      "split": "dev",
+      "title": "Radical Study Suggests Life on Earth Arose Twice"
+    },
+    {
+      "id": "fa3edf936f51c2cb",
+      "group": "short-post",
+      "split": "locked",
+      "title": "Mythos social engineering AISI INC-2026-07-28-01"
+    },
+    {
+      "id": "009b38ad8c4f8cad",
+      "group": "self-post",
+      "split": "dev",
+      "title": "Would you choose the Microsoft stack today if starting greenfield?"
+    },
+    {
+      "id": "0c594e81ad4cbc97",
+      "group": "self-post",
+      "split": "dev",
+      "title": "Show HN: I created a RAW to HDRI stacker in (mostly) Common Lisp"
+    },
+    {
+      "id": "16d09d0cb3339f46",
+      "group": "self-post",
+      "split": "locked",
+      "title": "Ask HN: How do you maintain flow when vibe coding?"
+    },
+    {
+      "id": "26d96bcb08183805",
+      "group": "self-post",
+      "split": "dev",
+      "title": "Show HN: Shumai – open-source Frame.io alternative for creative work"
+    },
+    {
+      "id": "327e3f0781b5721c",
+      "group": "self-post",
+      "split": "dev",
+      "title": "My first experience with an \"AI\"-ed call centre?"
+    },
+    {
+      "id": "3b9beedf95650f70",
+      "group": "self-post",
+      "split": "locked",
+      "title": "Show HN: Low-latency local LLM runner via OpenJDK Panama FFM (Java 22)"
+    },
+    {
+      "id": "48aec702025e35b3",
+      "group": "self-post",
+      "split": "dev",
+      "title": "Show HN: Bash4LLM+ – A lightweight, dependency-free Bash wrapper for LLM APIs"
+    },
+    {
+      "id": "54c014d1703cb2a4",
+      "group": "self-post",
+      "split": "dev",
+      "title": "Ask HN: How did you land your first projects as a solo engineer/consultant?"
+    },
+    {
+      "id": "5db6498ba40aab05",
+      "group": "self-post",
+      "split": "locked",
+      "title": "Show HN: I Made a Claude Skill for Spec-Driven Development (SDD)"
+    },
+    {
+      "id": "6769fabf1d43a6a5",
+      "group": "self-post",
+      "split": "dev",
+      "title": "I don't need AI to build me a new app. I need it to make Jira bearable"
+    },
+    {
+      "id": "7682c27f5d331992",
+      "group": "self-post",
+      "split": "dev",
+      "title": "Show HN: Nucleus – A security-hardened, Nix-native container runtime"
+    },
+    {
+      "id": "8568539331c22c6f",
+      "group": "self-post",
+      "split": "locked",
+      "title": "Ask HN: Got cancer, a new job,new boss in less than a year What do I do now?"
+    },
+    {
+      "id": "95951792bf679fc5",
+      "group": "self-post",
+      "split": "dev",
+      "title": "In a randomized comparison, a community-engaged translation of the Multidimensional Scale of Perceived Social Support (MSPSS) into Navajo (focused on accurately representing the meaning of ambiguous terms like 'special person') was not clearly more valid or reliable than a basic forward translation"
+    },
+    {
+      "id": "a65ff4cc38784847",
+      "group": "self-post",
+      "split": "dev",
+      "title": "Show HN: Brolly, a plain-text weather forecast site"
+    },
+    {
+      "id": "b4fe43c187fde3f0",
+      "group": "self-post",
+      "split": "locked",
+      "title": "WFH is becoming a benefit again"
+    },
+    {
+      "id": "c3f5a7a1c5d98295",
+      "group": "self-post",
+      "split": "dev",
+      "title": "Show HN: Let's Seal – Let's Encrypt for document signing, free and self-hosted"
+    },
+    {
+      "id": "d0252105b9da3cd2",
+      "group": "self-post",
+      "split": "dev",
+      "title": "Show HN: Sprocket – The Best AI Agent for Hardware and Software Development"
+    },
+    {
+      "id": "d9c793f0f4ee3058",
+      "group": "self-post",
+      "split": "locked",
+      "title": "Show HN: Wordit – Change One Letter, Keep the Chain Going"
+    },
+    {
+      "id": "e836e6bb0fec3182",
+      "group": "self-post",
+      "split": "dev",
+      "title": "Show HN: Appaca – AI Workspace for Operators"
+    },
+    {
+      "id": "f3d36373e11bffac",
+      "group": "self-post",
+      "split": "dev",
+      "title": "Show HN: Homegames. An open-source game platform I've been making for 8 years"
+    }
+  ]
+}
