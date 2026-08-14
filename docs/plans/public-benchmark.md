@@ -2,7 +2,7 @@
 
 Status: draft
 Owner: repository owner
-Last change: 2026-08-14
+Last change: 2026-08-14 12:50:24 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -25,10 +25,17 @@ cannot reach, and it means a published baseline exists to check our own arithmet
 
 ## 2. Decision
 
-Two BEIR datasets, SciFact and NFCorpus, become the primary bench for the engine axes: candidate
-generation, fusion and reranking. They are fetched by a script rather than committed, pinned by
-source and checksum. Our metric implementation is validated by reproducing the published BM25
-baseline before any configuration is compared.
+BEIR datasets become the primary bench for the engine axes: candidate generation, fusion and
+reranking. They are fetched by a script rather than committed, pinned by source and checksum. Our
+metric implementation is validated by reproducing the published BM25 baseline before any
+configuration is compared.
+
+Which datasets is decided by two filters applied in order. The first is the product: each dataset
+stands for a subject area this engine may later be sold into, so the bench and the commercial
+verticals in `docs/plans/retrieval-quality.md` section 13 are the same list rather than two lists.
+The second is the hardware: the retrieval path here is JavaScript BM25 and a 384 dimension model over
+an in memory array, so a collection of millions of documents is not measurable on this machine
+whatever its subject. Section 4 applies both filters to the published table of all 19 datasets.
 
 The local bench in `docs/plans/evaluation-corpus.md` is not replaced. It answers a question BEIR
 cannot: what this product does on its own subject matter, with its own thin and keyword stuffed
@@ -61,19 +68,52 @@ Out of scope, each with its reason:
 - Replacing the local bench, for the reason in section 2.
 - Chasing a leaderboard position. The published baseline is a check on our arithmetic, not a target.
 
-## 4. Why these two datasets
+## 4. Which datasets, and the vertical each one stands for
 
-| Dataset | Corpus | Test queries | Why it earns a place |
-|---|---|---|---|
-| SciFact | roughly 5 thousand documents | roughly 300 | Small enough to hold in memory. Claims verified against abstracts, so relevance is precise and a wrong answer is obviously wrong |
-| NFCorpus | roughly 3.6 thousand documents | roughly 320 | Small, and its queries are written by people in ordinary language against technical documents, which is the asymmetry this product actually has |
+The counts below are not estimates. They are the published table of the benchmark, read from
+`https://github.com/beir-cellar/beir/wiki/Datasets-available` at 2026-08-14 12:41 +0200. The
+availability column is the benchmark's own, and it is the column that decides more here than any
+other.
 
-Both counts are approximate until the fetch script reports the real ones, which it records in the
-manifest described in section 5.
+Taken now, because each is under 60 thousand documents and downloads without a licence step:
 
-Neither dataset is this product's domain, and that is stated plainly rather than hidden: they measure
-the engine, not the product. Section 6 of `docs/plans/retrieval-quality.md` keeps the local bench
-ahead of any shipping decision for exactly that reason.
+| Dataset | Vertical it stands for | Corpus | Test queries | Availability |
+|---|---|---|---|---|
+| SciFact | Science and research | 5K | 300 | public download |
+| NFCorpus | Medical and health | 3.6K | 323 | public download |
+| FiQA-2018 | Finance | 57K | 648 | public download |
+
+Held for later, with the trigger that admits each:
+
+| Dataset | Vertical | Corpus | Test queries | Trigger |
+|---|---|---|---|---|
+| TREC-COVID | Biomedical literature | 171K | 50 | An approximate nearest neighbour index exists. Also 50 queries is thin for separating two configurations |
+| CQADupStack | Technical community questions | 457K | 13145 | The same index. Closest public analogue to Hacker News and Reddit content |
+| Quora | Duplicate question matching | 523K | 10000 | The same index |
+| SCIDOCS | Citation recommendation | 25K | 1000 | Fits today. Held only because three datasets are enough to reveal disagreement, and a fourth costs judging time on every axis |
+
+Refused, with the reason:
+
+| Dataset | Corpus | Why not |
+|---|---|---|
+| MSMARCO | 8.84M | Four orders of magnitude beyond this hardware |
+| BioASQ | 14.91M | Size, and availability is reproducible only, not a public download |
+| NQ, HotpotQA, FEVER, Climate-FEVER, DBPedia | 2.68M to 5.42M | Size |
+| TREC-NEWS, Signal-1M, Robust04 | 528K to 2.86M | Availability is reproducible only, not a public download. See the finding below |
+
+The finding that this table produced, and it was not expected. News is the one vertical with no
+freely downloadable public collection. All three news and social collections in the benchmark,
+TREC-NEWS, Signal-1M and Robust04, are marked reproducible rather than public download, which means a
+licence or an original corpus obtained elsewhere. News is exactly what this product ingests today.
+
+Two consequences follow and both are recorded rather than argued. The public bench can measure this
+engine on science, medicine and finance, and it cannot measure it on news at all. And the local bench
+of `docs/plans/evaluation-corpus.md`, built from Guardian and Ars Technica articles, is therefore not
+a duplicate of the public one. It is the only news evidence that exists here, which raises its value
+rather than lowering it.
+
+Section 6 of `docs/plans/retrieval-quality.md` keeps the local bench ahead of any shipping decision.
+That ordering now has a second reason: not preference, but the absence of a public alternative.
 
 ## 5. Fetched, not committed
 
@@ -101,22 +141,61 @@ This is the same device as the planted controls on the judge in
 sees it. A judge that cannot grade a known pair is not trusted with unknown ones, and a metric that
 cannot reproduce a known score is not trusted with unknown configurations.
 
-The published figures, read on 2026-08-14 and fixed here before the first run:
+The published figures, now read from the primary table rather than from summaries of it. Source:
+Table 2 of the BEIR paper, `https://ar5iv.labs.arxiv.org/html/2104.08663`, read at
+2026-08-14 12:44 +0200.
 
 | Dataset | Published BM25 nDCG@10 | Our result | Verdict |
 |---|---|---|---|
 | SciFact | 0.665 | not yet run | |
 | NFCorpus | 0.325 | not yet run | |
+| FiQA-2018 | 0.236 | not yet run | |
+
+The two figures written here on 2026-08-14 from secondary sources survived contact with the primary
+table unchanged. That is worth one line rather than a celebration: the expectation was fixed before
+the check, and the check confirmed it.
+
+### 6.1 What the primary table said that the summaries did not
+
+The same sentence that carries the numbers carries their settings, and this is the part no summary
+reproduced: "We use Anserini with the default Lucene parameters (k=0.9 and b=0.4). We index the title
+(if available) and passage as separate fields for documents."
+
+Two facts follow, and the second one is a defect in the plan as written yesterday.
+
+The first is that 0.9 and 0.4 are Anserini's defaults, not Lucene's. Lucene's `BM25Similarity` ships
+k1 at 1.2 and b at 0.75, published in its own API documentation at
+`https://lucene.apache.org/core/9_9_1/core/org/apache/lucene/search/similarities/BM25Similarity.html`,
+read at 2026-08-14 12:47 +0200. The paper names its own values correctly and mislabels their origin.
+Recorded because an error inside a primary source is the one kind this project cannot catch by
+demanding sources.
+
+The second is that this repository sets `bm25K1` to 1.2 and `bm25B` to 0.75, and indexes one field.
+Running that against an expectation produced at 0.9, 0.4 and two fields compares two different
+retrieval systems and calls the difference a defect in our harness. The control run of behaviour 13
+is therefore specified, not merely intended:
+
+| Setting | Value for the control run | Reason |
+|---|---|---|
+| k1 | 0.9 | The value that produced the published number |
+| b | 0.4 | The same |
+| Fields | Title and body scored separately | The same. A single concatenated field is a different system |
+| Stopwords and stemming | Ours, unchanged | The known and accepted source of residual gap, see below |
+
+The product's own default stays at 1.2 and 0.75. The control run is a measurement of the instrument,
+not a change to the product, and conflating the two is what this section exists to prevent.
 
 Tolerance, decided now rather than after seeing the result. Within 0.05 the harness is sane. Beyond
 0.10 it is a defect and nothing else is measured until the cause is found. Between the two, the gap
 is recorded and its cause named before any axis is compared.
 
 The tolerance is not generous by accident. `src/eval/bm25.js` is a hand written implementation with a
-short stopword list and no stemming, while published BEIR baselines run Lucene through Anserini with
+short stopword list and no stemming, while the published baseline runs Lucene through Anserini with
 full analysis. Different BM25 implementations are known to produce different numbers on the same
-collection, which is why reproducing those baselines has its own literature. A gap of a few points is
-therefore expected and interpretable; a gap of fifteen is not, and the first suspect is stemming.
+collection, and the field has a reproducibility literature about exactly this, including a study
+titled "Which BM25 Do You Mean?" arguing that a paper must name its variant. A gap of a few points is
+therefore expected and interpretable; a gap of fifteen is not, and with k1, b and the field structure
+now matched, the first remaining suspect is stemming.
 
 A gap beyond tolerance is a defect in the harness or in the tokenisation, not a discovery about
 BM25, and it is chased before anything else is measured.
@@ -181,7 +260,7 @@ behaviour 13 interpretable when it fails.
 
 | Question | Trigger that forces an answer |
 |---|---|
-| Whether the BM25 baselines in section 6 match the BEIR paper's own table, read directly | An attempt to read the paper's table succeeds, see section 12 |
+| Answered 2026-08-14 12:44 +0200. Whether the BM25 baselines in section 6 match the BEIR paper's own table, read directly. They do, and the table also supplied the parameters in section 6.1 | closed |
 | Whether a configuration that wins on SciFact and NFCorpus also wins on the local bench | Both benches have run the same axis matrix |
 | Whether more BEIR datasets are worth adding | The two chosen disagree about which configuration wins |
 | Whether the tokenisation in `src/eval/bm25.js` explains any gap from the published baseline | Behaviour 13 fails |
@@ -191,22 +270,23 @@ behaviour 13 interpretable when it fails.
 A document whose central claim is that a number was read from the literature is worthless without
 saying where, and this one shipped without a single link. Recorded now.
 
-| What | Where |
-|---|---|
-| BEIR, the benchmark and its result tables | https://arxiv.org/pdf/2104.08663 |
-| Reproducing BEIR baselines, and why BM25 implementations disagree | https://cs.uwaterloo.ca/~jimmylin/publications/Kamalloo_etal_SIGIR2024.pdf |
-| SciFact corpus, queries and qrels | https://huggingface.co/datasets/BeIR/scifact |
-| NFCorpus corpus, queries and qrels | https://huggingface.co/datasets/BeIR/nfcorpus |
-| MS MARCO judgments, for scale comparison only | https://huggingface.co/datasets/BeIR/msmarco-qrels |
-| TREC topic development, cited in section 1 | https://trec.nist.gov/pubs/trec32/papers/overview_32.pdf |
+| What | Where | Read at |
+|---|---|---|
+| BEIR, Table 2, the BM25 figures in section 6 and the parameter sentence in section 6.1 | https://ar5iv.labs.arxiv.org/html/2104.08663 | 2026-08-14 12:44 +0200 |
+| The dataset table in section 4: domains, corpus sizes, query counts, availability | https://github.com/beir-cellar/beir/wiki/Datasets-available | 2026-08-14 12:41 +0200 |
+| Lucene `BM25Similarity`, its shipped k1 of 1.2 and b of 0.75 | https://lucene.apache.org/core/9_9_1/core/org/apache/lucene/search/similarities/BM25Similarity.html | 2026-08-14 12:47 +0200 |
+| Elastic on k1 and b: defaults work for most corpora, and tuning them is not the first priority | https://www.elastic.co/blog/practical-bm25-part-3-considerations-for-picking-b-and-k1-in-elasticsearch | 2026-08-14 12:44 +0200 |
+| Reproducing BEIR baselines, and why BM25 implementations disagree | https://cs.uwaterloo.ca/~jimmylin/publications/Kamalloo_etal_SIGIR2024.pdf | not read directly, PDF did not parse |
+| BEIR, the same paper as PDF | https://arxiv.org/pdf/2104.08663 | attempted 2026-08-14 12:43 +0200, returned unparseable binary, superseded by the HTML row above |
+| SciFact corpus, queries and qrels | https://huggingface.co/datasets/BeIR/scifact | not yet read |
+| NFCorpus corpus, queries and qrels | https://huggingface.co/datasets/BeIR/nfcorpus | not yet read |
+| FiQA-2018 corpus, queries and qrels | https://huggingface.co/datasets/BeIR/fiqa | not yet read |
+| TREC topic development, cited in section 1 | https://trec.nist.gov/pubs/trec32/papers/overview_32.pdf | not read directly |
 
-The provenance of the two numbers in section 6 is weaker than it should be, and pretending otherwise
-would defeat the purpose of writing them down in advance. An attempt to read the BEIR paper's result
-table directly returned unparseable binary, so 0.665 and 0.325 were taken from secondary sources
-citing that table rather than from the table itself. They are consistent across those sources, which
-is why they are usable as an expectation.
+The earlier version of this section admitted that 0.665 and 0.325 came from summaries rather than from
+the table, because the PDF returned unparseable binary. That is resolved. The paper's HTML rendering
+carries Table 2, both numbers matched, and the same paragraph supplied the retrieval parameters that
+the summaries had dropped, which turned out to matter more than the numbers did.
 
-The consequence is recorded rather than hidden: if our BM25 lands outside tolerance, the first check
-is not our code but whether the expectation is right, read from the primary table. Section 11 carries
-that as an open question with its trigger. An expectation with soft provenance is still better than
-no expectation, because it is fixed in advance and cannot be adjusted to match the result.
+The rows above marked as not read are honest gaps, not omissions. Each is either not needed until the
+fetch script runs, or resisted parsing in the same way the first PDF did.

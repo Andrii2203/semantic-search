@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-12
+Last change: 2026-08-14 12:50:24 +0200
 
 ## 1. Problem
 
@@ -22,6 +22,15 @@ retired mechanically.
 - Superseded documents move to `docs/archive/` and get `Status: superseded by <path>` in the header.
   They are never edited afterwards.
 - No em dashes, no asterisk bold, per `STYLE.md`.
+- Time is recorded to the second, with the offset, in the form `YYYY-MM-DD HH:MM:SS +ZZZZ`. It appears
+  in the header and next to every number that was measured or read from a source. A date alone is not
+  enough, because two edits on one day cannot be ordered, and a number without the moment it was taken
+  cannot be told apart from a number that was carried forward untouched.
+- Every number carries its source in the same row: a link to the primary document, and the timestamp
+  at which that document was read. Primary means the paper, the official documentation or the model
+  card itself, never a summary of it. A named company without a link is not a source.
+- A number whose source was searched for and not found says so in words, in its own row. An empty
+  cell is read as verified after a month has passed, which is how folklore enters a document.
 - The behaviour list in section 4 is the contract with the test suite. Test names repeat those lines
   verbatim, see `TESTING_STANDARD.md` section 8.
 
@@ -34,7 +43,7 @@ Copy everything between the markers into the new file.
 
 Status: draft | active | superseded by <path>
 Owner: <who decides>
-Last change: <YYYY-MM-DD>
+Last change: <YYYY-MM-DD HH:MM:SS +ZZZZ>
 Supersedes: <path or none>
 
 ## 1. Problem

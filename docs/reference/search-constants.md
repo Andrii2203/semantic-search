@@ -2,7 +2,7 @@
 
 Status: draft
 Owner: repository owner
-Last change: 2026-08-14
+Last change: 2026-08-14 12:50:24 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -88,7 +88,9 @@ point of this table.
 |---|---|---|---|---|
 | `semanticCutoffSearch` | 0.65 | `routes/search.js`, `search-engine.js` | arbitrary | Contradicted by `docs/eval/inbox-admission.md`: semantic matches mean 0.509 to 0.547. Forced by axis A being measured |
 | `semanticCutoffInbox` | 0.35 | `config.js` as `SIMILARITY_THRESHOLD` | measured, weakly | Dev half F1 peaks at 0.50, locked half peaks at 0.30 and 0.45. The two halves disagree, so the number is not settled |
-| `rrfK` | 60 | `config.js`, `search-engine.js` | borrowed | The constant from the original reciprocal rank fusion work, and the value Instacart and OpenSearch both use |
+| `rrfK` | 60 | `config.js`, `search-engine.js` | borrowed | The constant from the original reciprocal rank fusion work, and the value Instacart and OpenSearch both use. Link not yet recorded, see the rule added to `docs/standards/DOCUMENT_TEMPLATE.md` on 2026-08-14 |
+| `bm25K1` | 1.2 | `src/eval/bm25.js` | borrowed, source named | The value Lucene ships in `BM25Similarity`, published at https://lucene.apache.org/core/9_9_1/core/org/apache/lucene/search/similarities/BM25Similarity.html and read at 2026-08-14 12:47 +0200. Elastic states the shipped defaults work for most corpora and that tuning them is not a first priority, read at 2026-08-14 12:44 +0200. Not the value behind the BEIR baseline, see `docs/plans/public-benchmark.md` section 6.1 |
+| `bm25B` | 0.75 | `src/eval/bm25.js` | borrowed, source named | The same two sources, same read times. The BEIR baseline was produced at 0.4, which is Anserini's default rather than Lucene's |
 | `mmrLambda` | 0.5 | `config.js`, `search-engine.js` | arbitrary | `scripts/eval-match.js` measured 1.0, meaning diversity off, as better for files mode. Never measured for internet mode |
 | `bm25Weight` | 0.4 | `config.js`, `search-engine.js` | arbitrary | Only used when rank fusion is disabled. Forced by axis B being measured |
 | `semanticWeight` | 0.6 | `config.js`, `search-engine.js` | arbitrary | Same as above |
