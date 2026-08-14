@@ -181,6 +181,32 @@ behaviour 13 interpretable when it fails.
 
 | Question | Trigger that forces an answer |
 |---|---|
+| Whether the BM25 baselines in section 6 match the BEIR paper's own table, read directly | An attempt to read the paper's table succeeds, see section 12 |
 | Whether a configuration that wins on SciFact and NFCorpus also wins on the local bench | Both benches have run the same axis matrix |
 | Whether more BEIR datasets are worth adding | The two chosen disagree about which configuration wins |
 | Whether the tokenisation in `src/eval/bm25.js` explains any gap from the published baseline | Behaviour 13 fails |
+
+## 12. Sources, and how the baseline number was actually obtained
+
+A document whose central claim is that a number was read from the literature is worthless without
+saying where, and this one shipped without a single link. Recorded now.
+
+| What | Where |
+|---|---|
+| BEIR, the benchmark and its result tables | https://arxiv.org/pdf/2104.08663 |
+| Reproducing BEIR baselines, and why BM25 implementations disagree | https://cs.uwaterloo.ca/~jimmylin/publications/Kamalloo_etal_SIGIR2024.pdf |
+| SciFact corpus, queries and qrels | https://huggingface.co/datasets/BeIR/scifact |
+| NFCorpus corpus, queries and qrels | https://huggingface.co/datasets/BeIR/nfcorpus |
+| MS MARCO judgments, for scale comparison only | https://huggingface.co/datasets/BeIR/msmarco-qrels |
+| TREC topic development, cited in section 1 | https://trec.nist.gov/pubs/trec32/papers/overview_32.pdf |
+
+The provenance of the two numbers in section 6 is weaker than it should be, and pretending otherwise
+would defeat the purpose of writing them down in advance. An attempt to read the BEIR paper's result
+table directly returned unparseable binary, so 0.665 and 0.325 were taken from secondary sources
+citing that table rather than from the table itself. They are consistent across those sources, which
+is why they are usable as an expectation.
+
+The consequence is recorded rather than hidden: if our BM25 lands outside tolerance, the first check
+is not our code but whether the expectation is right, read from the primary table. Section 11 carries
+that as an open question with its trigger. An expectation with soft provenance is still better than
+no expectation, because it is fixed in advance and cannot be adjusted to match the result.
