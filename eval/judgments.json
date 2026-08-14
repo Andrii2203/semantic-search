@@ -352,6 +352,906 @@
       "judgedAt": "2026-08-14T07:44:49.974Z"
     },
     {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "228b0ae524dbdbea",
+      "grade": 0,
+      "reason": "The article discusses UK economic losses from heatwaves, while the interest is in U.S. job losses in July, which are completely different economic topics and countries.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:18.761Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "3e7a6aaae2e636cf",
+      "grade": 0,
+      "reason": "The article focuses on European stocks, UK tariffs, and corporate earnings, while the person is interested in U.S. job losses in July.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:22.404Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "5603149a01d4b004",
+      "grade": 2,
+      "reason": "The article covers U.S. job market data but reports May job gains of 172,000 rather than July job losses of 23,000, presenting the opposite economic trend from a different time period.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:26.152Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "5c978ca036c75192",
+      "grade": 0,
+      "reason": "This article discusses UK interest rates and the Iran conflict, which is completely unrelated to the U.S. job market decline in July.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:29.606Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "6a77c27bb8e08005",
+      "grade": 0,
+      "reason": "The article discusses UK retail job cuts due to rising employment costs, which is a different subject from the U.S. economy losing 23,000 jobs in July.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:33.097Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "6b36ba9e3db290b4",
+      "grade": 3,
+      "reason": "The article directly addresses the exact topic of interest: the U.S. economy losing 23,000 jobs in July as a sudden reversal, with detailed analysis of the causes and implications.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:36.552Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "6ffb3438828a5011",
+      "grade": 0,
+      "reason": "The article discusses Germany's trade imbalance with China and industrial job losses in Europe, which is unrelated to the U.S. job losses reported in July.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:40.138Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "73f71d7908986d1c",
+      "grade": 3,
+      "reason": "The article directly addresses the exact topic of interest: the U.S. economy losing 23,000 jobs in July as a surprise reversal, with detailed analysis of the job losses and market implications.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:43.700Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "7981075c53e5fbcf",
+      "grade": 2,
+      "reason": "Both articles discuss unexpected U.S. job losses in specific months, but this article focuses on February job losses and broader economic context rather than the July job loss decline the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:47.383Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "9ce9324a75ebfcf6",
+      "grade": 0,
+      "reason": "The article discusses UK job losses and recession concerns, while the person is interested in US job losses in July.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:51.166Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "a4058a53ea027b3a",
+      "grade": 0,
+      "reason": "The article reports job gains in April, which is the opposite of the job losses in July that the person is interested in learning about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:55.919Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "a8b2d4075d3e63e8",
+      "grade": 0,
+      "reason": "The article is about knee surgery and cartilage damage, completely unrelated to U.S. job losses and economic data.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:06:59.353Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "dab85d94c38ac3d5",
+      "grade": 0,
+      "reason": "The article discusses March job gains and February losses from 2026, while the interest is specifically about July job losses of 23,000, which are different time periods and opposite employment trends.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:05.572Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "e04ad335d0174921",
+      "grade": 2,
+      "reason": "The article covers U.S. job market data from a different month (June vs. July) showing similar themes of job growth slowdown, but does not address the specific July job loss figure the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:09.323Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "e259e9315b87371e",
+      "grade": 1,
+      "reason": "The article discusses June job growth slowdown, while the person is interested in July job losses, making it a related but different time period and opposite trend.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:12.932Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "e2fa80b0041d4824",
+      "grade": 1,
+      "reason": "The article discusses small business sentiment and concerns in the current economy, but does not address the specific news event of 23,000 job losses in July.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:17.821Z"
+    },
+    {
+      "intentId": "00a38d5c5aba8c6f",
+      "articleId": "f8f36b6158e8dbc6",
+      "grade": 2,
+      "reason": "The article discusses US job losses but reports 92,000 jobs lost in February rather than the 23,000 in July that the person is interested in, covering the same subject from a different time period.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:21.839Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "00d52c32ee43aa3c",
+      "grade": 1,
+      "reason": "The article reports on current tech company financial results and AI infrastructure spending, but does not address the person's core question about what happens if the AI bubble bursts and the post-bubble tech landscape.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:25.405Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "1a3bfa3d5c61516c",
+      "grade": 3,
+      "reason": "The article directly addresses the core concern about AI profitability and what happens when massive compute costs don't translate to profits, exploring OpenAI's struggle to become profitable despite massive spending.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:29.562Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "1cf5221bf4ffe941",
+      "grade": 2,
+      "reason": "The article discusses AI industry financial stress and market volatility, which relates to the bubble concept, but focuses on recent stock movements rather than exploring the post-bubble scenario and practical implications the person is asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:33.500Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "28ffa2bb76ac78b1",
+      "grade": 0,
+      "reason": "The article discusses personal budgeting trends and financial management practices, which is completely unrelated to the question about AI bubble economics, LLM pricing models, and post-bubble technology landscapes.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:37.603Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "375e3a888f4824f4",
+      "grade": 3,
+      "reason": "The article directly addresses the AI bubble scenario the person is asking about, discussing massive spending, inflated valuations, and comparing it to the dotcom bubble with potential crash risks.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:41.594Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "37887815a2eb5ced",
+      "grade": 3,
+      "reason": "The article directly addresses the core question about what happens when the AI bubble bursts, discussing the collapse scenario, loss of subsidized access, skill replacement challenges, and the brittleness of current AI investments.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:45.585Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "3c645511cd3a3a79",
+      "grade": 1,
+      "reason": "The article discusses AI's societal impact and job displacement through Cory Doctorow's perspective, but does not address the specific post-bubble scenario of pricing, profitability, tool availability, or historical comparisons to past bubbles that the person is asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:50.239Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "422b6737077aaee4",
+      "grade": 2,
+      "reason": "The article discusses the AI bubble and its potential consequences, but focuses on societal and employment impacts rather than the specific technical and economic scenario the person is asking about regarding tool accessibility and pricing post-bubble.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:54.544Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "47126202c6c6eb39",
+      "grade": 2,
+      "reason": "The article discusses tech layoffs driven by AI investment but addresses workforce displacement rather than the specific post-bubble scenario of pricing, profitability, and tool accessibility the person is asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:07:58.713Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "7025a36bc19cb850",
+      "grade": 2,
+      "reason": "The article discusses AI bubble concerns and market volatility related to AI companies, but focuses on stock market movements rather than the practical post-bubble scenario for AI tools and their accessibility that the person is asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:02.786Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "79febebede829f69",
+      "grade": 1,
+      "reason": "The article discusses wealth inequality from AI investment rather than addressing the specific scenario of what happens to AI tools and the tech landscape if the AI bubble bursts and subsidies end.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:06.651Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "813ab1258fbf1e2b",
+      "grade": 3,
+      "reason": "The article directly addresses the AI bubble concern by reporting massive funding rounds and investment momentum, which is central to the person's question about whether the bubble will burst and what happens when VC money stops flowing.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:10.315Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "9adbd5c69c19d89f",
+      "grade": 0,
+      "reason": "The article discusses competition between US and Chinese AI companies, while the person is interested in the economic consequences and practical implications if the AI bubble bursts.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:13.891Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "a4a441d81183803d",
+      "grade": 2,
+      "reason": "The article addresses AI's impact on the tech landscape and software engineering profession, but focuses on job displacement and worker adaptation rather than the economic bubble scenario and post-collapse pricing models the person is asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:17.903Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "eee83d340d1962da",
+      "grade": 0,
+      "reason": "The article discusses voice-based AI interfaces and dictation tools, which is unrelated to the question about what happens to the tech landscape and AI business models if the AI bubble bursts.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:21.626Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "f5dda2a11c1d04f8",
+      "grade": 1,
+      "reason": "The article discusses AI's impact on employment and productivity, which is related to AI economics but does not address the specific scenario of an AI bubble burst, VC funding collapse, pricing changes, or the post-bubble tech landscape that the person is asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:25.477Z"
+    },
+    {
+      "intentId": "01bda5151447e26a",
+      "articleId": "f940f68ab9e6875d",
+      "grade": 1,
+      "reason": "The article discusses geopolitical AI competition and European policy concerns rather than addressing the economic viability of AI companies, profitability, or what happens to AI tools when venture funding ends.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:29.312Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "0120fbc4a13117a9",
+      "grade": 1,
+      "reason": "The article addresses geopolitical conflicts and uncertainty mentioned in the post, but focuses on gambling markets rather than mental health strategies for coping with anxiety about world events.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:34.163Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "04f5a7c47d13a822",
+      "grade": 1,
+      "reason": "The article addresses some of the person's concerns (AI risks, geopolitical tensions, stock market volatility) but focuses on specific financial/market news rather than the core question about mental health and coping strategies for anxiety about global uncertainty.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:38.465Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "121a7ff04d96dbf3",
+      "grade": 1,
+      "reason": "The article addresses one of the person's many concerns (geopolitical conflict and economic impact) but doesn't engage with their broader question about mental health and coping strategies for dealing with overwhelming global uncertainty.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:42.169Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "37887815a2eb5ced",
+      "grade": 2,
+      "reason": "The article addresses AI concerns and economic uncertainty mentioned in the person's post, but focuses narrowly on AI bubble economics rather than the broader mental health and coping strategies they're actually asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:47.856Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "3c645511cd3a3a79",
+      "grade": 2,
+      "reason": "The article addresses similar anxieties about technology, AI, and societal concerns that the person raised, but from a critical/satirical perspective on AI hype rather than directly answering how to maintain mental health and sanity amid these concerns.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:52.099Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "458dc44b0d44c2bf",
+      "grade": 3,
+      "reason": "The article directly addresses the person's anxiety about global crises, AI unpredictability, conflicts, and existential threats by exploring the Doomsday Clock and expert perspectives on humanity's precarious situation.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:08:56.367Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "492b89f2f3e1ccc2",
+      "grade": 2,
+      "reason": "The article addresses the person's anxiety about geopolitical conflicts, economic uncertainty, and stock market volatility from a different angle—explaining market resilience rather than coping strategies for mental health.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:00.580Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "59813c717491b17c",
+      "grade": 2,
+      "reason": "The article addresses AI anxiety and economic uncertainty mentioned in the person's concerns, but focuses on market speculation rather than mental health strategies for coping with these worries.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:04.449Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "695689387f1e5fee",
+      "grade": 3,
+      "reason": "The article directly addresses the person's concerns about global chaos, economic uncertainty, geopolitical conflicts, and the unpredictability of the future by analyzing the IMF's pessimistic economic outlook and its causes.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:08.027Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "b8f7e9177989e631",
+      "grade": 3,
+      "reason": "The article directly addresses the person's anxiety about the future and uncertainty by featuring Stewart Brand's philosophy of long-term thinking and proactive engagement, offering perspective on how to mentally approach global challenges.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:11.663Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "bb179a4f66c2bb83",
+      "grade": 3,
+      "reason": "The article directly addresses one of the person's main anxieties about staying sane—financial crisis, stock market uncertainty, and economic instability—which are explicitly mentioned in their concerns about whether to sell or hold investments and the overall state of the world.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:15.576Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "c89dd901f4a1f6c4",
+      "grade": 1,
+      "reason": "The article discusses Elon Musk's Vegas Loop tunnel project, which relates tangentially to the person's concerns about technology and enshittification, but does not address their core anxiety about staying mentally healthy amid global uncertainty, geopolitical conflicts, and existential concerns.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:19.610Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "c9608d791b83c7d6",
+      "grade": 2,
+      "reason": "The article addresses one of the specific geopolitical concerns mentioned (Iran/Middle East conflict) but focuses narrowly on economic/market impacts rather than the broader mental health and coping strategies the person is seeking.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:24.135Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "d0482c97c92ad4b0",
+      "grade": 0,
+      "reason": "The article is about a business dispute over Ben & Jerry's ownership and activism, completely unrelated to the person's concerns about global instability, mental health, and coping strategies.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:27.954Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "e0386bf141e7aa86",
+      "grade": 1,
+      "reason": "The article discusses AI's role in therapy and mental health, which is tangentially related to the person's anxiety about AI and the future, but it focuses on a specific therapeutic use case rather than addressing their broader concerns about staying sane amid global uncertainty and societal problems.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:31.945Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "e0a794a70473f6ba",
+      "grade": 2,
+      "reason": "The article addresses tech enshittification and big tech concerns mentioned in the person's anxiety, but focuses on practical alternatives rather than mental health coping strategies they're actually asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:35.674Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "e2fe998c9b4e1410",
+      "grade": 1,
+      "reason": "The article addresses one of the person's concerns (geopolitical conflict and economic uncertainty regarding Iran) but focuses narrowly on supply chain impacts rather than the broader mental health and coping strategies they're asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:39.489Z"
+    },
+    {
+      "intentId": "01d238179d00831f",
+      "articleId": "e780b82b81441774",
+      "grade": 1,
+      "reason": "The article addresses economic anxiety from geopolitical conflicts, which relates to the person's concerns, but focuses narrowly on financial/economic impacts rather than mental health strategies for coping with uncertainty and anxiety.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:43.230Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "0674f392fa8f8c6a",
+      "grade": 0,
+      "reason": "The article is about AI-driven job cuts at Block, not about Spotify introducing an AI badge for artists.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:47.047Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "21687d73311170ab",
+      "grade": 0,
+      "reason": "The article discusses AI-generated influencers in brand marketing, while the interest is specifically about Spotify introducing an AI badge for content creators.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:50.709Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "2ec0497cdffef8de",
+      "grade": 0,
+      "reason": "The article discusses EU regulations on AI labeling for synthetic content, while the interest is specifically about Spotify introducing an AI badge in response to fan feedback.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:54.283Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "2f2f472b181cd8cc",
+      "grade": 3,
+      "reason": "The article directly addresses Spotify introducing an AI badge/label to distinguish AI artists from real people, which is exactly what the interested topic describes.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:09:58.308Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "35a8b4c855e9715d",
+      "grade": 0,
+      "reason": "The article is a letters section discussing AI consciousness and music appreciation, not about Spotify introducing AI badges in response to fan feedback.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:02.004Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "59d1826263aab081",
+      "grade": 2,
+      "reason": "The article discusses artist resistance to AI and the 'anti-slop' movement, which relates to the broader AI in creative industries topic that Spotify's AI badge announcement addresses, but from a different angle focused on artist rebellion rather than platform implementation.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:05.802Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "5f55745a9e479839",
+      "grade": 0,
+      "reason": "The article is about Currys' fan and air conditioning supply shortages during a UK heatwave, completely unrelated to Spotify introducing an AI badge for artists.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:09.397Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "5fe7a4e98f49ced0",
+      "grade": 0,
+      "reason": "The article is about Meta's AI image generator and privacy concerns, not about Spotify introducing an AI badge in response to fan feedback.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:12.861Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "654a02a4341a0118",
+      "grade": 1,
+      "reason": "The article discusses AI in creative fields generally, but focuses on an artist's personal critique of AI art rather than addressing Spotify's specific AI badge initiative for music platforms.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:16.674Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "67c5206109029f2d",
+      "grade": 2,
+      "reason": "The article discusses Spotify's AI music features and CEO's defense of them, but focuses on AI-generated remixes rather than the AI badge labeling system that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:21.758Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "740da2e8f040a333",
+      "grade": 2,
+      "reason": "The article discusses Spotify's relationship with Apple's app store fees and steering restrictions, which relates to the AI badge topic but focuses on the broader competition/regulatory angle rather than Spotify's AI badge announcement.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:25.716Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "93bffeb14d7f0903",
+      "grade": 0,
+      "reason": "The article is about an Elon Musk vs. Sam Altman lawsuit over OpenAI's structure, completely unrelated to Spotify introducing an AI badge for artists.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:29.543Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "a040ebd9b6d41f76",
+      "grade": 2,
+      "reason": "The article discusses AI-generated music impersonating artists on Spotify, which is related to the topic of AI badges on Spotify but addresses a different angle—the problem of fake AI content rather than Spotify's solution to label authentic AI music.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:33.440Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "baf177e6e307e17c",
+      "grade": 0,
+      "reason": "The article is about political deepfakes and AI-generated content, not about Spotify introducing an AI badge for artists.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:36.753Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "df4d3ed02c089643",
+      "grade": 0,
+      "reason": "The article is about weight-loss drug clinical trials and pharmaceutical company performance, completely unrelated to Spotify introducing AI badges for artists.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:40.533Z"
+    },
+    {
+      "intentId": "02d7eea5a42b5268",
+      "articleId": "fe5a6a620a34d432",
+      "grade": 1,
+      "reason": "The article discusses Spotify's AI remix deal with Universal Music, but the person is interested in Spotify introducing an AI badge in response to fan feedback, which are different AI initiatives.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:45.707Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "01be3346c01aec8c",
+      "grade": 2,
+      "reason": "The article discusses Anthropic's valuation and market position but doesn't directly address the claim about revenue distribution between OpenAI and Anthropic that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:49.217Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "14e75c7e324723d3",
+      "grade": 0,
+      "reason": "The article is about SpaceX's market valuation and acquisition of Cursor, not about AI revenue distribution between OpenAI and Anthropic.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:52.802Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "1a3bfa3d5c61516c",
+      "grade": 1,
+      "reason": "The article focuses on OpenAI's profitability and business model challenges rather than the distribution of AI revenue across companies like OpenAI and Anthropic.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:10:56.420Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "30e2cc83790ce4f3",
+      "grade": 2,
+      "reason": "The article discusses AI revenue and market competition between Google, OpenAI, and Anthropic, but focuses on Google's overall earnings rather than the specific claim about OpenAI and Anthropic's dominance in AI revenue.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:00.240Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "3538dbc844ba8352",
+      "grade": 1,
+      "reason": "The article discusses OpenAI and Anthropic's policy and PR efforts, but does not address the specific claim about revenue distribution between these companies and the broader AI industry.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:03.841Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "35977af6cf84365b",
+      "grade": 2,
+      "reason": "The article discusses OpenAI and Anthropic's IPO plans and market position, which relates to AI revenue concentration, but focuses on IPO timing and strategy rather than directly addressing the revenue distribution claim.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:07.578Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "52b2091197329fe1",
+      "grade": 2,
+      "reason": "The article discusses AI revenue competition involving OpenAI and Anthropic but focuses on Chinese competition and geopolitical tensions rather than the specific revenue distribution claim.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:11.582Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "74e5aebc06fafa6c",
+      "grade": 2,
+      "reason": "The article discusses OpenAI and Anthropic's market position and competition, but focuses on regulation strategy and Chinese competition rather than the specific claim about revenue distribution between these two companies.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:15.334Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "756b7fa170859932",
+      "grade": 0,
+      "reason": "The article is about OpenAI shutting down its Sora video product, not about AI revenue distribution between companies.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:20.170Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "8f6237bd472dcf92",
+      "grade": 2,
+      "reason": "The article discusses Anthropic's IPO filing and mentions OpenAI as a competitor, but focuses on Anthropic's valuation and IPO process rather than the revenue distribution claim that 70% of AI revenue comes from these two companies.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:24.119Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "958f3a727a2c91bb",
+      "grade": 2,
+      "reason": "The article discusses AI market competition and mentions OpenAI and Anthropic's dominance, but focuses on Meta's strategy rather than the specific claim about revenue distribution between these two companies.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:27.876Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "aad42771345f2627",
+      "grade": 2,
+      "reason": "The article discusses OpenAI and Anthropic's market dominance indirectly through a proposal involving both companies, but focuses on equity stake negotiations rather than revenue distribution data.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:31.556Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "ad7eff34ad127bc2",
+      "grade": 2,
+      "reason": "The article discusses OpenAI's funding and revenue but doesn't address the specific claim about AI revenue distribution between OpenAI and Anthropic.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:35.033Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "af006f97b017d4ef",
+      "grade": 2,
+      "reason": "The article discusses Anthropic and OpenAI's competitive positions and valuations, but focuses on IPO filings and market rivalry rather than directly addressing the claim about revenue distribution between these two companies.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:38.729Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "cfeb69e2e5ecfd07",
+      "grade": 2,
+      "reason": "The article discusses OpenAI's revenue-generating AI model release strategy in response to government requests, which relates to the business dynamics of major AI companies but doesn't directly address the revenue distribution claim between OpenAI and Anthropic.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:42.444Z"
+    },
+    {
+      "intentId": "03acb395cafaba4e",
+      "articleId": "f0e2e308dd31edec",
+      "grade": 2,
+      "reason": "The article discusses OpenAI's IPO filing, which is related to AI revenue and market dominance but focuses on the company's public offering rather than the specific claim about revenue distribution between OpenAI and Anthropic.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:46.363Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "0829d52e88c5954e",
+      "grade": 2,
+      "reason": "The article addresses labor and wealth distribution in tech but focuses on AI's impact on employment generally rather than organizing efforts, unions, or collective action strategies that the person is specifically interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:50.069Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "422b6737077aaee4",
+      "grade": 1,
+      "reason": "The article discusses AI's impact on tech jobs and worker anxiety, but does not address labor organizing, unions, strikes, or collective action that the person is specifically interested in exploring.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:53.992Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "447240214a530f41",
+      "grade": 1,
+      "reason": "The article describes exploitative work conditions in AI startups but does not address labor organizing, unionization, strikes, or collective action that the person is specifically interested in discussing.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:11:57.920Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "47126202c6c6eb39",
+      "grade": 1,
+      "reason": "The article discusses tech layoffs and AI's impact on employment but does not address labor organizing, unionization, strikes, or collective action that the person is specifically interested in exploring.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:01.725Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "5296187e8c651003",
+      "grade": 2,
+      "reason": "The article discusses labor organizing and unionization efforts, which relates to the person's interest in tech labor organization, but focuses on warehouse workers at Walmart rather than tech industry labor specifically.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:05.384Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "95dd3c0f37182b20",
+      "grade": 0,
+      "reason": "The article discusses AI's impact on academic education and critical thinking, not tech labor organization, unionization, or worker advocacy in the tech industry.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:09.132Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "9d634f421910f5dd",
+      "grade": 3,
+      "reason": "The article directly addresses tech labor organizing efforts and worker power in response to AI-driven job anxiety, which is exactly what the person is asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:13.257Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "9f40115e93fd493a",
+      "grade": 2,
+      "reason": "The article addresses tech worker concerns and management pressure in the AI era, but focuses on productivity issues rather than labor organizing, unionization, or collective action that the person is specifically interested in discussing.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:17.188Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "a4a441d81183803d",
+      "grade": 3,
+      "reason": "The article directly addresses tech worker concerns about job security, AI's impact on their roles, and mentions collective action as one of the adaptation strategies engineers are pursuing in response to industry changes.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:21.238Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "a775d4dc2da080d8",
+      "grade": 1,
+      "reason": "The article discusses government policy on AI and worker transitions, but does not address tech worker organizing, unionization, strikes, or labor activism that the person is specifically interested in exploring.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:25.037Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "bf127613add833b4",
+      "grade": 2,
+      "reason": "The article discusses tech layoffs and workforce restructuring driven by AI, which relates to the person's concerns about job security and tech industry labor issues, but focuses on management cuts rather than worker organizing, unionization, or labor resistance strategies they're asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:30.940Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "c04a2bf44dce6e21",
+      "grade": 2,
+      "reason": "The article discusses AI's impact on labor and the shift toward gig work, which relates to the person's concerns about tech worker exploitation and labor organization, but focuses on gig workers rather than tech workers specifically organizing.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:34.837Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "e45e74912aefcc0f",
+      "grade": 1,
+      "reason": "The article discusses AI's impact on jobs and employment trends, but does not address tech labor organizing, unions, strikes, or worker collective action that the person is specifically interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:38.820Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "ef9a2f4847953378",
+      "grade": 2,
+      "reason": "The article addresses AI's impact on tech worker anxiety and job security but focuses on individual worker concerns rather than labor organizing, unionization, or collective action efforts that the person is specifically interested in discussing.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:42.547Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "f52c9b929d37a29e",
+      "grade": 3,
+      "reason": "The article directly addresses tech worker unionization efforts and AI-driven labor concerns, which are the core topics the person is asking about.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:46.558Z"
+    },
+    {
+      "intentId": "04b5994790304a78",
+      "articleId": "f5dda2a11c1d04f8",
+      "grade": 1,
+      "reason": "The article addresses AI's impact on employment but focuses on whether job losses will occur, not on tech worker organizing, labor movements, or collective action strategies that the person is interested in discussing.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:50.925Z"
+    },
+    {
       "intentId": "056dac0dfc2588a3",
       "articleId": "02538412c57e32ec",
       "grade": 0,
@@ -530,6 +1430,276 @@
       "model": "claude-haiku-4-5",
       "promptVersion": 1,
       "judgedAt": "2026-08-14T07:46:07.741Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "04fbf2d916a3e887",
+      "grade": 2,
+      "reason": "The article discusses a specific second-order effect of GLP-1 adoption (reduced grocery spending) but only addresses one narrow consequence rather than exploring the broader systemic implications across multiple industries and sectors.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:55.067Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "0d0ad2bc4bb5f758",
+      "grade": 1,
+      "reason": "The article discusses healthcare system benefits of GLP-1 drugs rather than the broader second-order economic and societal consequences across industries that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:12:59.188Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "0e2c3cb0b2e255af",
+      "grade": 1,
+      "reason": "The article mentions GLP-1 drugs (Eli Lilly's Zepbound/Mounjaro and Novo Nordisk's Wegovy/Ozempic) but only discusses their financial performance and market competition, not the second-order effects on fuel consumption, food supply chains, or broader societal impacts that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:03.391Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "1a0fbde4a657b09d",
+      "grade": 0,
+      "reason": "The article focuses on personal relationship impacts of GLP-1 use, while the interest is specifically about second-order economic and systemic consequences of widespread GLP-1 adoption.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:07.237Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "216b250b5a60392e",
+      "grade": 0,
+      "reason": "The article discusses UK energy bills and US tariffs, which are completely unrelated to GLP-1 drugs and their second-order economic effects.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:10.988Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "26b9cad620b8cce2",
+      "grade": 1,
+      "reason": "The article discusses protein consumption trends and whey protein market growth, which is related to dietary changes but does not address the second-order economic and systemic effects of GLP-1 drug adoption that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:14.872Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "43e65861afefc601",
+      "grade": 0,
+      "reason": "The article focuses on clinical trial results for a new weight-loss drug, not on the second-order economic and systemic effects of widespread GLP-1 adoption.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:18.426Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "533076d4ecc2ca74",
+      "grade": 0,
+      "reason": "The article discusses oil prices and geopolitical tensions, which is completely unrelated to GLP-1 drugs and their second-order economic effects.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:21.951Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "7f99fdf9ec183d8c",
+      "grade": 1,
+      "reason": "The article focuses on personal relationship impacts of GLP-1 weight loss rather than the systemic second-order economic and logistical consequences across industries that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:25.767Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "a86db0ae63725215",
+      "grade": 1,
+      "reason": "The article discusses direct side effects of GLP-1 drugs rather than second-order economic and systemic consequences of widespread adoption.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:29.392Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "ae70d9d98ad11361",
+      "grade": 0,
+      "reason": "The article discusses GLP-1 drugs' efficacy and side effects in treating obesity, not the second-order economic and systemic consequences of widespread adoption that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:33.423Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "d80b669d3db56df0",
+      "grade": 1,
+      "reason": "The article discusses a new GLP-1 pill's weight loss efficacy but does not address the second-order effects and downstream consequences of widespread GLP-1 adoption that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:37.445Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "da38bc6f76cdd18c",
+      "grade": 1,
+      "reason": "The article focuses on the shift from injections to pills and market expansion of GLP-1 drugs, but does not address the second-order effects and downstream consequences of widespread GLP-1 adoption that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:41.077Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "e4a19684028d0c19",
+      "grade": 2,
+      "reason": "The article discusses second-order effects of GLP-1 adoption (clothing/fashion industry disruption) but focuses on consumer behavior changes rather than systemic economic consequences across multiple industries.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:44.864Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "edf627516b15765f",
+      "grade": 0,
+      "reason": "The article discusses GLP-1 drugs' effectiveness in weight loss and addiction treatment, but does not address the second-order economic and systemic consequences of widespread GLP-1 adoption that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:48.747Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "f4b82b91b0e55f0a",
+      "grade": 1,
+      "reason": "The article discusses GLP-1 drug efficacy and weight maintenance but does not address the second-order effects and downstream consequences of widespread GLP-1 adoption that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:52.366Z"
+    },
+    {
+      "intentId": "05d5c112aa157455",
+      "articleId": "fd7342a22c2dd655",
+      "grade": 0,
+      "reason": "The article focuses on UK regulatory approval and availability of Wegovy pills, not on the second-order economic and systemic effects of widespread GLP-1 adoption that the person is interested in.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:13:55.980Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "077ee828d58ecfec",
+      "grade": 0,
+      "reason": "The article is about medical diagnosis on TikTok, which is completely unrelated to the person's interest in building a private AI voice journal app.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:00.797Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "11522d2fc3078a40",
+      "grade": 0,
+      "reason": "The article is about detecting lies through voice analysis, which is unrelated to building a private AI voice journal application with local processing and semantic retrieval features.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:04.668Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "1fae4b9d4bf02646",
+      "grade": 0,
+      "reason": "The article is about AI jailbreaking and safety testing, which is unrelated to building a private voice journal application with AI features.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:10.294Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "3f1b9948be2357e2",
+      "grade": 2,
+      "reason": "The article covers AI journaling from a user experience perspective, while the person is interested in a specific technical implementation (Echologue) with particular features like voice-first, local embeddings, and zero data retention.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:14.076Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "42fcafc02e5c2d26",
+      "grade": 0,
+      "reason": "The article is about Meta smartglasses and their social implications, which is unrelated to the person's interest in building a private AI voice journal application.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:17.632Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "504dc79132a5c487",
+      "grade": 0,
+      "reason": "The article discusses the social value of voice notes between friends, while the person is interested in a private AI voice journal app for personal reflection and self-analysis.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:22.916Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "5ecf0f5ea355af2b",
+      "grade": 0,
+      "reason": "The article discusses AI's impact on entry-level job markets and gen Z entrepreneurship, which is unrelated to the person's interest in building a private AI voice journal application.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:26.603Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "688332589180aca1",
+      "grade": 0,
+      "reason": "The article is about flight attendant experiences and air rage incidents, which is completely unrelated to the person's interest in building a private AI voice journal app.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:30.584Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "6e8b9d468b8f97f9",
+      "grade": 0,
+      "reason": "The article is about Atlassian layoffs and has no connection to the Echologue voice journal app or its features.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:34.008Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "86ad0fc585b6b75c",
+      "grade": 0,
+      "reason": "The article discusses risks of unregulated chatbots and mental health safeguards, which is unrelated to the person's interest in building a private AI voice journal application.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:39.614Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "9e7a30beb8f0cf40",
+      "grade": 0,
+      "reason": "The article is a call for reader submissions about AI in social relationships, not a discussion of Echologue or voice-first AI journaling applications.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:43.489Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "a1fcc21a932766f9",
+      "grade": 1,
+      "reason": "The article discusses AI privacy risks and de-anonymization attacks, which relates to the privacy concerns motivating Echologue, but does not address the product itself, its features, or voice journaling applications.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:47.399Z"
+    },
+    {
+      "intentId": "0661bb5be56d8ce1",
+      "articleId": "b35827ab19ff859d",
+      "grade": 0,
+      "reason": "The article is about a dumbphone movement and digital detox challenge, which is unrelated to the person's interest in building a private AI voice journal application.",
+      "model": "claude-haiku-4-5",
+      "promptVersion": 1,
+      "judgedAt": "2026-08-14T19:14:51.055Z"
     },
     {
       "intentId": "0c594e81ad4cbc97",

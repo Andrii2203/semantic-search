@@ -1,7 +1,7 @@
 'use strict';
 
 const { loadJudgments, isRelevant, isAnswerable } = require('../../src/eval/judgments');
-const { loadCorpus, loadIntents } = require('../../src/eval/corpus-loader');
+const { loadCorpus, loadIntents, loadCandidates } = require('../../src/eval/corpus-loader');
 const { deriveCategory } = require('../../src/eval/categories');
 
 const SPLITS = ['dev', 'locked'];
@@ -9,7 +9,7 @@ const GRADES = [0, 1, 2, 3];
 
 describe('src/eval/judgments.js', () => {
   test('every judgment names an intent that exists and an article that exists', () => {
-    const intentIds = new Set(loadIntents().map((intent) => intent.id));
+    const intentIds = new Set(loadCandidates().map((intent) => intent.id));
     const articleIds = new Set(loadCorpus().map((article) => article.id));
 
     for (const judgment of loadJudgments()) {

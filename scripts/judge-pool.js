@@ -11,7 +11,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { loadCorpus, loadIntents, EVAL_DIR } = require('../src/eval/corpus-loader');
+const { loadCorpus, loadCandidates, EVAL_DIR } = require('../src/eval/corpus-loader');
 const { loadJudgments, saveJudgments } = require('../src/eval/judgments');
 const { judgePair, getSpend, PROMPT_VERSION } = require('../src/eval/judge');
 const constants = require('../src/search-constants');
@@ -64,7 +64,7 @@ function pending(pool, judgments) {
 
 async function main() {
   const corpus = new Map(loadCorpus().map((article) => [article.id, article]));
-  const intents = new Map(loadIntents().map((intent) => [intent.id, intent]));
+  const intents = new Map(loadCandidates().map((intent) => [intent.id, intent]));
   const pool = readPool();
   const judgments = loadJudgments();
 

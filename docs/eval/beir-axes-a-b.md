@@ -59,6 +59,34 @@ clock read at 19:23:48 +0200.
 | `parallel-rrf` | 0.6948 | 0.9583 | 0.3438 | 0.3221 |
 | `parallel-weighted` | 0.7229 | 0.9583 | 0.3388 | 0.3184 |
 
+### 5.1 FiQA-2018, which finished later and disagrees on one point
+
+The embedding of 57638 documents took 4871.9 seconds and finished at 2026-08-14 20:22 +0200, after
+the sections above were written. Added here rather than folded in silently.
+
+| Configuration | nDCG@10 | Recall@100 |
+|---|---|---|
+| `bm25-repository-defaults` | 0.2256 | 0.5027 |
+| `dense-only` | 0.3604 | 0.7033 |
+| `sequential-rescore` | 0.3394 | 0.5027 |
+| `parallel-rrf` | 0.3373 | 0.6945 |
+| `parallel-weighted-40` | 0.3488 | 0.6889 |
+
+FiQA agrees with both other collections on axis A by recall, and by the same mechanism: sequential
+rescoring again lands on exactly BM25's Recall@100 of 0.5027, while the parallel shapes reach 0.69.
+
+It disagrees on which branch should be there at all. On FiQA the dense branch alone has the best
+nDCG@10 of any configuration, 0.3604, and mixing the lexical branch in lowers it. Financial questions
+against financial answers are the case where the words of the question and the words of the answer
+differ most, and BM25 scores 0.2256 there against 0.66 on SciFact.
+
+That is the first measured evidence in this project for the claim in
+`docs/reference/retrieval-in-industry.md` section 8.2 that retrieval quality is domain specific, and
+it bears directly on the vertical question in `docs/plans/retrieval-quality.md` section 13. The
+winning configuration is not the same in every subject area: science and medicine want both branches,
+finance wants the dense one. That is a per vertical configuration, measured on this project's own
+runs rather than argued by analogy from BEIR's existence.
+
 ## 6. Axis A is decided, and the defect is now a number
 
 | Comparison | Dataset | Metric | Difference | 95 percent interval |

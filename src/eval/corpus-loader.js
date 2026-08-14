@@ -51,4 +51,19 @@ function loadIntents() {
     .sort((a, b) => a.id.localeCompare(b.id));
 }
 
-module.exports = { loadCorpus, loadPosts, loadIntents, snapshotNames, EVAL_DIR };
+function loadCandidates() {
+  const file = path.join(EVAL_DIR, 'intent-candidates.json');
+  if (!fs.existsSync(file)) {
+    return loadIntents();
+  }
+
+  const chosen = readJson(file, { items: [] });
+  const posts = new Map(loadPosts().map((post) => [post.id, post]));
+
+  return (chosen.items || [])
+    .filter((entry) => posts.has(entry.id))
+    .map((entry) => ({ ...posts.get(entry.id), coverage: entry.coverage }))
+    .sort((a, b) => a.id.localeCompare(b.id));
+}
+
+module.exports = { loadCorpus, loadPosts, loadIntents, loadCandidates, snapshotNames, EVAL_DIR };

@@ -273,6 +273,45 @@ every configuration, so including it lowers every number by the same amount whil
 discrimination. The count of excluded intents is reported next to the score, because it is the
 honest size of the bench rather than a footnote.
 
+30. The chooser ranks candidate posts by how well the article corpus covers their subject, and keeps
+    the best.
+31. The chooser never reads a judgment, so selection cannot be contaminated by the answer key.
+32. Pruning keeps an intent only when the answer key gives it at least three articles graded
+    relevant, or when it has none at all and is kept deliberately as unanswerable.
+33. Both splits carry both groups after pruning.
+
+### 10.1 How intents are chosen, after the first attempt failed
+
+Written 2026-08-14 20:20:28 +0200, replacing the rule that produced 8 answerable intents out of 34.
+
+The first chooser sampled posts evenly with no regard to subject, which section 12 records as
+replacing a bad selection rule with none. The corpus is 1509 business, 644 technology and 356 science
+articles from two publishers. The candidate posts are 1546 from Hacker News and 50 from Reddit. Those
+two populations overlap on a minority of subjects, and sampling evenly from one against the other is
+close to sampling at random from the intersection.
+
+The replacement follows what TREC does, which
+`docs/reference/retrieval-in-industry.md` section 8.1 already records: the assessor searches the
+collection before fixing a topic, and topics with too few relevant documents are revised or
+discarded. Two steps, in this order:
+
+Coverage first. Every candidate post is embedded, and its coverage is the mean cosine of its three
+closest articles. Posts are ranked by coverage and the top ones become candidate topics. This asks
+whether the corpus contains anything on the subject at all. It does not ask whether any configuration
+ranks it well.
+
+Pruning second, after judging. A topic survives when the answer key gives it at least three articles
+graded 2 or 3, which is TREC's own minimum. A topic with no relevant article at all is not discarded,
+it moves to the unanswerable group of section 5, where it does the job that group exists for.
+
+The bias this carries, recorded rather than hidden. Selecting topics by embedding proximity favours
+topics the embedding model represents well, so the bench will understate how badly that model handles
+subjects it embeds poorly. Three things limit the damage. Coverage is computed from the corpus side,
+not from any configuration's ranking, so no configuration under comparison is favoured over another.
+The 26 already judged unanswerable intents are kept untouched and were selected under the old rule,
+so they are not subject to this bias at all. And the alternative, judging all 1596 posts against 2509
+articles, is four million pairs, which is not a choice.
+
 ## 11. Tests
 
 | # | Level | File |
@@ -291,6 +330,10 @@ honest size of the bench rather than a footnote.
 | 12 | L4 | `__tests__/eval/judge.test.js` |
 | 13 | L2 | `__tests__/eval/judge.test.js` |
 | 27 | L2 | `__tests__/eval/local-bench.test.js` |
+| 30 | L1 | `__tests__/eval/intent-selection.test.js` |
+| 31 | L1 | `__tests__/eval/intent-selection.test.js` |
+| 32 | L1 | `__tests__/eval/intent-selection.test.js` |
+| 33 | L1 | `__tests__/eval/intent-selection.test.js` |
 | 28 | L2 | `__tests__/eval/local-bench.test.js` |
 | 29 | L2 | `__tests__/eval/local-bench.test.js` |
 

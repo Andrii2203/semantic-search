@@ -1,0 +1,914 @@
+{
+  "items": [
+    {
+      "id": "00351b9da56bd12c",
+      "title": "Zapscape (CVE-2026-64561): Guest-to-Host Escape in KVM/x86",
+      "coverage": 0.2136,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "009b38ad8c4f8cad",
+      "title": "Would you choose the Microsoft stack today if starting greenfield?",
+      "coverage": 0.4197,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "00a38d5c5aba8c6f",
+      "title": "U.S. economy lost 23,000 jobs in July, a sudden reversal",
+      "coverage": 0.6575,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "01bda5151447e26a",
+      "title": "Ask HN: What happens after the AI bubble bursts?",
+      "coverage": 0.6537,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "01d238179d00831f",
+      "title": "Ask HN: How are you all staying sane?",
+      "coverage": 0.6088,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "02d7eea5a42b5268",
+      "title": "Spotify to introduce AI badge after fans make feelings 'clear'",
+      "coverage": 0.5591,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "03acb395cafaba4e",
+      "title": "70% of AI revenue comes from OpenAI and Anthropic [video]",
+      "coverage": 0.6122,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "04b5994790304a78",
+      "title": "Ask HN: Are there any serious efforts to organize tech labor now?",
+      "coverage": 0.6934,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "056dac0dfc2588a3",
+      "title": "About Rx Kids",
+      "coverage": 0.3241,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "05d5c112aa157455",
+      "title": "GLP-1 Second-Order Effects",
+      "coverage": 0.6784,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "0661bb5be56d8ce1",
+      "title": "Show HN: Echologue – the private AI voice journal I built for myself",
+      "coverage": 0.5559,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "0a82e7f71638d4a5",
+      "title": "Launch HN: Stoa Markets (YC S26) – A Marketplace for GPUs and AI Servers",
+      "coverage": 0.5557,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "0bd0aa4b70fd7fb1",
+      "title": "Ask HN: What are you building that's not AI related?",
+      "coverage": 0.5418,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "0c594e81ad4cbc97",
+      "title": "Show HN: I created a RAW to HDRI stacker in (mostly) Common Lisp",
+      "coverage": 0.3537,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "0da92f212764af1f",
+      "title": "Stripe withheld $85k from our EU platform",
+      "coverage": 0.5705,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "0e44fe061788c4d1",
+      "title": "Bulldozers Plow Through Big Bend National Park, Sparking Fury in Texas",
+      "coverage": 0.2963,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "13218033765ca0be",
+      "title": "Show HN: Helios – what plug-in solar could generate for any address in Britain",
+      "coverage": 0.541,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "15c238b9357882a6",
+      "title": "Ask HN: Where are all the disruptive software that AI promised?",
+      "coverage": 0.5841,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "16d09d0cb3339f46",
+      "title": "Ask HN: How do you maintain flow when vibe coding?",
+      "coverage": 0.3187,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "1714138947205168",
+      "title": "The lifesaving secret hidden inside a horseshoe crab's blue blood",
+      "coverage": 0.2716,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "1a799b482b4cf205",
+      "title": "Strategic Oil Reserves Down to a Record Low Two-Week Supply",
+      "coverage": 0.5852,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "1f2b9181c5c02785",
+      "title": "Gemini becomes Google's fastest-growing product ever as it hits 1B users",
+      "coverage": 0.5552,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "207435b46be9a5e0",
+      "title": "Defending my own brain against enshittification",
+      "coverage": 0.337,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "247886eee275c7ea",
+      "title": "How to find AI-conservative companies to work for?",
+      "coverage": 0.5651,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "26d96bcb08183805",
+      "title": "Show HN: Shumai – open-source Frame.io alternative for creative work",
+      "coverage": 0.3326,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "26f6177b7ddd0369",
+      "title": "Tech leaders say AI means less work – staff say they work up to 90 hours a week",
+      "coverage": 0.603,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "27e1bb6940e30009",
+      "title": "Ask HN: Why there are no actual studies that show AI is more productive?",
+      "coverage": 0.5493,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "287812b82f0a24e1",
+      "title": "The Ultimate Horse",
+      "coverage": 0.2929,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "2cf8891ee83495dc",
+      "title": "Show HN: Command Center, the AI coding env for people who care about quality",
+      "coverage": 0.5968,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "2fc18f5656212d1c",
+      "title": "The OpenAI–Hugging Face Incident [video]",
+      "coverage": 0.4376,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "30de771dc3c5c7ec",
+      "title": "Influencers face backlash over Meta 'pervert glasses' content",
+      "coverage": 0.5896,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "327e3f0781b5721c",
+      "title": "My first experience with an \"AI\"-ed call centre?",
+      "coverage": 0.5407,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "36c499aa2e7792d3",
+      "title": "Ask HN: Apple terminated our dev account over a rogue employee",
+      "coverage": 0.5613,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "38d65116d40eacdd",
+      "title": "Show HN: KidScreen, a finite YouTube shelf chosen by parents",
+      "coverage": 0.4219,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "3ad6094dccfaf13f",
+      "title": "OpenAI wraps $7B share sale ahead of potential IPO",
+      "coverage": 0.5544,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "3b150e6c5cd3ce53",
+      "title": "Lost jobs, inequality, rogue agents: why are we accepting oligarchs’ AI agenda? | The dangers of AI become clearer every day. Why are we still acting as if we have no choice about our future?",
+      "coverage": 0.5921,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "3b9beedf95650f70",
+      "title": "Show HN: Low-latency local LLM runner via OpenJDK Panama FFM (Java 22)",
+      "coverage": 0.2959,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "405ec783292211be",
+      "title": "Anthropic in Talks to Buy World Model AI Startup Decart for $6B",
+      "coverage": 0.5507,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "41c81381ce49dbd7",
+      "title": "Grok Bot",
+      "coverage": 0.3778,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "45d6daf3abc1a5e8",
+      "title": "Ask HN: Any AWS billing issues known? Amazon forecast of 3 billion dollars",
+      "coverage": 0.6107,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "46675847f99bb786",
+      "title": "Lost my phone at the office. Claude suggested tracking Bluetooth signal strength",
+      "coverage": 0.3819,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "48aec702025e35b3",
+      "title": "Show HN: Bash4LLM+ – A lightweight, dependency-free Bash wrapper for LLM APIs",
+      "coverage": 0.1982,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "4953616dea255bbe",
+      "title": "Ask HN: Will hardware ever be cheap again?",
+      "coverage": 0.6139,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "4dad2f314f9c0c49",
+      "title": "U.S. Lost 23,000 Jobs in July, While Unemployment Ticked Lower",
+      "coverage": 0.6459,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "50558cbd38bc4e87",
+      "title": "DeepSeek costs OpenCode Go user $1.14/day; dual DGX breaks even in 24 years",
+      "coverage": 0.378,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "54c014d1703cb2a4",
+      "title": "Ask HN: How did you land your first projects as a solo engineer/consultant?",
+      "coverage": 0.4232,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "57cf0ecd1f6f3b0b",
+      "title": "An OpenAI Strategist Says AI Labs Should Rival Government Power",
+      "coverage": 0.5664,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "59c2d93e9975a799",
+      "title": "Show HN: Halo – open-source, tamper-evident runtime evidence for AI agents",
+      "coverage": 0.5678,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "5b9148dc4fb80ea8",
+      "title": "Updated GPG Key for Signing Firefox and Thunderbird Releases",
+      "coverage": 0.1864,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "5c2d9949fd5a5dad",
+      "title": "Ask HN: Anyone else feel this community has changed recently?",
+      "coverage": 0.5812,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "5c8e340d3c96e361",
+      "title": "Show HN: I nerfed our coding agents on purpose",
+      "coverage": 0.5412,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "5db6498ba40aab05",
+      "title": "Show HN: I Made a Claude Skill for Spec-Driven Development (SDD)",
+      "coverage": 0.4133,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "5dc433bba6e77d4a",
+      "title": "Israeli startup was linked to rogue AI hacks at OpenAI, Anthropic and Meta",
+      "coverage": 0.6232,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "60ebef0521675768",
+      "title": "Why Wall Street is ignoring big tech's debt [video]",
+      "coverage": 0.5941,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "620684f6846a8fcd",
+      "title": "Ask HN: Is there a term for feeling sad about forced AI adoption?",
+      "coverage": 0.5516,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "621c953dd7d3d760",
+      "title": "Noctua finds more than half of PC cases misstate CPU cooler clearances",
+      "coverage": 0.2702,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "6769fabf1d43a6a5",
+      "title": "I don't need AI to build me a new app. I need it to make Jira bearable",
+      "coverage": 0.4468,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "6943e4d87b6d2bd9",
+      "title": "There Are Magic Hexagons of Every Order",
+      "coverage": 0.2669,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "6a279d577e62d753",
+      "title": "Ask HN: If OpenAI hacked HuggingFace, why aren't OpenAI prosecuted?",
+      "coverage": 0.6215,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "706efbbd72af43ae",
+      "title": "Ask HN: Anyone feel like they're just opting out of tech these days?",
+      "coverage": 0.5749,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "71e2eb940644bda7",
+      "title": "Ask HN: Why does tech industry not have more co-ops?",
+      "coverage": 0.5638,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "71ef1314f776f81d",
+      "title": "Lawyers using \"AI\" could face sanctions including costs for fake citations",
+      "coverage": 0.5554,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "72220ba5a48e23df",
+      "title": "AI agents lie, cheat and steal. That is putting off users",
+      "coverage": 0.5944,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "76719071c0b2757b",
+      "title": "Ask HN: Are we as society going to let LLM companies take all the values?",
+      "coverage": 0.5991,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "7682c27f5d331992",
+      "title": "Show HN: Nucleus – A security-hardened, Nix-native container runtime",
+      "coverage": 0.373,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "7747c19aed3f9996",
+      "title": "What are the best coping mechanisms for AI Fatalism?",
+      "coverage": 0.5449,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "7a5a2fd9f1b301da",
+      "title": "Ask HN: How do you motivate your humans to stop AI-washing their emails?",
+      "coverage": 0.5435,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "7a772e9f9a6950fd",
+      "title": "Glaciers on the Climate Dashboard",
+      "coverage": 0.2699,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "7bda9ed9720e8326",
+      "title": "Show HN: Be the ChatBOT",
+      "coverage": 0.5528,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "8140613f7963772b",
+      "title": "Claude Code Opus 4.7 keeps checking on malware",
+      "coverage": 0.5761,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "852bcf2a8f1f7a68",
+      "title": "Ask HN: Am I getting old, or is working with AI juniors becoming a nightmare?",
+      "coverage": 0.5849,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "8568539331c22c6f",
+      "title": "Ask HN: Got cancer, a new job,new boss in less than a year What do I do now?",
+      "coverage": 0.5214,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "86403d54febb1692",
+      "title": "Locating an unknown source of radiation in a heterogeneous environment (2019)",
+      "coverage": 0.3584,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "8cae974696e6d07f",
+      "title": "Nokia Design Archive",
+      "coverage": 0.2844,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "8efe6aa45966da12",
+      "title": "New Mexico court orders Meta to pay $567m over harms to children’s mental health",
+      "coverage": 0.6869,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "9403a0b18e530472",
+      "title": "Banksy works cost public almost £150k",
+      "coverage": 0.4625,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "95951792bf679fc5",
+      "title": "In a randomized comparison, a community-engaged translation of the Multidimensional Scale of Perceived Social Support (MSPSS) into Navajo (focused on accurately representing the meaning of ambiguous terms like 'special person') was not clearly more valid or reliable than a basic forward translation",
+      "coverage": 0.2782,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "9920155bc6e38dd6",
+      "title": "Tell HN: Who wants to be hired\" posts outpace \"Who's hiring\" 2 to 1",
+      "coverage": 0.5777,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "9bb1cbe679c57f32",
+      "title": "SETI@Home was the coolest thing",
+      "coverage": 0.4149,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "a3b934f6f8b3ea1a",
+      "title": "Psychedelics as a potential treatment for borderline personality disorder: A narrative review",
+      "coverage": 0.6119,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "a5b7ff37a9c07e21",
+      "title": "The risk of AI isn't making us lazy, but making \"lazy\" look productive",
+      "coverage": 0.6801,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "a65ff4cc38784847",
+      "title": "Show HN: Brolly, a plain-text weather forecast site",
+      "coverage": 0.3943,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "a664ccbfff452cd7",
+      "title": "Feeling stressed and overworked? Don't worry - OpenAI CEO Sam Altman thinks that we just love to work, and that's why AI won't result in a four-day working week",
+      "coverage": 0.5512,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "a81455a0c470e7ee",
+      "title": "The Human Is the Loop",
+      "coverage": 0.2413,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "ad649db381013140",
+      "title": "Ask HN: Why are so many \"AI evangelists\" posting such insufferable content?",
+      "coverage": 0.5653,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "af03c754ffccd7f6",
+      "title": "OpenAI Trained Models While They Were Coordinating Exploits via Message Boards",
+      "coverage": 0.6161,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "b33004fbb704967d",
+      "title": "Launch HN: Discovered Materials (YC P26) – AI agents to discover new materials",
+      "coverage": 0.5821,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "b476c85f078214cd",
+      "title": "Grok 4.6 scores 61 on the Artificial Analysis Intelligence Index",
+      "coverage": 0.4012,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "b4fe43c187fde3f0",
+      "title": "WFH is becoming a benefit again",
+      "coverage": 0.5135,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "b6f47b1bd2b21f82",
+      "title": "Show HN: I simulated closing the Strait of Hormuz on real oil trade data",
+      "coverage": 0.6046,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "b7992e8e94a84bc1",
+      "title": "Mythos Attempted to Social Engineer Open Source Maintainer to Merge Malware",
+      "coverage": 0.5871,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "b97a4c65430399e6",
+      "title": "Microsoft filings suggest \"around 70%\" of its AI revenue is on OpenAI",
+      "coverage": 0.5847,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "b9d493bbf97b7ebe",
+      "title": "Tell HN: The saddest irony of my/our craft",
+      "coverage": 0.5609,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "baf52e929a9be2a9",
+      "title": "My phone detects going on a run as “someone snatching my phone and running off”",
+      "coverage": 0.3609,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "bc3b1356898b46e1",
+      "title": "Show HN: Reviving my 2001 college band with AI",
+      "coverage": 0.562,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "bf966a6701860730",
+      "title": "I lost my ability to learn anything new because of AI and I need your opinions",
+      "coverage": 0.5889,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "c0c387c6f8b2f08c",
+      "title": "Ask HN: What career will you switch to when AI replaces developers?",
+      "coverage": 0.5657,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "c2c4907d48903b14",
+      "title": "AWS won't discuss my bill, suspended my account, took $1,600, still no human",
+      "coverage": 0.5424,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "c3f5a7a1c5d98295",
+      "title": "Show HN: Let's Seal – Let's Encrypt for document signing, free and self-hosted",
+      "coverage": 0.3232,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "c4fd69abdb51fadc",
+      "title": "I'm Done Using AI",
+      "coverage": 0.4655,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "c808283a1b38f0e6",
+      "title": "Show HN: Startup sci-fi novel that took me 5 years to write",
+      "coverage": 0.5811,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "ccc4d22a28237669",
+      "title": "OpenAI launches ChatGPT desktop app for Linux",
+      "coverage": 0.4169,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "d0252105b9da3cd2",
+      "title": "Show HN: Sprocket – The Best AI Agent for Hardware and Software Development",
+      "coverage": 0.4298,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "d3f778e9090f698d",
+      "title": "Emergent Introspective Awareness in Large Language Models",
+      "coverage": 0.2938,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "d6b1d84c3e4e379a",
+      "title": "Tired of AI When will this era end?",
+      "coverage": 0.6197,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "d9c793f0f4ee3058",
+      "title": "Show HN: Wordit – Change One Letter, Keep the Chain Going",
+      "coverage": 0.3503,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "d9fc416ce3e6dcc0",
+      "title": "AI coding is a nightmare. Am I the only one experiencing this?",
+      "coverage": 0.5624,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "db49119ef6865eb0",
+      "title": "Tell HN: Meta's AI support feature allows Instagram accounts to be stolen",
+      "coverage": 0.6475,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "db653b4b3997c2c7",
+      "title": "Anthropic bans orgs without warning",
+      "coverage": 0.557,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "dca48c4fd2739fea",
+      "title": "Ask HN: How I find a job where what is needed is solid code, not firefighting?",
+      "coverage": 0.5523,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "dce91fdbc6696e36",
+      "title": "Show HN: We post-trained a model that pen tests instead of refusing",
+      "coverage": 0.6883,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "dcecd0f255aa518d",
+      "title": "AI Fortunes Are Reviving an Old Debate About Private Power",
+      "coverage": 0.5518,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "de2be18c14e1a761",
+      "title": "London Underground begins scanning passengers' faces",
+      "coverage": 0.4692,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "df7fe2f8451ca13f",
+      "title": "Ask HN: Is anyone here also developing \"perpetual AI psychosis\" like Karpathy?",
+      "coverage": 0.5873,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "e0dddb089853cfbd",
+      "title": "'Pervert glasses': Backlash against Meta's smart glasses grows",
+      "coverage": 0.5972,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "e4c315112d94f8fb",
+      "title": "Nvidia's Risky Business",
+      "coverage": 0.5838,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "e6a88dfb8c7761ba",
+      "title": "50k Boat Names",
+      "coverage": 0.2987,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "e7e8ac74504bb981",
+      "title": "Israel Is Attacking Iran",
+      "coverage": 0.5816,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "e836e6bb0fec3182",
+      "title": "Show HN: Appaca – AI Workspace for Operators",
+      "coverage": 0.5711,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "e997c9aa1c7ca54a",
+      "title": "FTX's former Anthropic stake would be worth about $75B at today's valuation",
+      "coverage": 0.5445,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "e9dca4bafaa89d25",
+      "title": "Show HN: Scan your AI agents for dangerous capabilities",
+      "coverage": 0.5493,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "ebafe2b6a50694e1",
+      "title": "Show HN: Gigacatalyst – Extend your SaaS with an embedded AI builder",
+      "coverage": 0.5956,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "eea6c983b9173e7c",
+      "title": "Radical Study Suggests Life on Earth Arose Twice",
+      "coverage": 0.3544,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "f050348d8f7ed1c0",
+      "title": "The Tokenpocalypse Is Here: Companies Are Scrambling to Stop Spending on AI",
+      "coverage": 0.556,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "f3d36373e11bffac",
+      "title": "Show HN: Homegames. An open-source game platform I've been making for 8 years",
+      "coverage": 0.2888,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "f41c9f2d47a17f8e",
+      "title": "Lost jobs, inequality, rogue agents: why are we accepting oligarchs’ AI agenda?",
+      "coverage": 0.5551,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "f60a849056e3d11c",
+      "title": "Everyone feared AI taking over; the real danger is AI serving just the few",
+      "coverage": 0.6086,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "fa3edf936f51c2cb",
+      "title": "Mythos social engineering AISI INC-2026-07-28-01",
+      "coverage": 0.5814,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "fe6cb21414bcefaf",
+      "title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+      "coverage": 0.546,
+      "group": "candidate",
+      "split": "unassigned"
+    },
+    {
+      "id": "fefd22c30dfc1527",
+      "title": "Ask HN: What are you working on (non-AI)?",
+      "coverage": 0.5474,
+      "group": "candidate",
+      "split": "unassigned"
+    }
+  ]
+}

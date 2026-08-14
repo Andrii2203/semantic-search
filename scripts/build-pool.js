@@ -10,7 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { loadCorpus, loadIntents, EVAL_DIR } = require('../src/eval/corpus-loader');
+const { loadCorpus, loadCandidates, EVAL_DIR } = require('../src/eval/corpus-loader');
 const { buildIndex, topPositions } = require('../src/eval/bm25');
 const searchEngine = require('../src/search-engine');
 const constants = require('../src/search-constants');
@@ -42,7 +42,7 @@ function topSemantic(intentVector, articleVectors, limit) {
 
 async function main() {
   const corpus = loadCorpus();
-  const intents = loadIntents();
+  const intents = loadCandidates();
   console.log(`${intents.length} intents against ${corpus.length} articles, pool depth ${constants.poolDepth}\n`);
 
   const index = buildIndex(corpus);
