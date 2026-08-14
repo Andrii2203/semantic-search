@@ -73,6 +73,18 @@ describe('src/eval/harness.js', () => {
     expect(CONFIGURATIONS['bm25-beir-baseline'].fields).toEqual(['title', 'text']);
   });
 
+  test('the harness reports one metric value per query alongside the mean', () => {
+    const result = runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'tiny', root });
+    const perQuery = result.perQuery['nDCG@10'];
+
+    expect(perQuery.map((row) => row.queryId)).toEqual(['q1', 'q2']);
+    expect(perQuery.every((row) => typeof row.value === 'number')).toBe(true);
+    expect(result.metrics[0].value).toBeCloseTo(
+      perQuery.reduce((total, row) => total + row.value, 0) / perQuery.length,
+      10,
+    );
+  });
+
   test('a retrieval that ranks the judged document first scores one', () => {
     const result = runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'tiny', root });
     expect(result.metrics[0].value).toBeCloseTo(1, 10);

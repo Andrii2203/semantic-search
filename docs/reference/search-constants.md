@@ -159,6 +159,9 @@ here corrupts every number the project reports and they belong under the same ru
 | `thinArticleWords` | 50 | measured | The 2026-08-13 snapshot put 54 of 59 headline items below this and 77 of 77 news articles above it, so it separates the two corpora cleanly |
 | `poolDepth` | 10 | borrowed | TREC pools the top 100 per system across dozens of systems. At eight configurations and fifty intents, ten keeps the judging budget near two thousand pairs |
 | `evaluationRecallK` | 100 | borrowed, source named | The second metric BEIR reports alongside nDCG@10, so a recall number here is comparable outward. Added 2026-08-14 18:25 +0200 with `src/eval/harness.js` |
+| `bootstrapResamples` | 10000 | arbitrary, bounded by cost | The resample count of the paired bootstrap. Ten thousand costs under a second on 648 queries. Forced by a comparison whose interval moves when the count is raised |
+| `bootstrapAlpha` | 0.05 | borrowed, convention | A 95 percent interval, the convention this field reports. Forced by nothing, and a different level would be a presentation choice rather than a measurement |
+| `bootstrapSeed` | 1 | arbitrary, and must never be tuned | Fixes the resampling so two runs agree. Choosing a seed after seeing a result would be selecting the answer, which is why behaviour 18 pins reproducibility rather than the value |
 | `beirBaselineK1` | 0.9 | borrowed, source named | Anserini's default, and the value the published BEIR BM25 baseline was produced at, quoted in `docs/plans/public-benchmark.md` section 6.1 from the paper's Table 2. Used only by the control configuration, never by the product |
 | `beirBaselineB` | 0.4 | borrowed, source named | The same sentence, the same source, the same restriction to the control configuration |
 

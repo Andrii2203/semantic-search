@@ -217,6 +217,33 @@ now matched, the first remaining suspect is stemming.
 A gap beyond tolerance is a defect in the harness or in the tokenisation, not a discovery about
 BM25, and it is chased before anything else is measured.
 
+## 6.2 The bench's resolution, and why a difference needs an interval
+
+Added 2026-08-14 18:48:46 +0200, after the control run made the question concrete rather than
+theoretical.
+
+The control run measured that changing k1, b and the field structure together moves nDCG@10 by 0.027
+on SciFact, 0.003 on NFCorpus and 0.007 on FiQA. Those are the sizes the axis matrix of
+`docs/plans/retrieval-quality.md` phase 4 expects to see between two fusion methods or two rerankers.
+A bench that cannot say whether 0.027 is a difference or a coincidence cannot decide an axis, and
+reporting the larger number as the winner would be guessing with extra steps.
+
+The instrument for this is standard and cheap: a paired bootstrap over queries. The two
+configurations are scored on the same queries, the per query differences are resampled with
+replacement many times, and the interval of the resampled means says how much of the observed
+difference survives the choice of queries. Paired, because both configurations saw the same queries,
+and pairing removes the variance that comes from some queries simply being harder.
+
+Proof of need, per `docs/standards/DECISION_PROTOCOL.md` section 3:
+
+| # | Question | Answer |
+|---|---|---|
+| 1 | Trigger | Measured 2026-08-14 18:25:36 +0200 and recorded in `docs/eval/beir-bm25-control.md` section 6: three settings changed at once move nDCG@10 by 0.027, which is the same order as the effects phase 4 will compare |
+| 2 | Cost of not doing it | Phase 4 picks a winner from differences that may be noise, phases 5 to 8 build on that winner, and the error is discovered, if ever, after the locked half is spent |
+| 3 | Cheapest alternative | More queries, which BEIR does not offer beyond what these collections carry, or a fixed threshold such as "0.01 counts as a win", which is a number with no source and therefore forbidden by the rule this project adopted on 2026-08-14. A paired bootstrap is one small module and seconds of compute |
+| 4 | Kill criterion | The interval is so wide on all three collections that no plausible axis effect could clear it. The public bench is then unable to decide the axes, and that decision returns to the local bench with its 11 usable topics, which would be a finding worth having early |
+| 5 | Signal | The mean difference, its confidence interval and the proportion of resamples in which the first configuration wins, printed per comparison and appended to `docs/eval/` |
+
 ## 7. Behaviours
 
 1. The fetch script writes each dataset under `eval/beir/<name>/` and a manifest naming the source,
@@ -234,6 +261,13 @@ BM25, and it is chased before anything else is measured.
 12. The harness refuses to run when the requested dataset is absent, naming the fetch command.
 13. BM25 alone on each dataset reproduces the published baseline within the tolerance recorded in
     section 6.
+14. The harness reports one metric value per query alongside the mean.
+15. A comparison of two configurations reports the mean difference per metric.
+16. A comparison reports a confidence interval for that difference, from a paired bootstrap over
+    queries.
+17. A configuration compared with itself reports a difference of zero and an interval containing zero.
+18. Two comparisons with the same seed produce identical numbers.
+19. A comparison refuses two configurations scored on different query sets.
 
 ## 8. Tests
 
@@ -252,6 +286,12 @@ BM25, and it is chased before anything else is measured.
 | 11 | L2 | `__tests__/eval/harness.test.js` |
 | 12 | L2 | `__tests__/eval/harness.test.js` |
 | 13 | not a test | a measurement, recorded in `docs/eval/`, because it needs the fetched corpus and takes minutes |
+| 14 | L2 | `__tests__/eval/harness.test.js` |
+| 15 | L1 | `__tests__/eval/significance.test.js` |
+| 16 | L1 | `__tests__/eval/significance.test.js` |
+| 17 | L1 | `__tests__/eval/significance.test.js` |
+| 18 | L1 | `__tests__/eval/significance.test.js` |
+| 19 | L2 | `__tests__/eval/significance.test.js` |
 
 Behaviours 6 to 10 are the ones that matter most and they need no corpus at all. They pin the metric
 against hand written rankings whose correct score can be computed on paper, which is what makes
@@ -294,6 +334,7 @@ Behaviours 1 to 5, 11 and 12 remain, and they need the fetch script that does no
 | Question | Trigger that forces an answer |
 |---|---|
 | Answered 2026-08-14 12:44 +0200. Whether the BM25 baselines in section 6 match the BEIR paper's own table, read directly. They do, and the table also supplied the parameters in section 6.1 | closed |
+| Answered 2026-08-14 18:52:14 +0200. How large a difference this bench can resolve: about 0.022 nDCG@10 on SciFact, 0.008 on NFCorpus, 0.009 on FiQA, recorded in `docs/eval/beir-bm25-control.md` section 6.1 | closed |
 | Whether a configuration that wins on SciFact and NFCorpus also wins on the local bench | Both benches have run the same axis matrix |
 | Whether more BEIR datasets are worth adding | The two chosen disagree about which configuration wins |
 | Whether the tokenisation in `src/eval/bm25.js` explains any gap from the published baseline | Behaviour 13 fails |

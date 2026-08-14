@@ -109,6 +109,49 @@ rerankers cannot be called wins without a significance test. The open question a
 `docs/plans/public-benchmark.md` section 11 is now answerable by measurement rather than by argument,
 and it should be answered before the axis matrix runs.
 
+## 6.1 How large a difference this bench can see
+
+Measured 2026-08-14, clock read 18:52:14 +0200. Paired bootstrap over queries, 10000 resamples, 95
+percent interval, seed 1, by `node scripts/compare-beir.js bm25-repository-defaults
+bm25-beir-baseline scifact nfcorpus fiqa`. Paired because both configurations were scored on the same
+queries, which removes the variance that comes from some queries being harder than others.
+
+| Dataset | Metric | Difference | 95 percent interval | Verdict |
+|---|---|---|---|---|
+| SciFact | nDCG@10 | +0.0265 | [0.0040, 0.0488] | excludes zero |
+| SciFact | Recall@100 | -0.0050 | [-0.0250, 0.0150] | contains zero |
+| NFCorpus | nDCG@10 | +0.0034 | [-0.0050, 0.0119] | contains zero |
+| NFCorpus | Recall@100 | -0.0045 | [-0.0125, 0.0011] | contains zero |
+| FiQA-2018 | nDCG@10 | -0.0074 | [-0.0167, 0.0022] | contains zero |
+| FiQA-2018 | Recall@100 | +0.0087 | [-0.0058, 0.0239] | contains zero |
+
+The number phase 4 needs is the half width of these intervals, because it is the size a difference
+must exceed before it can be called a result rather than a coincidence:
+
+| Dataset | Queries | Resolution on nDCG@10 |
+|---|---|---|
+| SciFact | 300 | about 0.022 |
+| NFCorpus | 323 | about 0.008 |
+| FiQA-2018 | 648 | about 0.009 |
+
+Three consequences, and the third is the one that changes the plan.
+
+SciFact is the least sensitive of the three despite being the cleanest, and it is nearly three times
+coarser than the other two. Its per query scores are close to all or nothing, because a claim's
+supporting abstract is either retrieved or it is not, so the variance between queries is large. A
+collection being tidy and a collection being sensitive are different properties.
+
+The only comparison that separates is SciFact on nDCG@10, where this repository's own k1 of 1.2 and b
+of 0.75 over one concatenated field beat the paper's 0.9, 0.4 and two fields, by 0.0265, winning in
+98.9 percent of resamples. That is a measured result rather than an argument, and it holds on one
+collection out of three while the other two say the two configurations are indistinguishable. No
+consistent winner exists, which is itself the answer to whether these settings matter much.
+
+Phase 4 now has a rule it did not have. Any axis effect below roughly 0.01 on NFCorpus or FiQA, or
+below 0.022 on SciFact, is not a finding, and the matrix must report intervals rather than point
+values. An axis whose effect is smaller than the interval on all three collections is not decided
+here at all, and saying so will be more honest than ranking eight configurations by a fourth decimal.
+
 ## 7. Behaviours
 
 Not applicable. This document records a measurement rather than describing running behaviour. The
@@ -136,6 +179,6 @@ Not applicable. This document changes no runtime behaviour.
 
 | Question | Trigger that forces an answer |
 |---|---|
-| How large a difference in nDCG@10 on these collections is real rather than noise | Already triggered by section 6. Needs a significance test or a bootstrap over queries, before the phase 4 matrix is read |
+| Answered 2026-08-14 18:52:14 +0200 in section 6.1. About 0.022 on SciFact, 0.008 on NFCorpus, 0.009 on FiQA | closed |
 | Whether adding a stemmer closes the remaining two to three points | Somebody wants the gap closed. It is not needed for comparing configurations, because every configuration carries the same tokeniser |
 | Whether Recall@100 on NFCorpus at 0.24 is a property of the collection or a defect here | Phase 4 measures candidate generation, where a recall ceiling that low would dominate every later stage |

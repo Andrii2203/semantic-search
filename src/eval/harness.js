@@ -79,16 +79,24 @@ function runConfiguration({ configuration: name, dataset: datasetName, root }) {
   const indexes = buildIndexes(dataset.documents, configuration);
   const context = { dataset, indexes, configuration };
 
-  const scored = dataset.queries.map((query) => scoreQuery(context, query));
+  const scored = dataset.queries.map((query) => ({ ...scoreQuery(context, query), id: query.id }));
+  const ndcgName = `nDCG@${constants.evaluationK}`;
+  const recallName = `Recall@${constants.evaluationRecallK}`;
+
+  const perQuery = {
+    [ndcgName]: scored.map((row) => ({ queryId: row.id, value: row.ndcg })),
+    [recallName]: scored.map((row) => ({ queryId: row.id, value: row.recall })),
+  };
 
   return {
     configuration: name,
     dataset: datasetName,
     queries: dataset.queries.length,
     metrics: [
-      { name: `nDCG@${constants.evaluationK}`, value: mean(scored.map((row) => row.ndcg)) },
-      { name: `Recall@${constants.evaluationRecallK}`, value: mean(scored.map((row) => row.recall)) },
+      { name: ndcgName, value: mean(scored.map((row) => row.ndcg)) },
+      { name: recallName, value: mean(scored.map((row) => row.recall)) },
     ],
+    perQuery,
   };
 }
 
