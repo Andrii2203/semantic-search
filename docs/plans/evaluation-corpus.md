@@ -256,6 +256,23 @@ answer key.
     unresolved.
 26. The planted controls of section 9.1 are graded correctly by the judge in use.
 
+27. The local corpus loads in the shape a public collection loads in, so one harness scores both.
+28. The local dataset carries only the intents of the requested split, and defaults to dev.
+29. The local dataset reports how many of its intents have no relevant article, and leaves them out
+    of the ranking metrics.
+
+Behaviours 27 to 29 were added 2026-08-14 19:57:47 +0200. They exist because
+`docs/adr/008-parallel-candidate-generation.md` decided an axis on public collections of English
+scientific and medical prose, and named the absence of a check on this product's own short,
+multilingual news content as the hole in that decision. One harness over both benches is the cheapest
+way to close it.
+
+Ranking metrics are computed over answerable intents only, which is what TREC does and what
+section 5 of this document already separates. An intent with no relevant article scores zero for
+every configuration, so including it lowers every number by the same amount while adding no
+discrimination. The count of excluded intents is reported next to the score, because it is the
+honest size of the bench rather than a footnote.
+
 ## 11. Tests
 
 | # | Level | File |
@@ -273,6 +290,9 @@ answer key.
 | 11 | L1 | `__tests__/eval/categories.test.js` |
 | 12 | L4 | `__tests__/eval/judge.test.js` |
 | 13 | L2 | `__tests__/eval/judge.test.js` |
+| 27 | L2 | `__tests__/eval/local-bench.test.js` |
+| 28 | L2 | `__tests__/eval/local-bench.test.js` |
+| 29 | L2 | `__tests__/eval/local-bench.test.js` |
 
 Reporting the count of unjudged results belongs to the harness, which section 3 puts out of scope
 here. It is carried into `docs/plans/retrieval-quality.md` phase 3 rather than left unwritten.

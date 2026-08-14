@@ -121,9 +121,9 @@ async function prepareIndex(dataset, configuration, options) {
 }
 
 async function runConfiguration(options) {
-  const { configuration: name, dataset: datasetName, root } = options;
+  const { configuration: name, dataset: requested, root } = options;
   const configuration = resolveConfiguration(name);
-  const dataset = loadDataset(datasetName, { root });
+  const dataset = typeof requested === 'string' ? loadDataset(requested, { root }) : requested;
   const index = await prepareIndex(dataset, configuration, options);
 
   const scored = [];
@@ -143,7 +143,7 @@ async function runConfiguration(options) {
 
   return {
     configuration: name,
-    dataset: datasetName,
+    dataset: dataset.name,
     queries: dataset.queries.length,
     metrics: [
       { name: ndcgName, value: mean(scored.map((row) => row.ndcg)) },

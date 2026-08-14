@@ -69,6 +69,7 @@ function loadVectors(directory, ids) {
 }
 
 function saveVectors(directory, ids, vectors) {
+  fs.mkdirSync(directory, { recursive: true });
   const width = vectors[0].length;
   const floats = new Float32Array(ids.length * width);
 

@@ -86,5 +86,5 @@ is the reason this ADR changes a default rather than closing the plan.
 | Question | Trigger that forces an answer |
 |---|---|
 | Which fusion method, and at what weights | Neither is separable from the other on two collections. See `docs/eval/beir-axes-a-b.md` section 7.2 |
-| Whether the ordering holds on short, multilingual, thin news items | The local bench runs the same five configurations |
+| Partly answered 2026-08-14 20:10:41 +0200 in `docs/eval/local-news-axis-a.md`. On the product's own news content parallel retrieves 0.3059 more of the relevant set than sequential, an interval excluding zero and a 45 percent increase. Ranking quality on news stays unanswered, because the bench has eight usable topics | open, on nDCG only |
 | When the code changes its default, and under which plan | This ADR records the decision. The change itself belongs to phase 4 of `docs/plans/retrieval-quality.md` and has not been made |
