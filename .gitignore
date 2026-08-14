@@ -9,3 +9,6 @@ coverage/
 test-data/
 # BEIR datasets are fetched, not vendored. See docs/plans/public-benchmark.md section 5.
 eval/beir/
+
+# Model weights, downloaded not vendored
+.cache/

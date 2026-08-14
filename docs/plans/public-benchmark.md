@@ -268,6 +268,12 @@ Proof of need, per `docs/standards/DECISION_PROTOCOL.md` section 3:
 17. A configuration compared with itself reports a difference of zero and an interval containing zero.
 18. Two comparisons with the same seed produce identical numbers.
 19. A comparison refuses two configurations scored on different query sets.
+20. A dense configuration ranks the whole corpus by vector similarity to the query.
+21. A sequential configuration scores only the documents the lexical branch returned.
+22. A parallel configuration merges a lexical candidate list and a dense candidate list.
+23. Reciprocal rank fusion merges two rankings by the reciprocal of the rank constant plus the rank.
+24. Weighted fusion merges two rankings by normalised score at the configured weights.
+25. The retrieval path takes its embedder as an argument, so a run is reproducible without a model.
 
 ## 8. Tests
 
@@ -292,6 +298,12 @@ Proof of need, per `docs/standards/DECISION_PROTOCOL.md` section 3:
 | 17 | L1 | `__tests__/eval/significance.test.js` |
 | 18 | L1 | `__tests__/eval/significance.test.js` |
 | 19 | L2 | `__tests__/eval/significance.test.js` |
+| 20 | L2 | `__tests__/eval/retrieval.test.js` |
+| 21 | L2 | `__tests__/eval/retrieval.test.js` |
+| 22 | L2 | `__tests__/eval/retrieval.test.js` |
+| 23 | L1 | `__tests__/eval/retrieval.test.js` |
+| 24 | L1 | `__tests__/eval/retrieval.test.js` |
+| 25 | L2 | `__tests__/eval/retrieval.test.js` |
 
 Behaviours 6 to 10 are the ones that matter most and they need no corpus at all. They pin the metric
 against hand written rankings whose correct score can be computed on paper, which is what makes

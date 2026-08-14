@@ -51,6 +51,8 @@ const evaluation = {
   poolDepth: 10,
   evaluationK: 10,
   evaluationRecallK: 100,
+  embeddingModel: 'Xenova/all-MiniLM-L6-v2',
+  embeddingBatchSize: 64,
   bootstrapResamples: 10000,
   bootstrapAlpha: 0.05,
   bootstrapSeed: 1,

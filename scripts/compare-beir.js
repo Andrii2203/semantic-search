@@ -4,7 +4,7 @@ const constants = require('../src/search-constants');
 const { runConfiguration, CONFIGURATIONS } = require('../src/eval/harness');
 const { compare } = require('../src/eval/significance');
 
-function main() {
+async function main() {
   const [first, second, ...datasets] = process.argv.slice(2);
 
   if (!first || !second || datasets.length === 0) {
@@ -22,8 +22,8 @@ function main() {
 
   for (const dataset of datasets) {
     const rows = compare(
-      runConfiguration({ configuration: first, dataset }),
-      runConfiguration({ configuration: second, dataset }),
+      await runConfiguration({ configuration: first, dataset }),
+      await runConfiguration({ configuration: second, dataset }),
       {},
     );
 
@@ -41,4 +41,7 @@ function main() {
   }
 }
 
-main();
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

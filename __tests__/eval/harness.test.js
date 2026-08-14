@@ -45,8 +45,8 @@ describe('src/eval/harness.js', () => {
     fs.rmSync(root, { recursive: true, force: true });
   });
 
-  test('the harness scores a named configuration over a whole dataset and returns one row per metric', () => {
-    const result = runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'tiny', root });
+  test('the harness scores a named configuration over a whole dataset and returns one row per metric', async () => {
+    const result = await runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'tiny', root });
 
     expect(result.configuration).toBe('bm25-beir-baseline');
     expect(result.dataset).toBe('tiny');
@@ -58,14 +58,14 @@ describe('src/eval/harness.js', () => {
     }
   });
 
-  test('the harness refuses to run when the requested dataset is absent, naming the fetch command', () => {
-    expect(() => runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'scifact', root }))
-      .toThrow(/scripts\/fetch-beir\.js scifact/);
+  test('the harness refuses to run when the requested dataset is absent, naming the fetch command', async () => {
+    await expect(runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'scifact', root }))
+      .rejects.toThrow(/scripts\/fetch-beir\.js scifact/);
   });
 
-  test('the harness refuses a configuration it does not know, naming the ones it knows', () => {
-    expect(() => runConfiguration({ configuration: 'invented', dataset: 'tiny', root }))
-      .toThrow(/bm25-beir-baseline/);
+  test('the harness refuses a configuration it does not know, naming the ones it knows', async () => {
+    await expect(runConfiguration({ configuration: 'invented', dataset: 'tiny', root }))
+      .rejects.toThrow(/bm25-beir-baseline/);
   });
 
   test('the baseline configuration carries the parameters the published number was produced at', () => {
@@ -73,8 +73,8 @@ describe('src/eval/harness.js', () => {
     expect(CONFIGURATIONS['bm25-beir-baseline'].fields).toEqual(['title', 'text']);
   });
 
-  test('the harness reports one metric value per query alongside the mean', () => {
-    const result = runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'tiny', root });
+  test('the harness reports one metric value per query alongside the mean', async () => {
+    const result = await runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'tiny', root });
     const perQuery = result.perQuery['nDCG@10'];
 
     expect(perQuery.map((row) => row.queryId)).toEqual(['q1', 'q2']);
@@ -85,8 +85,21 @@ describe('src/eval/harness.js', () => {
     );
   });
 
-  test('a retrieval that ranks the judged document first scores one', () => {
-    const result = runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'tiny', root });
+  test('a retrieval that ranks the judged document first scores one', async () => {
+    const result = await runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'tiny', root });
     expect(result.metrics[0].value).toBeCloseTo(1, 10);
+  });
+
+  test('a dense configuration is scored with an injected embedder and no model', async () => {
+    const embed = (text) => Promise.resolve(text.includes('Vitamin') ? [1, 0] : [0, 1]);
+    const result = await runConfiguration({
+      configuration: 'dense-only',
+      dataset: 'tiny',
+      root,
+      embed,
+    });
+
+    expect(result.queries).toBe(2);
+    expect(result.metrics[0].name).toBe('nDCG@10');
   });
 });
