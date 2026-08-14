@@ -7,3 +7,5 @@ coverage/
 
 # Generated test fixtures (synthetic resumes + ground truth for eval)
 test-data/
+# BEIR datasets are fetched, not vendored. See docs/plans/public-benchmark.md section 5.
+eval/beir/
