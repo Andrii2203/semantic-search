@@ -1,0 +1,29 @@
+{
+  "dataset": "scifact",
+  "source": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/scifact.zip",
+  "retrievedAt": "2026-08-14 16:24:17 +0000",
+  "archiveBytes": 2816079,
+  "archiveSha256": "536e14446a0ba56ed1398ab1055f39fe852686ecad24a6306c80c490fa8e0165",
+  "counts": {
+    "documents": 5183,
+    "queries": 300,
+    "judgments": 339
+  },
+  "files": [
+    {
+      "path": "qrels/test.tsv",
+      "bytes": 5389,
+      "sha256": "0864bb985e0ca2367ba217977e72004d549054b2b06666ed9d4825ac7c21284c"
+    },
+    {
+      "path": "corpus.jsonl",
+      "bytes": 8106566,
+      "sha256": "dec31c8182f3d744c7d2c09423756fd1d17cbef75808db13ba01cc0aab4d1ac6"
+    },
+    {
+      "path": "queries.jsonl",
+      "bytes": 209731,
+      "sha256": "8ff84a7c903f722981cd8d595c022660140c51867b27608a6d4910db86080313"
+    }
+  ]
+}

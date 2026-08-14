@@ -119,8 +119,11 @@ That ordering now has a second reason: not preference, but the absence of a publ
 
 The datasets are not added to git. They are public, immutable and versioned at the source, and adding
 them would roughly double the repository for no gain in reproducibility. Instead
-`scripts/fetch-beir.js` writes `eval/beir/<dataset>/` and a manifest recording the source URL, the
-retrieval date, the document and query counts, and a checksum of each file.
+`scripts/fetch-beir.js` writes `eval/beir/<dataset>/` and a manifest at
+`eval/beir-manifests/<dataset>.json` recording the source URL, the moment of retrieval, the document,
+query and judgment counts, the archive size and a SHA-256 of the archive and of each extracted file.
+The manifest sits outside `eval/beir/` for one reason: that path is ignored by git, and a manifest
+inside it would be ignored with the data it is meant to pin.
 
 This is a deliberate exception to the rule in `docs/plans/evaluation-corpus.md` that a run must be
 reproducible from git alone, and the reason it is safe here is the reason it is not safe there. Our
@@ -147,9 +150,13 @@ Table 2 of the BEIR paper, `https://ar5iv.labs.arxiv.org/html/2104.08663`, read 
 
 | Dataset | Published BM25 nDCG@10 | Our result | Verdict |
 |---|---|---|---|
-| SciFact | 0.665 | not yet run | |
-| NFCorpus | 0.325 | not yet run | |
-| FiQA-2018 | 0.236 | not yet run | |
+| SciFact | 0.665 | 0.6380 at the published settings, 0.6645 at ours | sane, both inside 0.05 |
+| NFCorpus | 0.325 | 0.3037 at the published settings, 0.3071 at ours | sane, both inside 0.05 |
+| FiQA-2018 | 0.236 | 0.2329 at the published settings, 0.2256 at ours | sane, both inside 0.05 |
+
+Run at 2026-08-14, clock read 18:25:36 +0200. Full report, including a result that contradicts
+section 6.1 below, in `docs/eval/beir-bm25-control.md`. Behaviour 13 is satisfied and the harness is
+trusted to compare configurations.
 
 The two figures written here on 2026-08-14 from secondary sources survived contact with the primary
 table unchanged. That is worth one line rather than a celebration: the expectation was fixed before
@@ -184,6 +191,16 @@ is therefore specified, not merely intended:
 
 The product's own default stays at 1.2 and 0.75. The control run is a measurement of the instrument,
 not a change to the product, and conflating the two is what this section exists to prevent.
+
+Corrected after the run, 2026-08-14 18:25:36 +0200. The principle above is right and the size implied
+by it was wrong. Both configurations were run over all three collections, and the difference between
+them is 0.003 to 0.027 nDCG@10, with the repository's own unmatched settings landing closer to the
+published number on two collections out of three. Running unmatched would not have raised a false
+alarm. The paragraph above was written as though the settings were the difference between a working
+check and a broken one, which the measurement does not support. The consequence that does matter is
+recorded in `docs/eval/beir-bm25-control.md` section 6: a bench where that much movement comes from
+changing three settings at once cannot resolve small differences between configurations without a
+significance test.
 
 Tolerance, decided now rather than after seeing the result. Within 0.05 the harness is sane. Beyond
 0.10 it is a defect and nothing else is measured until the cause is found. Between the two, the gap

@@ -40,8 +40,10 @@ function buildIndex(documents) {
   return { postings, lengths, averageLength, size: documents.length };
 }
 
-function score(index, queryText) {
+function score(index, queryText, options = {}) {
   const { postings, lengths, averageLength, size } = index;
+  const k1 = options.k1 === undefined ? constants.bm25K1 : options.k1;
+  const b = options.b === undefined ? constants.bm25B : options.b;
   const scores = new Map();
 
   for (const term of new Set(tokenize(queryText))) {
@@ -53,9 +55,8 @@ function score(index, queryText) {
     const inverseFrequency = Math.log(1 + (size - list.length + 0.5) / (list.length + 0.5));
 
     for (const { position, count } of list) {
-      const normalised =
-        constants.bm25K1 * (1 - constants.bm25B + (constants.bm25B * lengths[position]) / averageLength);
-      const contribution = (inverseFrequency * count * (constants.bm25K1 + 1)) / (count + normalised);
+      const normalised = k1 * (1 - b + (b * lengths[position]) / averageLength);
+      const contribution = (inverseFrequency * count * (k1 + 1)) / (count + normalised);
       scores.set(position, (scores.get(position) || 0) + contribution);
     }
   }
@@ -63,8 +64,8 @@ function score(index, queryText) {
   return scores;
 }
 
-function topPositions(index, queryText, limit) {
-  return [...score(index, queryText).entries()]
+function topPositions(index, queryText, limit, options = {}) {
+  return [...score(index, queryText, options).entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, limit)
     .map(([position, value]) => ({ position, score: value }));

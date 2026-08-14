@@ -1,0 +1,29 @@
+{
+  "dataset": "fiqa",
+  "source": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/fiqa.zip",
+  "retrievedAt": "2026-08-14 16:24:22 +0000",
+  "archiveBytes": 17948027,
+  "archiveSha256": "32c7df99ed21252fdfb2cf3f5673502a8d245ee0c44c4a133570d92ce2b3ad02",
+  "counts": {
+    "documents": 57638,
+    "queries": 648,
+    "judgments": 1706
+  },
+  "files": [
+    {
+      "path": "qrels/test.tsv",
+      "bytes": 25256,
+      "sha256": "6adc2a640dcdd22bb8b3858f89107adef2a7c3db20a63550dfa7a0f71e379e44"
+    },
+    {
+      "path": "corpus.jsonl",
+      "bytes": 47949497,
+      "sha256": "ff593e4df9933955dc3af83be0c3fa28ac7465f627e08c2e53593e734d506517"
+    },
+    {
+      "path": "queries.jsonl",
+      "bytes": 706247,
+      "sha256": "eede1e61d4a0188940239b53ebc2da91f577a6a34679c812d1eb9090c29877bc"
+    }
+  ]
+}

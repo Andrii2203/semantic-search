@@ -1,0 +1,29 @@
+{
+  "dataset": "nfcorpus",
+  "source": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nfcorpus.zip",
+  "retrievedAt": "2026-08-14 16:24:18 +0000",
+  "archiveBytes": 2448432,
+  "archiveSha256": "efe5be03f8c5b86a5870102d0599d227c8c6e2484328e68c6522560385671b0b",
+  "counts": {
+    "documents": 3633,
+    "queries": 323,
+    "judgments": 12334
+  },
+  "files": [
+    {
+      "path": "qrels/test.tsv",
+      "bytes": 279572,
+      "sha256": "f8fba6ef3d4dd9c3a242a8ba4ae38276fc3622fce7dcbae764766d564542fd2a"
+    },
+    {
+      "path": "corpus.jsonl",
+      "bytes": 6219364,
+      "sha256": "10cc83ef1826b1425e6a87090b5140b39b27755d5a27e48215a88611c899991f"
+    },
+    {
+      "path": "queries.jsonl",
+      "bytes": 441466,
+      "sha256": "d024e6621b84925d485ae473d316a0c3af31c62c8068a59fb29d22f7613aef2a"
+    }
+  ]
+}

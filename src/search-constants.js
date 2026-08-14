@@ -50,6 +50,9 @@ const evaluation = {
   thinArticleWords: 50,
   poolDepth: 10,
   evaluationK: 10,
+  evaluationRecallK: 100,
+  beirBaselineK1: 0.9,
+  beirBaselineB: 0.4,
   calibrationSampleSize: 60,
   calibrationMinimumKappa: 0.4,
 };
