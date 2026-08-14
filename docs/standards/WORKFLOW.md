@@ -56,6 +56,26 @@ npm run verify
 This runs lint, the complexity limits and the whole test suite. It is the same command CI runs.
 Green locally and green in CI mean the same thing, so there is never a reason to push and hope.
 
+The gate runs inside Docker, not on the host. `better-sqlite3` is a native module, and on a Windows
+host without the Microsoft build tools `npm install` fails at node-gyp, so the gate cannot run there
+at all. The container is Linux and matches CI, which removes the whole class of works on my machine.
+
+```
+docker run --rm -v "$PWD:/app" -v semantic-search-node-modules:/app/node_modules \
+  -w /app -e CI=true node:20-slim sh -c "npm run lint && npx jest --forceExit --coverage"
+
+docker run --rm -v "$PWD:/app" -v semantic-search-client-node-modules:/app/client/node_modules \
+  -w /app/client -e CI=true node:20-slim sh -c "npm ci && npm run test"
+```
+
+The two named volumes hold the installed modules, so the first run pays the install and later runs do
+not. Host `node_modules` is never used, because a module built for Windows and a module built for
+Linux cannot share a directory. The first run of the backend volume additionally needs
+`apt-get install -y python3 make g++` before `npm ci`, which is what builds the native module.
+
+Recorded green on 2026-08-13: lint 0 errors and 3 unused variable warnings, 532 backend tests passed
+and 6 skipped, 20 client tests passed.
+
 ## 3. What counts as done
 
 A change is done when all of the following hold.

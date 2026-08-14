@@ -1,5 +1,12 @@
 # Universal Matching Engine: PLAN v7 (Execution Plan)
 
+Status: superseded by docs/plans/retrieval-quality.md
+Owner: repository owner
+Last change: 2026-08-13
+
+Delivered. Archived on 2026-08-13. Not edited after this line was added, per
+`docs/standards/DOCUMENT_TEMPLATE.md` section 2.
+
 ## Контекст
 
 Тип: Персональний інструмент, побудований як продукт.  

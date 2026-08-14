@@ -15,7 +15,10 @@ that intent into a Gmail style inbox. Every action the person takes (star, appro
 their profile vector, so the match improves over time.
 
 Product intent: `docs/product/VISION.md`, `docs/product/STRATEGY.md`.
-Current execution plan: `docs/plans/PLAN_v7.md`.
+Current execution plan: `docs/plans/retrieval-quality.md`.
+What production search systems do, and the six axes this plan measures:
+`docs/reference/retrieval-in-industry.md`.
+Every number in the retrieval path, with its origin: `docs/reference/search-constants.md`.
 
 ## 2. Hard rules
 
@@ -47,6 +50,7 @@ These are not preferences. Work that breaks them is rejected and redone.
 | `client/` | React UI | code |
 | `__tests__/` | tests, mirroring the `src/` tree | code |
 | `scripts/` | one off operational scripts | code |
+| `eval/` | frozen snapshots, chosen intents, the answer key, the calibration set | data, committed |
 
 `docs/archive/` is dead weight by definition. Never cite it as a source of truth, never restore from
 it without running the decision protocol first.
