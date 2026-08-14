@@ -88,15 +88,15 @@ point of this table.
 |---|---|---|---|---|
 | `semanticCutoffSearch` | 0.65 | `routes/search.js`, `search-engine.js` | arbitrary | Contradicted by `docs/eval/inbox-admission.md`: semantic matches mean 0.509 to 0.547. Forced by axis A being measured |
 | `semanticCutoffInbox` | 0.35 | `config.js` as `SIMILARITY_THRESHOLD` | measured, weakly | Dev half F1 peaks at 0.50, locked half peaks at 0.30 and 0.45. The two halves disagree, so the number is not settled |
-| `rrfK` | 60 | `config.js`, `search-engine.js` | borrowed, source named | OpenSearch documents 60 as its default rank constant, https://opensearch.org/blog/introducing-reciprocal-rank-fusion-hybrid-search/ read at 2026-08-14 13:12 +0200. The value originates in the 2009 paper that introduced the method, where it came from a pilot study and the optimum is reported as flat from roughly 20 to 100. That paper was not read directly, two attempts returned 404, so the flat optimum is held on secondary authority. Corrected 2026-08-14 13:10 +0200: this row previously credited Instacart, whose published formula has no rank constant at all |
+| `rrfK` | 60 | `config.js`, `search-engine.js` | borrowed, source named | OpenSearch documents 60 as its default rank constant, https://opensearch.org/blog/introducing-reciprocal-rank-fusion-hybrid-search/ read at 2026-08-14 17:53 +0200. The value originates in the 2009 paper that introduced the method, where it came from a pilot study and the optimum is reported as flat from roughly 20 to 100. That paper was not read directly, two attempts returned 404, so the flat optimum is held on secondary authority. Corrected 2026-08-14 17:52 +0200: this row previously credited Instacart, whose published formula has no rank constant at all |
 | `bm25K1` | 1.2 | `src/eval/bm25.js` | borrowed, source named | The value Lucene ships in `BM25Similarity`, published at https://lucene.apache.org/core/9_9_1/core/org/apache/lucene/search/similarities/BM25Similarity.html and read at 2026-08-14 12:47 +0200. Elastic states the shipped defaults work for most corpora and that tuning them is not a first priority, read at 2026-08-14 12:44 +0200. Not the value behind the BEIR baseline, see `docs/plans/public-benchmark.md` section 6.1 |
 | `bm25B` | 0.75 | `src/eval/bm25.js` | borrowed, source named | The same two sources, same read times. The BEIR baseline was produced at 0.4, which is Anserini's default rather than Lucene's |
 | `mmrLambda` | 0.5 | `config.js`, `search-engine.js` | arbitrary | `scripts/eval-match.js` measured 1.0, meaning diversity off, as better for files mode. Never measured for internet mode |
 | `bm25Weight` | 0.4 | `config.js`, `search-engine.js` | arbitrary | Only used when rank fusion is disabled. Forced by axis B being measured |
 | `semanticWeight` | 0.6 | `config.js`, `search-engine.js` | arbitrary | Same as above |
-| `candidateLimitBm25` | 100 | `config.js`, `routes/search.js` | borrowed, loosely, source named | Anthropic retrieves 150 candidates and reranks them, quoted as "we used the top 150" at https://www.anthropic.com/engineering/contextual-retrieval read at 2026-08-14 13:02 +0200. Our 100 is not their 150 and nothing here justifies the difference. Never measured as a recall ceiling |
+| `candidateLimitBm25` | 100 | `config.js`, `routes/search.js` | borrowed, loosely, source named | Anthropic retrieves 150 candidates and reranks them, quoted as "we used the top 150" at https://www.anthropic.com/engineering/contextual-retrieval read at 2026-08-14 17:41 +0200. Our 100 is not their 150 and nothing here justifies the difference. Never measured as a recall ceiling |
 | `candidateLimitSemantic` | does not exist | nowhere | absent | The semantic branch has no limit because it never had its own candidate set. Forced by axis A |
-| `resultsReturned` | 20 | `routes/search.js`, `search-engine.js`, `reranker.js` | borrowed, source named | Anthropic states "Passing the top-20 chunks to the model is more effective than just the top-10 or top-5", same page, read at 2026-08-14 13:14 +0200. No margin is published with it, and their measurement is of chunks passed to a model, not of results shown to a person |
+| `resultsReturned` | 20 | `routes/search.js`, `search-engine.js`, `reranker.js` | borrowed, source named | Anthropic states "Passing the top-20 chunks to the model is more effective than just the top-10 or top-5", same page, read at 2026-08-14 17:55 +0200. No margin is published with it, and their measurement is of chunks passed to a model, not of results shown to a person |
 | `chunkMaxWords` | 300 | `chunker/semantic.js` | arbitrary | Sits at the model's 256 token window, see section 4. The configured `CHUNK_SIZE` of 200 never reaches it |
 | `chunkMinWords` | 50 | `chunker/semantic.js`, `chunker/utils.js` | arbitrary | Forced by axis C being measured |
 | `chunkOverlapWords` | 50 | `config.js`, `chunker/fixed.js` | arbitrary | Only reaches the fixed strategy, which is not the default |
@@ -120,7 +120,7 @@ Counted by origin on 2026-08-13, when this table was written: two borrowed with 
 measured on a small sample, one absent, and the rest arbitrary. That ratio was the finding of this
 document.
 
-Recounted at 2026-08-14 13:16 +0200, after the verification pass recorded in
+Recounted at 2026-08-14 17:57 +0200, after the verification pass recorded in
 `docs/reference/retrieval-in-industry.md` section 4.1: five now carry a link to a primary source and
 the moment it was read, being `rrfK`, `bm25K1`, `bm25B`, `candidateLimitBm25` and `resultsReturned`.
 The pass also removed one false attribution rather than adding one, which is the more valuable half.
@@ -138,7 +138,7 @@ behaviours 1 and 2 have no test, which section 7 lists and nobody built. The lis
 `judgeProvider`, `judgeSecondModel`, `judgeMaxTokens`, `judgeInputCostPerMillion`,
 `judgeOutputCostPerMillion`, `judgeCallsPerMinute`, `gradeMin`, `gradeMax`, `calibrationSampleSize`
 and `calibrationMinimumKappa`, plus `judgeModel` whose recorded value is stale. Recorded here at
-2026-08-14 13:16 +0200 as a known gap with its cause, rather than left to be rediscovered.
+2026-08-14 17:57 +0200 as a known gap with its cause, rather than left to be rediscovered.
 
 ## 5.1 Evaluation constants
 

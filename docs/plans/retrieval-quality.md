@@ -2,7 +2,7 @@
 
 Status: draft
 Owner: repository owner
-Last change: 2026-08-14 16:20:11 +0200
+Last change: 2026-08-14 18:07:30 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -104,7 +104,7 @@ its own entry in `docs/eval/`.
 
 | # | Phase | Branch | Depends on | Why here |
 |---|---|---|---|---|
-| 0 | A build that runs | main | nothing | Closed 2026-08-14 16:18 +0200. See section 6.1 |
+| 0 | A build that runs | main | nothing | Closed 2026-08-14 18:06 +0200. See section 6.1 |
 | 1 | Evaluation corpus for internet search | main | 0 | Nothing that follows can be judged without an answer key, and the existing harness only covers files mode |
 | 2 | Constants extraction, no value changes | main | 1 | Turns every axis into configuration. Behaviour identical before and after, verified by re-running phase 1 |
 | 3 | Baseline recorded | main | 2 | The number every later number is compared against |
@@ -118,7 +118,7 @@ its own entry in `docs/eval/`.
 Phases 0 to 3 change no ranking behaviour. That is deliberate: three phases of work before the first
 improvement, so that the first improvement can be believed.
 
-## 6.1 Phase 0, closed 2026-08-14 16:18 +0200
+## 6.1 Phase 0, closed 2026-08-14 18:06 +0200
 
 The cause was named exactly rather than worked around. `npm install` on the development machine runs
 Node 24 and has no Python, so `better-sqlite3` 11.10.0 finds no prebuilt binary for that Node version,
@@ -135,7 +135,7 @@ docker build --target test -t semantic-search-test .
 docker run --rm semantic-search-test npm test
 ```
 
-Result of the first full run, at 2026-08-14 16:18 +0200: 61 suites passed, 1 skipped, 575 tests
+Result of the first full run, at 2026-08-14 18:06 +0200: 61 suites passed, 1 skipped, 575 tests
 passed, 6 skipped, zero failures. `npx eslint src/ __tests__/ scripts/` reports zero errors and three
 pre-existing unused variable warnings.
 

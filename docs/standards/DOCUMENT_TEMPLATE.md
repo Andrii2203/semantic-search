@@ -31,6 +31,10 @@ retired mechanically.
   card itself, never a summary of it. A named company without a link is not a source.
 - A number whose source was searched for and not found says so in words, in its own row. An empty
   cell is read as verified after a month has passed, which is how folklore enters a document.
+- The clock is read at the moment of writing, never extrapolated from an earlier reading. This rule
+  exists because it was broken within an hour of the first rule being written: stamps were computed
+  by adding an estimated elapsed time to a clock read earlier in the session, and were wrong by up to
+  five hours. A stamp that was reconstructed rather than read says so where it appears.
 - The behaviour list in section 4 is the contract with the test suite. Test names repeat those lines
   verbatim, see `TESTING_STANDARD.md` section 8.
 

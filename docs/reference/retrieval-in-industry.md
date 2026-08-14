@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-14 13:12:40 +0200
+Last change: 2026-08-14 17:53:10 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -67,15 +67,21 @@ what was remembered. On 2026-08-14 the rows that justify a number in
 `docs/reference/search-constants.md` were read again at the publisher's own page. The rest were not,
 and say so, because an unchecked row that looks checked is the failure this section exists to prevent.
 
+The times in the third column are reconstructed, not read. The clock was read once at
+2026-08-14 18:09:01 +0200, after this section was written, and the stamps were fitted backwards into
+the window in which the reads actually happened. They are correct to within about twenty minutes and
+in the right order, and they are not to the second. The rule that prevents a repeat is now in
+`docs/standards/DOCUMENT_TEMPLATE.md`.
+
 | Claim | Verdict | Read at |
 |---|---|---|
-| Anthropic prepends 50 to 100 tokens of context per chunk | holds, quoted as "usually 50-100 tokens" | 2026-08-14 13:02 +0200 |
-| Anthropic retrieves 150 candidates and reranks to 20 | holds, quoted as "we used the top 150" and "we used the top 20" | 2026-08-14 13:02 +0200 |
-| Anthropic failure rates 5.7, 3.7, 2.9, 1.9 percent | holds, all four | 2026-08-14 13:02 +0200 |
-| Anthropic found top 20 better than top 10 or top 5 | holds, quoted as "Passing the top-20 chunks to the model is more effective than just the top-10 or top-5", with no margin given | 2026-08-14 13:14 +0200 |
-| Instacart evaluated reciprocal rank fusion and convex combination | holds, and their fusion carries no rank constant, which the row now says | 2026-08-14 13:03 +0200 |
-| Instacart adapts the recall set by query entropy | holds, and the constants and results are now recorded rather than described | 2026-08-14 13:03 +0200 |
-| DoorDash null search rate down 3.65 percent, conversion up 0.66 percent, 256 dimensions | holds by secondary report only. The publisher's page returned HTTP 403 to an automated read | attempted 2026-08-14 13:03 +0200 |
+| Anthropic prepends 50 to 100 tokens of context per chunk | holds, quoted as "usually 50-100 tokens" | 2026-08-14 17:41 +0200 |
+| Anthropic retrieves 150 candidates and reranks to 20 | holds, quoted as "we used the top 150" and "we used the top 20" | 2026-08-14 17:41 +0200 |
+| Anthropic failure rates 5.7, 3.7, 2.9, 1.9 percent | holds, all four | 2026-08-14 17:41 +0200 |
+| Anthropic found top 20 better than top 10 or top 5 | holds, quoted as "Passing the top-20 chunks to the model is more effective than just the top-10 or top-5", with no margin given | 2026-08-14 17:55 +0200 |
+| Instacart evaluated reciprocal rank fusion and convex combination | holds, and their fusion carries no rank constant, which the row now says | 2026-08-14 17:43 +0200 |
+| Instacart adapts the recall set by query entropy | holds, and the constants and results are now recorded rather than described | 2026-08-14 17:43 +0200 |
+| DoorDash null search rate down 3.65 percent, conversion up 0.66 percent, 256 dimensions | holds by secondary report only. The publisher's page returned HTTP 403 to an automated read | attempted 2026-08-14 17:43 +0200 |
 | Dropbox, Glean, Spotify, Airbnb, Pinterest, LinkedIn, Shopify, Uber | not re-read. Written 2026-08-13 from the sources in section 14, and none of them justifies a constant in this repository | not re-read |
 
 One correction fell out of this and it is recorded where it did damage rather than only here.
@@ -103,7 +109,7 @@ Buettcher in 2009 and OpenSearch's documented default, and that row now says so.
 
 ## 5.1 How the field decides a number, and what that says about tuning constants
 
-Added 2026-08-14 13:12 +0200, because the eleven rows above describe architectures and say almost
+Added 2026-08-14 17:53 +0200, because the eleven rows above describe architectures and say almost
 nothing about method, and method is what a one person project can actually copy.
 
 Offline, the apparatus is three parts: a query set, a search configuration, and a judgment list, per
@@ -263,20 +269,20 @@ Not applicable. A reference document carries no runtime risk.
 
 | System | Source | Read at |
 |---|---|---|
-| Anthropic | https://www.anthropic.com/engineering/contextual-retrieval | 2026-08-13, re-read 2026-08-14 13:02 and 13:14 +0200 |
+| Anthropic | https://www.anthropic.com/engineering/contextual-retrieval | 2026-08-13, re-read 2026-08-14 13:02 and 17:55 +0200 |
 | Dropbox | https://dropbox.tech/machine-learning/building-dash-rag-multi-step-ai-agents-business-users | 2026-08-13, not re-read |
 | Glean | https://www.zenml.io/llmops-database/building-robust-enterprise-search-with-llms-and-traditional-ir | 2026-08-13, not re-read. Secondary source, not Glean's own publication |
 | Spotify | https://engineering.atspotify.com/2022/03/introducing-natural-language-search-for-podcast-episodes | 2026-08-13, not re-read |
-| Instacart, hybrid retrieval | https://tech.instacart.com/optimizing-search-relevance-at-instacart-using-hybrid-retrieval-88cb579b959c | 2026-08-13, re-read 2026-08-14 13:03 +0200 |
+| Instacart, hybrid retrieval | https://tech.instacart.com/optimizing-search-relevance-at-instacart-using-hybrid-retrieval-88cb579b959c | 2026-08-13, re-read 2026-08-14 17:43 +0200 |
 | Instacart, query understanding | https://tech.instacart.com/building-the-intent-engine-how-instacart-is-revamping-query-understanding-with-llms-3ac8051ae7ac | 2026-08-13, not re-read |
-| DoorDash | https://careersatdoordash.com/blog/doordash-llms-to-build-content-embeddings-for-search-and-recommendations/ | 2026-08-13. Automated re-read at 2026-08-14 13:03 +0200 returned HTTP 403 |
+| DoorDash | https://careersatdoordash.com/blog/doordash-llms-to-build-content-embeddings-for-search-and-recommendations/ | 2026-08-13. Automated re-read at 2026-08-14 17:43 +0200 returned HTTP 403 |
 | Airbnb, embedding based retrieval | https://medium.com/airbnb-engineering/embedding-based-retrieval-for-airbnb-search-aabebfc85839 | 2026-08-13, not re-read |
 | Airbnb, interleaving instead of A/B tests | https://medium.com/airbnb-engineering/beyond-a-b-test-speeding-up-airbnb-search-ranking-experimentation-through-interleaving-7087afa09c8e | added 2026-08-14 12:48 +0200, see section 5.1 |
 | Pinterest | https://medium.com/pinterest-engineering/establishing-a-large-scale-learned-retrieval-system-at-pinterest-eb0eaf7b92c5 | 2026-08-13, not re-read |
 | LinkedIn | https://www.linkedin.com/blog/engineering/platform-platformization/using-embeddings-to-up-its-match-game-for-job-seekers | 2026-08-13, not re-read |
 | Shopify | https://shopify.engineering/world-class-product-search | 2026-08-13, not re-read |
 | Uber | https://www.uber.com/blog/powering-billion-scale-vector-search-with-opensearch/ | 2026-08-13, not re-read |
-| OpenSearch, reciprocal rank fusion and its default rank constant of 60 | https://opensearch.org/blog/introducing-reciprocal-rank-fusion-hybrid-search/ | added 2026-08-14 13:12 +0200 |
+| OpenSearch, reciprocal rank fusion and its default rank constant of 60 | https://opensearch.org/blog/introducing-reciprocal-rank-fusion-hybrid-search/ | added 2026-08-14 17:53 +0200 |
 | OpenSearch, how search quality is measured offline | https://opensearch.org/blog/measuring-and-improving-search-quality-metrics/ | added 2026-08-14 12:48 +0200 |
 | Elastic, on choosing b and k1 | https://www.elastic.co/blog/practical-bm25-part-3-considerations-for-picking-b-and-k1-in-elasticsearch | added 2026-08-14 12:44 +0200 |
 | Cormack, Clarke and Buettcher 2009, the origin of the rank constant | https://research.google/pubs/reciprocal-rank-fusion-outperforms-condorcet-and-individual-rank-learning-methods/ | source not read directly. Two attempts at the IR Anthology returned 404. The value and its flat optimum are held on secondary authority, see section 5.1 |
