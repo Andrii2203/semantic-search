@@ -16,6 +16,25 @@ RUN npm ci
 COPY client/ ./
 RUN npm run build
 
+FROM node:20-slim AS test
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY package*.json ./
+RUN npm ci
+
+COPY jest.config.js .eslintrc.json .env.example ./
+COPY src/ ./src/
+COPY __tests__/ ./__tests__/
+COPY __mocks__/ ./__mocks__/
+COPY scripts/ ./scripts/
+COPY eval/ ./eval/
+
+CMD ["npm", "test"]
+
 FROM node:20-slim
 
 WORKDIR /app

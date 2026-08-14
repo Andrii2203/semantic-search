@@ -240,6 +240,22 @@ Behaviours 6 to 10 are the ones that matter most and they need no corpus at all.
 against hand written rankings whose correct score can be computed on paper, which is what makes
 behaviour 13 interpretable when it fails.
 
+Built 2026-08-14 16:10 +0200. Behaviours 6 to 10 are covered by `__tests__/eval/metrics.test.js` and
+`src/eval/metrics.js`, ten tests passing, the five behaviours plus five edge cases that the behaviour
+list did not name and the implementation would otherwise have decided silently: a relevant document
+beyond k, a judgment of grade zero, a query with no relevant document at all, a ranking shorter than
+k, and an unjudged document. The last one is behaviour 12 of `docs/plans/evaluation-corpus.md`
+appearing again at a different level, which is a sign the two documents agree.
+
+The definitions implemented, so that a later disagreement with a published number can be traced to a
+definition rather than argued: gain is `2^grade - 1`, discount is `log2(rank + 1)` with rank counted
+from one, the ideal ranking is the judged grades sorted descending and cut at k, nDCG is zero when the
+ideal is zero rather than a division by zero, and recall counts every judgment above grade zero as
+relevant. These are the definitions BEIR's own tooling uses, which is what makes the numbers
+comparable outward.
+
+Behaviours 1 to 5, 11 and 12 remain, and they need the fetch script that does not exist yet.
+
 ## 9. Definition of done
 
 - Every behaviour in section 7 has a passing test, except the two marked otherwise.

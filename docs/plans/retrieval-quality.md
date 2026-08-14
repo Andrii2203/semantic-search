@@ -2,7 +2,7 @@
 
 Status: draft
 Owner: repository owner
-Last change: 2026-08-14
+Last change: 2026-08-14 16:20:11 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -104,7 +104,7 @@ its own entry in `docs/eval/`.
 
 | # | Phase | Branch | Depends on | Why here |
 |---|---|---|---|---|
-| 0 | A build that runs | main | nothing | `npm install` fails on the native SQLite module, so `npm run verify` cannot run and no phase can be declared done. Resolved in Docker or on Node 20 with build tools |
+| 0 | A build that runs | main | nothing | Closed 2026-08-14 16:18 +0200. See section 6.1 |
 | 1 | Evaluation corpus for internet search | main | 0 | Nothing that follows can be judged without an answer key, and the existing harness only covers files mode |
 | 2 | Constants extraction, no value changes | main | 1 | Turns every axis into configuration. Behaviour identical before and after, verified by re-running phase 1 |
 | 3 | Baseline recorded | main | 2 | The number every later number is compared against |
@@ -117,6 +117,30 @@ its own entry in `docs/eval/`.
 
 Phases 0 to 3 change no ranking behaviour. That is deliberate: three phases of work before the first
 improvement, so that the first improvement can be believed.
+
+## 6.1 Phase 0, closed 2026-08-14 16:18 +0200
+
+The cause was named exactly rather than worked around. `npm install` on the development machine runs
+Node 24 and has no Python, so `better-sqlite3` 11.10.0 finds no prebuilt binary for that Node version,
+falls back to compiling from source, and node-gyp fails at "Could not find any Python installation to
+use". The install stops there, which is why `node_modules` held a `jest` shim in `.bin` and no `jest`
+package. Nothing in the repository was broken. The machine could not build one native dependency.
+
+The fix is a `test` stage in the `Dockerfile`, on Node 20 with `python3`, `make` and `g++`, which is
+the environment the production stage already used for the same reason. Two commands, and they are the
+gate this project runs from now on until the host toolchain changes:
+
+```
+docker build --target test -t semantic-search-test .
+docker run --rm semantic-search-test npm test
+```
+
+Result of the first full run, at 2026-08-14 16:18 +0200: 61 suites passed, 1 skipped, 575 tests
+passed, 6 skipped, zero failures. `npx eslint src/ __tests__/ scripts/` reports zero errors and three
+pre-existing unused variable warnings.
+
+Recorded because it changes what a green run means. Until now no number in this project had ever been
+produced by a machine that could run the suite, and every claim of done rested on reading the code.
 
 ## 7. Axis A note
 
