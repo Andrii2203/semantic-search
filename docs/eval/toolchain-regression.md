@@ -107,5 +107,6 @@ Not applicable. No runtime behaviour changed.
 
 | Question | Trigger that forces an answer |
 |---|---|
-| Whether embedding on Node 24, or on the GPU, reproduces the cached vectors | The first re-embedding run, which `docs/adr/012-multilingual-embedding-model.md` forces anyway |
+| Answered 2026-08-15 14:37:11 +0200 for the runtime, and it is stronger than expected. Five SciFact documents re-embedded on Node 24 with `onnxruntime-node` 1.27 match the vectors cached on Node 20 with 1.26 bit for bit, maximum element difference 0.000e+0. The GPU half stays open | closed for the runtime, open for the device |
+| Whether embedding on the GPU reproduces the same vectors | The first run under `docs/adr/013-local-inference-on-the-gpu.md` |
 | Whether this check runs automatically after a dependency change rather than when someone thinks to ask | The next toolchain step lands without it |

@@ -302,6 +302,38 @@ Recorded as a rule rather than as a story: a dependency that sits in the request
 running the application, not by the suite. The suite is necessary and it is not sufficient, which is
 exactly what today demonstrated twice before this.
 
+### 5.6 Steps 6 and 7, and the plan closed 2026-08-15 14:37:11 +0200
+
+Minors and patches in one install, as section 5 said: `@anthropic-ai/sdk` 0.117.1, `groq-sdk` 1.5.0,
+`helmet` 8.3.0, `multer` 2.2.0, `cors` 2.8.6, `onnxruntime-node` 1.27.0, `prettier` 3.9.6. Then the
+client: `jsdom` 25 to 30, five majors, and `vitest` 3 to 4. Twenty client tests, four files, all
+passing.
+
+`npm outdated` prints nothing. Every dependency in both manifests is on its current version.
+
+The `onnxruntime-node` bump is the one that could have moved a number rather than a behaviour, since
+it runs the model that produces every vector. So it was checked against the cache rather than
+assumed:
+
+| Check | Result |
+|---|---|
+| Five SciFact documents re-embedded on Node 24 with onnxruntime 1.27, compared element by element against the vectors cached on 2026-08-14 on Node 20 with 1.26 | maximum element difference 0.000e+0, bit for bit identical |
+
+That closes the open question left in `docs/eval/toolchain-regression.md` section 6. The regression
+check proved the arithmetic above the model was unchanged, and this proves the model itself is. The
+whole toolchain moved and not one number did.
+
+### 5.7 Final state
+
+| | Before, 2026-08-15 morning | After |
+|---|---|---|
+| Node | 20, end of life 2026-04-30, in four places, three of which disagreed with the host | 24, in one place read by four |
+| Dependencies a major behind | 10 runtime, 3 development, 2 client | none |
+| Lint | ESLint 8, end of life, through a config ESLint 10 ignores silently | ESLint 10, flat config, enforcement proven by deliberate violation |
+| The gate | Docker only, image build per run | `npm run verify` on the host, 68 suites and 621 tests in about 25 seconds |
+| `npm run verify` | red since 2026-08-14 18:06 | exits 0 |
+| Quoted measurements | taken on the old toolchain | re-run and identical, `docs/eval/toolchain-regression.md` |
+
 ## 6. Behaviours
 
 1. `npm install` on a clean checkout succeeds on the Node version named in `engines`.
