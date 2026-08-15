@@ -145,6 +145,52 @@ default of 60 was read at its own blog. The 2009 paper was not read directly, be
 its anthology page returned 404, so the pilot study and the flat optimum are held on secondary
 authority until the paper is obtained.
 
+## 5.2 How a weight is actually set in a production system
+
+Added 2026-08-15 11:43:15 +0200. Section 5.1 recorded how the field decides a number in general. This
+section records the specific case this project is about to face, which is how the fusion weights get
+their values, because `docs/eval/beir-axes-a-b.md` section 7.1 swept them and deliberately refused to
+move them.
+
+The answer the large systems give is that nobody sets them by hand at all. The weights become
+features of a learned ranker. Gradient boosted decision trees trained with a ranking objective,
+LambdaMART as implemented in XGBoost and LightGBM, have been the production workhorse for over a
+decade and remain in place in 2026, typically as a stage between candidate generation and a neural
+reranker. Section 4 of this document already records two of them: Shopify ranks with gradient boosted
+trees, and Airbnb, Pinterest and LinkedIn learn the combination end to end instead.
+
+The lexical weight and the dense score stop being a tuning knob and become two features among many,
+next to freshness, popularity, trust and interaction history. That is the same list section 5 point 7
+recorded, and it explains why no published system quotes an alpha: they do not have one.
+
+What that costs, and why this project cannot copy it yet. A learned ranker needs labelled query and
+document pairs in the thousands. This repository has 947 judgments over 50 intents, of which 16 have
+any relevant article, recorded in `docs/plans/evaluation-corpus.md` section 12. Training a ranker on
+that would fit noise and then be measured on the same noise. Section 8 of this document already
+carries the trigger that would unblock it, one hundred logged decisions, and a learned ranker needs
+considerably more than that.
+
+What the field does when it cannot train, which is what applies here. Grid search over the weight on
+a development split, validated on a held out split with a significance test, and repeated per domain
+rather than once globally. Published practice reports optimal weights that differ by subject area,
+for example a lexical bias in legal search where exact statutory references matter more than
+paraphrase, and the same sources warn that the optimum is corpus specific and drifts, so it is
+re-measured rather than set once. Two independent 2026 write ups also give the same starting advice
+this project arrived at by measurement: begin with reciprocal rank fusion at a rank constant of 60
+and no tuning, and if hybrid does not beat both single branches, stop and find out why before adding
+machinery.
+
+The research direction beyond a fixed weight is a weight chosen per query rather than per corpus,
+published as dynamic alpha tuning. It is recorded here so that it is not proposed as an axis before
+the fixed weight has been measured per vertical, which is the cheaper experiment and is already
+scheduled in `docs/plans/retrieval-quality.md` section 13.
+
+The conclusion for this repository, stated so that the next argument about weights starts here.
+The shipped 0.4 and 0.6 sit on the flat part of the curve and stay until a per vertical sweep says
+otherwise. The sweep is per subject area, reported with intervals, and the peak is not adopted unless
+it clears the resolution recorded in `docs/eval/beir-bm25-control.md` section 6.1. A learned ranker is
+the correct end state and it is blocked on labels, not on effort.
+
 ## 6. Where they differ
 
 | Question | Positions taken |
@@ -237,6 +283,41 @@ tuned configuration and the answer key that justified it are per vertical assets
 itself is the cheap part. `docs/plans/retrieval-quality.md` section 12 carries the open question and
 the experiment that would settle it on this project's own data rather than by analogy.
 
+## 8.3 What the field settled on by 2026, and what is now available off the shelf
+
+Added 2026-08-15 11:10:48 +0200, after a second research pass. The eleven systems above were read on
+2026-08-13 and describe architectures published between 2022 and 2025. This section records what
+changed since, and it changes one thing that matters here: the parts this project is deciding by
+measurement are now commodities, while the deciding itself is not.
+
+The stack is no longer contested. Independent 2026 write ups describe the same pipeline as settled:
+lexical and dense retrieval in parallel, fused by reciprocal rank fusion, then a cross encoder
+reranker. That is the same conclusion section 5 drew from the eleven systems, and it is the shape
+`docs/adr/008-parallel-candidate-generation.md` adopted, so this repository is now aligned with the
+consensus rather than ahead of or behind it.
+
+Two additions to the same stack are named consistently and neither is measured here. Query rewriting
+before retrieval, and an agent that can re-ask the retriever after seeing results. Both belong to
+axis D and both stay out of scope until axis D is measured, per
+`docs/plans/retrieval-quality.md` section 3.
+
+Learned sparse retrieval, SPLADE, and late interaction, ColBERT, are the two alternatives to the
+dense branch that keep being reported as stronger than BM25 on BEIR at a higher index cost. Neither
+is an option in this runtime today, which is worth writing down before somebody proposes it as an
+axis: both need an index shape `src/eval/bm25.js` and the vector table do not have.
+
+What is available without training anything, verified on the Hub on 2026-08-15 between 11:02 and
+11:06 +0200 and recorded with counts in `docs/adr/012-multilingual-embedding-model.md` section 4: a
+multilingual embedding model under 500M parameters that runs in this project's existing ONNX runtime,
+and a multilingual cross encoder reranker in the same runtime. Axis E was written on the assumption
+that reranking means either a language model API or a cross encoder somebody would have to host. It
+means neither. It is a package download.
+
+The consequence for this project is a narrowing, not a new plan. Nothing in the retrieval stack is a
+differentiator any more, which `docs/product/COMPETITORS.md` section 6 states from the product side.
+What remains scarce is the apparatus for deciding which configuration is right for a given subject
+area, and this repository has one.
+
 ## 9. Behaviours
 
 Not applicable. This document records external evidence. It changes no running behaviour, so there is
@@ -286,3 +367,8 @@ Not applicable. A reference document carries no runtime risk.
 | OpenSearch, how search quality is measured offline | https://opensearch.org/blog/measuring-and-improving-search-quality-metrics/ | added 2026-08-14 12:48 +0200 |
 | Elastic, on choosing b and k1 | https://www.elastic.co/blog/practical-bm25-part-3-considerations-for-picking-b-and-k1-in-elasticsearch | added 2026-08-14 12:44 +0200 |
 | Cormack, Clarke and Buettcher 2009, the origin of the rank constant | https://research.google/pubs/reciprocal-rank-fusion-outperforms-condorcet-and-individual-rank-learning-methods/ | source not read directly. Two attempts at the IR Anthology returned 404. The value and its flat optimum are held on secondary authority, see section 5.1 |
+| EmbeddingGemma, the model card and its publisher's post, for section 8.3 and ADR-012 | https://huggingface.co/blog/embeddinggemma | 2026-08-15 11:02 +0200 |
+| Qwen3-Embedding-0.6B model card | https://huggingface.co/Qwen/Qwen3-Embedding-0.6B | 2026-08-15 11:04 +0200 |
+| The Hub's own model index, for which ONNX builds of embedders and rerankers exist and their download counts | https://huggingface.co/api/models | 2026-08-15 between 11:05 and 11:06 +0200 |
+| OpenSearch, agentic relevance tuning, the 2026 addition named in section 8.3 | https://opensearch.org/blog/agentic-relevance-tuning/ | surfaced 2026-08-15 11:08 +0200, not read directly |
+| The settled 2026 pipeline, lexical and dense in parallel, rank fusion, cross encoder | Several independent 2026 write ups surfaced by search, none of them a primary engineering source from a named company | surfaced 2026-08-15 11:08 +0200, held as secondary. The primary evidence for the same claim is the eleven systems in section 4 |

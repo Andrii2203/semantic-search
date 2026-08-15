@@ -56,9 +56,36 @@ npm run verify
 This runs lint, the complexity limits and the whole test suite. It is the same command CI runs.
 Green locally and green in CI mean the same thing, so there is never a reason to push and hope.
 
-The gate runs inside Docker, not on the host. `better-sqlite3` is a native module, and on a Windows
-host without the Microsoft build tools `npm install` fails at node-gyp, so the gate cannot run there
-at all. The container is Linux and matches CI, which removes the whole class of works on my machine.
+Changed 2026-08-15 12:56:41 +0200. The gate runs on the host, natively, and Docker is the fallback.
+
+The reason the gate moved into Docker was never Windows. It was that the host had no version pin, so
+`npm install` ran on Node 24 against `better-sqlite3` 11, which publishes no prebuilt binary for that
+Node version, fell back to compiling, and failed for want of Python. Recorded in
+`docs/plans/retrieval-quality.md` section 6.1.
+
+From today the toolchain is pinned in one place and read everywhere: `.nvmrc`, `engines` in
+`package.json` with `engine-strict=true`, the `Dockerfile` and `.github/workflows/ci.yml` all name the
+same Node major. With `better-sqlite3` on a version that ships a prebuilt binary for it, `npm ci`
+needs no compiler and the loop is:
+
+```
+npm run verify
+```
+
+The CI workflow already runs this way, natively on `ubuntu-latest` with `npm ci`, and has never used
+the `Dockerfile`. So the host and CI now do the same thing, which is what the container was supposed
+to guarantee.
+
+Docker keeps two jobs and loses one. It builds the production image, and it is the fallback when a
+dependency genuinely cannot be built on the host. It is no longer the only way to run the suite.
+
+The fallback is not theoretical and the condition that triggers it is written down rather than
+remembered: if `npm ci` on the host fails for a package that has no Windows prebuilt binary and needs
+a compiler, that package is named in `docs/plans/dependency-upgrade.md` with the error, and the gate
+for that work goes back into the container until the package is replaced or the toolchain is
+installed. A vague memory that something once needed Linux is not that record.
+
+The container commands, kept for the fallback:
 
 ```
 docker run --rm -v "$PWD:/app" -v semantic-search-node-modules:/app/node_modules \

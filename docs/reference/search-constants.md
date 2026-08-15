@@ -140,6 +140,18 @@ behaviours 1 and 2 have no test, which section 7 lists and nobody built. The lis
 and `calibrationMinimumKappa`, plus `judgeModel` whose recorded value is stale. Recorded here at
 2026-08-14 17:57 +0200 as a known gap with its cause, rather than left to be rediscovered.
 
+Three rows above stopped being true on 2026-08-15 11:10:48 +0200 and the table is not rewritten until
+the code moves, per the definition of done of each ADR. Recorded here so the gap is visible rather
+than discovered.
+
+`semanticCutoffSearch` is deleted, not retuned, by `docs/adr/011-one-cutoff-one-origin.md`. Search
+returns the top `resultsReturned` in rank order and applies no cosine floor.
+`semanticCutoffInbox` becomes the only threshold in the system and the only one a person can move.
+
+Every row of section 4, the model facts, is void when
+`docs/adr/012-multilingual-embedding-model.md` picks a model. The 384 dimensions, the 256 token window
+and the English only language row are properties of `Xenova/all-MiniLM-L6-v2` and of nothing else.
+
 ## 5.1 Evaluation constants
 
 These do not change what search returns. They decide what a measurement means, so an arbitrary value

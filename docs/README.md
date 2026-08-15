@@ -15,6 +15,8 @@ How work is done here. Read before writing anything.
 | `standards/STYLE.md` | How does text and code look here |
 | `standards/COMPLEXITY.md` | What are the limits, where are they enforced |
 | `standards/DESIGN_STANDARD.md` | Visual language of the UI |
+| `standards/EVALUATION_STANDARD.md` | How a measurement is made so that it means something |
+| `standards/DEPENDENCY_STANDARD.md` | How packages, runtimes and models are kept current |
 
 ## product
 
@@ -24,6 +26,7 @@ Why this exists. Changes rarely.
 |---|---|
 | `product/VISION.md` | What is being built and for whom |
 | `product/STRATEGY.md` | How this fits the larger picture |
+| `product/COMPETITORS.md` | Who else solves this, and what they publish about how |
 
 ## plans
 
@@ -31,8 +34,16 @@ What is being built right now. One active plan at a time.
 
 | File | Answers |
 |---|---|
-| `plans/PLAN_v7.md` | The phased execution plan |
+| `plans/retrieval-quality.md` | The active plan: why search is poor and the order it is fixed in |
+| `plans/evaluation-corpus.md` | The local bench, its judge and its answer key |
+| `plans/public-benchmark.md` | The BEIR bench and the control that validates our metrics |
+| `plans/dependency-upgrade.md` | The measured state of every dependency and the order they move in |
 | `plans/production-readiness-fixes.md` | The defects found by running the system, and their fixes |
+
+## eval
+
+One report per measurement, appended, never overwritten. Produced under
+`standards/EVALUATION_STANDARD.md`.
 
 ## adr
 

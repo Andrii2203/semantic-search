@@ -115,6 +115,41 @@ rather than lowering it.
 Section 6 of `docs/plans/retrieval-quality.md` keeps the local bench ahead of any shipping decision.
 That ordering now has a second reason: not preference, but the absence of a public alternative.
 
+## 4.1 What a vertical can and cannot be built on, and the licence that decides it
+
+Added 2026-08-15 11:43:15 +0200, because the question was asked directly: the datasets are downloaded,
+so can the verticals of `docs/plans/retrieval-quality.md` section 13 be built on them.
+
+The answer splits in two, and the split is not a technicality.
+
+What these collections can do, and already did. They choose a configuration per subject area and they
+validate the instrument. `docs/eval/beir-axes-a-b.md` section 5.1 is the proof: FiQA, standing for
+finance, wants the dense branch alone, while SciFact and NFCorpus, standing for science and medicine,
+want both branches. That is the vertical hypothesis measured rather than argued, and it cost nothing
+beyond compute.
+
+What they cannot be. They cannot be the content a vertical serves, and they cannot be a commercial
+asset. Read on 2026-08-15 11:35 +0200, from the benchmark's own paper and the dataset cards: SciFact
+carries CC BY-NC 2.0, which forbids commercial use, and NFCorpus and FiQA-2018 publish no licence at
+all while being described as restricted to academic or non-commercial use. A product sold on top of
+them is not a licensing risk to manage, it is a licence violation to avoid.
+
+So the shape of a vertical is unchanged by having the data: a vertical is a tuned configuration plus
+an answer key over the content of that vertical, and the public collections are the bench that picks
+the configuration, not the product. The answer key is the asset, and an answer key over somebody
+else's non-commercial corpus is not an asset.
+
+Two consequences follow, both cheap to state and expensive to discover later.
+
+The engine axes can be decided on the public collections for free, which is why
+`docs/plans/retrieval-quality.md` section 6 puts phase 3.5 ahead of the matrix. Nothing about that
+changes.
+
+The first real vertical still needs its own corpus and its own judged topics, in its own subject
+area, and the method for building one is already written in `docs/plans/evaluation-corpus.md`. What
+the public collections bought is that the method itself is now proven and the metric code is
+verified, which is the expensive half of doing it a second time.
+
 ## 5. Fetched, not committed
 
 The datasets are not added to git. They are public, immutable and versioned at the source, and adding

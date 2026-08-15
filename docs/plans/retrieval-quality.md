@@ -75,6 +75,10 @@ Out of scope, each with its reason:
 
 ## 4. Sources: kept, and frozen
 
+Superseded in part on 2026-08-15 11:10:48 +0200 by `docs/adr/010-sources-narrowed-to-user-feeds.md`.
+The three sources no longer stay in the product. Everything below about the snapshot being frozen and
+never fetched during a run is unchanged and is what keeps the existing bench valid. See section 6.2.
+
 Hacker News, Reddit and Djinni stay in the product. They are the only real, messy content available,
 and `docs/standards/EVALUATION_STANDARD.md` section 6 states that a corpus written by us cannot
 describe behaviour on real feeds.
@@ -88,6 +92,11 @@ and section 5 fixes the measurement language as English so that the model axis d
 the other five.
 
 ## 5. Language
+
+Superseded on 2026-08-15 11:10:48 +0200 by `docs/adr/012-multilingual-embedding-model.md`. Ukrainian
+stops being a holdout and becomes a supported language with a bench of its own. The isolation argument
+below still holds for the five axes measured on the current model, which is why the English
+collections stay the place where the axes are decided. See section 6.2.
 
 Measurement is in English. The reason is isolation: the measured cross language score of 0.182 is
 larger than the difference any other axis will produce, so a mixed language corpus would report the
@@ -141,6 +150,27 @@ pre-existing unused variable warnings.
 
 Recorded because it changes what a green run means. Until now no number in this project had ever been
 produced by a machine that could run the suite, and every claim of done rested on reading the code.
+
+## 6.2 What changed on 2026-08-15, and what it costs this plan
+
+Four decisions were taken on 2026-08-15 11:10:48 +0200 and each one moves something this plan had
+scheduled. They are recorded here because a plan that contradicts its own ADRs is worse than no plan.
+
+| Decision | ADR | Effect on this plan |
+|---|---|---|
+| The three built in sources are retired | `docs/adr/010-sources-narrowed-to-user-feeds.md` | Section 4 is superseded in part. The first open question of section 12, whether ingestion fetches the article body, is answered for the product: RSS carries bodies, so the product stops indexing headlines. It stays open for the bench, whose intents are Hacker News and Reddit posts |
+| The search cutoff is deleted rather than retuned | `docs/adr/011-one-cutoff-one-origin.md` | Section 7 said axis A and the cutoff move together in one commit. They still do, and the cutoff's half of that commit is now a deletion. The second open question of section 12, whether search and inbox cutoffs split, is closed: one of the two stops existing |
+| Ukrainian becomes supported and axis F is promoted | `docs/adr/012-multilingual-embedding-model.md` | Section 5 is superseded. Phase 6 moves next to phase 4 in section 6, because every constant measured on `all-MiniLM-L6-v2` is void when the model changes, and measuring axes on a model that is about to be replaced spends the work twice |
+| Dependencies are audited before a phase | `docs/standards/DEPENDENCY_STANDARD.md`, `docs/plans/dependency-upgrade.md` | Phase 0 is reopened as one step of the upgrade plan. Node 20 went end of life on 2026-04-30, and the native module that broke the build in section 6.1 is two majors behind |
+
+The order in section 6 therefore reads: the dependency upgrade first, because the gate runs on it,
+then phase 4 and axis F together, then the rest unchanged.
+
+One cost is recorded rather than argued away. Promoting axis F means the axis matrix runs against a
+moving model, which is the thing this plan was built to avoid. The alternative is worse: deciding
+four axes on a model this project has already decided to replace, then repeating all of it. The rule
+that keeps it honest is the one already in `docs/standards/EVALUATION_STANDARD.md` section 4, that a
+score without its configuration is a rumour, and the configuration now includes the model identifier.
 
 ## 7. Axis A note
 

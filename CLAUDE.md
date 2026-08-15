@@ -9,12 +9,16 @@ Read this file first, then the document that matches your task. Never start from
 ## 1. What this project is
 
 A universal matching engine. A person writes, in free text, what they care about. The system pulls
-content from sources (Hacker News, Reddit, Djinni today, user supplied sources later) or from the
-person's own uploaded documents, splits it into chunks, embeds it, and delivers only what matches
-that intent into a Gmail style inbox. Every action the person takes (star, approve, skip) nudges
-their profile vector, so the match improves over time.
+content from the feeds that person added and from their own uploaded documents, splits it into
+chunks, embeds it, and delivers only what matches that intent into a Gmail style inbox. Every action
+the person takes (star, approve, skip) nudges their profile vector, so the match improves over time.
+
+The three built in sources, Hacker News, Reddit and Djinni, were retired on 2026-08-15 by
+`docs/adr/010-sources-narrowed-to-user-feeds.md`, because their content is headlines with no body and
+nothing can be retrieved by meaning from a headline.
 
 Product intent: `docs/product/VISION.md`, `docs/product/STRATEGY.md`.
+Who else solves this, and what they publish: `docs/product/COMPETITORS.md`.
 Current execution plan: `docs/plans/retrieval-quality.md`.
 What production search systems do, and the six axes this plan measures:
 `docs/reference/retrieval-in-industry.md`.
@@ -34,6 +38,7 @@ These are not preferences. Work that breaks them is rejected and redone.
 | 6 | Complexity limits are enforced by the linter and by CI | `docs/standards/COMPLEXITY.md` |
 | 7 | No comments in source code | `docs/standards/STYLE.md` |
 | 8 | No em dashes, no asterisk bold in any text | `docs/standards/STYLE.md` |
+| 9 | Dependencies are checked against the registry before a phase, and a major behind is a defect | `docs/standards/DEPENDENCY_STANDARD.md` |
 
 ## 3. Where things live
 
