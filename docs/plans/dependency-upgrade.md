@@ -270,6 +270,38 @@ work that belongs to another plan, and `docs/adr/011-one-cutoff-one-origin.md` r
 fourteen outright. It is switched on in the commit that finishes phase 2, and that is the moment
 behaviour 4 of `docs/reference/search-constants.md` stops being a claim.
 
+### 5.5 Steps 3 and 4, done 2026-08-15 14:30:18 +0200
+
+Jest 29.7.0 to 30.4.1 needed no configuration change and no test change. Identical counts before and
+after: 68 suites, 621 passed, 6 skipped, branches 80.17 percent.
+
+Then the request path, in one install: `zod` 3 to 4.4.3, `express` 4 to 5.2.1, `express-rate-limit` 7
+to 8.6.2. The suite passed with zero changes to any file, which is the result that needed
+distrusting rather than celebrating. Express 5 replaced its path matching, Zod 4 changed its error
+API, and 621 green tests said nothing had happened.
+
+So the application was started and used, which the suite never does. `node src/server.js` on port
+3999 against a throwaway database, then:
+
+| Check | Result |
+|---|---|
+| `GET /api/health` | 200, and it reports db, embedding, groq, fts5 and scheduler all ok, so `better-sqlite3` 13 and FTS5 and the ONNX model all load under Node 24 |
+| The ingest cycle on startup | 194 items fetched, 194 validated, 71 passed the pre filter, 71 saved |
+| `POST /api/auth/register` | 201, session cookie set |
+| `POST /api/auth/register` with a bad password | 400 and a readable `VALIDATION_FAILED` message, so the Zod 4 error shape still reaches the error mapper |
+| `GET /api/items?limit=2` authenticated | 200 with the welcome items |
+| `POST /api/search` | 200 with real results and their matched chunks, so the retrieval path runs end to end |
+| `GET /api/items/does-not-exist` | 404 `NOT_FOUND`, so Express 5 path matching still resolves a parameter route |
+
+That last row is the one that justifies the exercise. Express 5 changed to `path-to-regexp` 8, where
+the wildcard and optional parameter syntax of Express 4 is a parse error rather than a warning. A
+route that failed to compile would have thrown at startup, and no unit test in this repository starts
+the server.
+
+Recorded as a rule rather than as a story: a dependency that sits in the request path is verified by
+running the application, not by the suite. The suite is necessary and it is not sufficient, which is
+exactly what today demonstrated twice before this.
+
 ## 6. Behaviours
 
 1. `npm install` on a clean checkout succeeds on the Node version named in `engines`.
