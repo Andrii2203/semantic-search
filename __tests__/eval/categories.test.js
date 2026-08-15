@@ -1,6 +1,11 @@
 'use strict';
 
-const { deriveCategory, CATEGORIES } = require('../../src/eval/categories');
+const {
+  deriveCategory,
+  lexicalOverlap,
+  buildDocumentFrequency,
+  CATEGORIES,
+} = require('../../src/eval/categories');
 const constants = require('../../src/search-constants');
 
 const varied = [
@@ -81,5 +86,27 @@ describe('src/eval/categories.js', () => {
       { overlap: 0.01, isDuplicate: false },
     );
     expect(category).toBe('irrelevant');
+  });
+
+  test('lexical overlap is computed from the intent text and the article text, weighting each shared word by its inverse document frequency over the corpus', () => {
+    const articles = [
+      { content: 'quarterly earnings report from the retailer' },
+      { content: 'quarterly earnings guidance from the airline' },
+      { content: 'quarterly earnings and the tokamak confinement experiment' },
+    ];
+    const frequency = buildDocumentFrequency(articles);
+    const article = articles[2].content;
+
+    const sharedCommonWord = lexicalOverlap('quarterly results', article, frequency);
+    const sharedRareWord = lexicalOverlap('tokamak results', article, frequency);
+
+    expect(sharedRareWord).toBeGreaterThan(sharedCommonWord);
+  });
+
+  test('a pair whose intent and article share no content word has an overlap of zero, and a pair whose intent words all appear in the article has an overlap of one', () => {
+    const article = 'sediment transport reshaped the northern shore over a decade';
+
+    expect(lexicalOverlap('tokamak confinement plasma', article)).toBe(0);
+    expect(lexicalOverlap('sediment transport shore', article)).toBe(1);
   });
 });

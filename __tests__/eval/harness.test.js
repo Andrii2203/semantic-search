@@ -5,6 +5,33 @@ const os = require('os');
 const path = require('path');
 
 const { runConfiguration, CONFIGURATIONS } = require('../../src/eval/harness');
+const { CATEGORIES } = require('../../src/eval/categories');
+
+const richCorpus = [
+  {
+    _id: 'rich1',
+    title: 'Vitamin supplementation and bone density',
+    text:
+      'A randomised trial of vitamin supplementation measured bone density in older adults across ' +
+      'twelve clinical sites during winter. Participants received either a daily dose or a placebo, ' +
+      'and researchers tracked fracture incidence, calcium absorption and mobility scores throughout ' +
+      'the follow up period. The authors report modest gains concentrated among people whose ' +
+      'baseline levels were lowest before enrolment began.',
+  },
+  {
+    _id: 'rich2',
+    title: 'Coastal erosion on the northern shore',
+    text:
+      'Sediment transport along the northern shore reshaped the beach over a decade, according to a ' +
+      'survey combining aerial photography with tide gauge records. Planners now expect the dune ' +
+      'line to retreat further unless the groynes are replaced, and the council commissioned a ' +
+      'second study covering the estuary and its shifting channels before any permission is granted.',
+  },
+];
+
+const richQueries = [{ _id: 'rq1', text: 'vitamin supplementation and bone density in older adults' }];
+
+const richQrels = ['query-id\tcorpus-id\tscore', 'rq1\trich1\t3', 'rq1\trich2\t0'].join('\n');
 
 const corpus = [
   { _id: 'doc1', title: 'Vitamin D and bone density', text: 'A randomised trial of vitamin supplementation measured bone density in older adults.' },
@@ -19,18 +46,19 @@ const queries = [
 
 const qrels = ['query-id\tcorpus-id\tscore', 'q1\tdoc1\t2', 'q2\tdoc2\t2'].join('\n');
 
-function writeDataset(root, name) {
+function writeDataset(root, name, dataset = {}) {
+  const { rows = corpus, asked = queries, judged = qrels } = dataset;
   const directory = path.join(root, name);
   fs.mkdirSync(path.join(directory, 'qrels'), { recursive: true });
   fs.writeFileSync(
     path.join(directory, 'corpus.jsonl'),
-    corpus.map((row) => JSON.stringify(row)).join('\n'),
+    rows.map((row) => JSON.stringify(row)).join('\n'),
   );
   fs.writeFileSync(
     path.join(directory, 'queries.jsonl'),
-    queries.map((row) => JSON.stringify(row)).join('\n'),
+    asked.map((row) => JSON.stringify(row)).join('\n'),
   );
-  fs.writeFileSync(path.join(directory, 'qrels', 'test.tsv'), qrels);
+  fs.writeFileSync(path.join(directory, 'qrels', 'test.tsv'), judged);
 }
 
 describe('src/eval/harness.js', () => {
@@ -39,6 +67,7 @@ describe('src/eval/harness.js', () => {
   beforeAll(() => {
     root = fs.mkdtempSync(path.join(os.tmpdir(), 'harness-'));
     writeDataset(root, 'tiny');
+    writeDataset(root, 'rich', { rows: richCorpus, asked: richQueries, judged: richQrels });
   });
 
   afterAll(() => {
@@ -101,5 +130,34 @@ describe('src/eval/harness.js', () => {
 
     expect(result.queries).toBe(2);
     expect(result.metrics[0].name).toBe('nDCG@10');
+  });
+
+  test('every judgment in a report carries a derived category, computed at report time from the grade, the overlap and the article properties', async () => {
+    const result = await runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'rich', root });
+
+    expect(Object.keys(result.categories).sort()).toEqual([...CATEGORIES].sort());
+    expect(result.categorised.length).toBeGreaterThan(0);
+
+    for (const row of result.categorised) {
+      expect(CATEGORIES).toContain(row.category);
+      expect(typeof row.overlap).toBe('number');
+      expect(typeof row.grade).toBe('number');
+    }
+
+    const counted = Object.values(result.categories).reduce((total, count) => total + count, 0);
+    expect(counted).toBe(result.categorised.length);
+
+    const judged = result.categorised.find((row) => row.documentId === 'rich1');
+    expect(judged.grade).toBe(3);
+    expect(judged.category).toBe('relevant');
+  });
+
+  test('the harness reports counts per category, not one averaged number', async () => {
+    const result = await runConfiguration({ configuration: 'bm25-beir-baseline', dataset: 'rich', root });
+
+    expect(result.categories.relevant).toBe(1);
+    for (const category of CATEGORIES) {
+      expect(typeof result.categories[category]).toBe('number');
+    }
   });
 });

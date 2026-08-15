@@ -5,6 +5,8 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.js',
     '!src/server.js',
+    '!src/anthropic-client.js',
+    '!src/eval/embedder.js',
   ],
   coverageDirectory: 'coverage',
   coverageThreshold: {

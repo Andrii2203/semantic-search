@@ -273,6 +273,32 @@ every configuration, so including it lowers every number by the same amount whil
 discrimination. The count of excluded intents is reported next to the score, because it is the
 honest size of the bench rather than a footnote.
 
+34. Lexical overlap is computed from the intent text and the article text, weighting each shared word
+    by its inverse document frequency over the corpus.
+35. A pair whose intent and article share no content word has an overlap of zero, and a pair whose
+    intent words all appear in the article has an overlap of one.
+36. Every judgment in a report carries a derived category, computed at report time from the grade,
+    the overlap and the article properties.
+37. Every judged article of a kept intent exists in the corpus of the same snapshot.
+
+Behaviours 34 to 37 were added 2026-08-15 13:34:37 +0200 and the reason is a defect this list caused.
+Section 7 defines the eight categories in terms of lexical overlap and never states, as a checkable
+line, that the overlap is measured from the two texts. So `lexicalOverlap` in
+`src/eval/categories.js` was written, exported and never called by anything, and `deriveCategory`
+with it. Measured the same day: no script, harness or report imports either function, and 0 of the
+1077 rows in `eval/judgments.json` carries a category.
+
+The trap that made this worse than dead code is worth recording. `deriveCategory` reads
+`properties.overlap ?? 0`, so a caller wired up without computing the overlap silently returns
+`semantic` for every grade of 2 or 3 and `irrelevant` for every grade of 0. The two categories that
+section 7 calls the ones deciding whether meaning is used at all, `trap` and `relevant`, become
+unreachable without any error. Behaviour 34 exists so that the caller is required rather than
+assumed, and behaviour 35 exists because a number with no stated end points can be wrong in the
+middle and nobody notices.
+
+Behaviour 37 was already tested in `__tests__/eval/local-bench.test.js` before it was written down
+here, which is the same defect in the other direction: a test with no behaviour to answer to.
+
 30. The chooser ranks candidate posts by how well the article corpus covers their subject, and keeps
     the best.
 31. The chooser never reads a judgment, so selection cannot be contaminated by the answer key.
@@ -314,28 +340,90 @@ articles, is four million pairs, which is not a choice.
 
 ## 11. Tests
 
-| # | Level | File |
-|---|---|---|
-| 1 | L2 | `__tests__/eval/corpus-loader.test.js` |
-| 2 | L2 | `__tests__/eval/corpus-loader.test.js` |
-| 3 | L1 | `__tests__/eval/judgments.test.js` |
-| 4 | L1 | `__tests__/eval/judgments.test.js` |
-| 5 | L1 | `__tests__/eval/judgments.test.js` |
-| 6 | L1 | `__tests__/eval/judgments.test.js` |
-| 7 | L1 | `__tests__/eval/judgments.test.js` |
-| 8 | L1 | `__tests__/eval/judgments.test.js` |
-| 9 | L1 | `__tests__/eval/judgments.test.js` |
-| 10 | L1 | `__tests__/eval/judgments.test.js` |
-| 11 | L1 | `__tests__/eval/categories.test.js` |
-| 12 | L4 | `__tests__/eval/judge.test.js` |
-| 13 | L2 | `__tests__/eval/judge.test.js` |
-| 27 | L2 | `__tests__/eval/local-bench.test.js` |
-| 30 | L1 | `__tests__/eval/intent-selection.test.js` |
-| 31 | L1 | `__tests__/eval/intent-selection.test.js` |
-| 32 | L1 | `__tests__/eval/intent-selection.test.js` |
-| 33 | L1 | `__tests__/eval/intent-selection.test.js` |
-| 28 | L2 | `__tests__/eval/local-bench.test.js` |
-| 29 | L2 | `__tests__/eval/local-bench.test.js` |
+Rewritten 2026-08-15 13:34:37 +0200 against the test names actually present in the suite, rather
+than against what this table claimed. What it claimed and what was there had drifted apart in three
+ways at once, and section 11.2 records them.
+
+| # | Level | File | State |
+|---|---|---|---|
+| 1 | L2 | `__tests__/eval/corpus-loader.test.js` | passing |
+| 2 | L2 | `__tests__/eval/corpus-loader.test.js` | passing |
+| 3 | L2 | `__tests__/eval/corpus-loader.test.js` | passing |
+| 4 | L2 | `__tests__/eval/corpus-loader.test.js` | passing |
+| 5 | L2 | `__tests__/eval/corpus-loader.test.js` | passing |
+| 6 | L1 | `__tests__/eval/judgments.test.js` | passing |
+| 7 | L1 | `__tests__/eval/judgments.test.js` | passing |
+| 8 | L1 | `__tests__/eval/judgments.test.js` | passing |
+| 9 | L1 | `__tests__/eval/judgments.test.js` | passing |
+| 10 | L1 | `__tests__/eval/judgments.test.js` | passing |
+| 11 | L1 | `__tests__/eval/judgments.test.js` | passing |
+| 12 | L1 | `__tests__/eval/judgments.test.js` | passing |
+| 13 | L1 | `__tests__/eval/judgments.test.js` | passing |
+| 14 | L1 | `__tests__/eval/judgments.test.js` | passing |
+| 15 | L1 | `__tests__/eval/categories.test.js` | passing |
+| 16 | L1 | `__tests__/eval/categories.test.js` | passing |
+| 17 | L2 | `__tests__/eval/judge.test.js` | passing |
+| 18 | L2 | `__tests__/eval/judge.test.js` | passing |
+| 19 | L2 | `__tests__/eval/judge.test.js` | passing |
+| 20 | L2 | `__tests__/eval/judge.test.js` | passing |
+| 21 | L2 | `__tests__/eval/judge.test.js` | passing |
+| 22 | L2 | `__tests__/eval/judge.test.js` | passing |
+| 23 | L2 | `__tests__/eval/judge.test.js` | passing |
+| 24 | L2 | `__tests__/eval/judge.test.js` | partial, see 11.2 |
+| 25 | L2 | `__tests__/eval/judge.test.js` | missing |
+| 26 | not a test | a measurement, recorded in section 9.1, because it needs the judge and a key | recorded |
+| 27 | L2 | `__tests__/eval/local-bench.test.js` | passing |
+| 28 | L2 | `__tests__/eval/local-bench.test.js` | passing |
+| 29 | L2 | `__tests__/eval/local-bench.test.js` | passing |
+| 30 | L1 | `__tests__/eval/intent-selection.test.js` | passing |
+| 31 | L1 | `__tests__/eval/intent-selection.test.js` | passing |
+| 32 | L1 | `__tests__/eval/intent-selection.test.js` | passing |
+| 33 | L1 | `__tests__/eval/intent-selection.test.js` | passing |
+| 34 | L1 | `__tests__/eval/categories.test.js` | passing |
+| 35 | L1 | `__tests__/eval/categories.test.js` | passing |
+| 36 | L2 | `__tests__/eval/harness.test.js` | passing |
+| 37 | L2 | `__tests__/eval/local-bench.test.js` | passing |
+
+### 11.1 What closing 34 to 36 changed, 2026-08-15 13:46:36 +0200
+
+`lexicalOverlap` needed no correction. It was written correctly, exported, and called by nothing, so
+both tests passed the moment they existed. That is the whole finding: the function was not wrong, it
+was unreachable, and no test noticed because no behaviour line asked for it.
+
+`runConfiguration` in `src/eval/harness.js` now derives a category for every result in the top
+`evaluationK` of every query, from the grade in the qrels, the inverse document frequency weighted
+overlap between the query text and the document text, and the article properties. A report carries
+`categories`, the count per each of the eight, and `categorised`, one row per result with its grade,
+its overlap and its category. Branch coverage of `src/eval/categories.js` moved from 47.72 to 84.09
+percent as a side effect, which is the right order: the tests came from behaviours, and the number
+followed.
+
+One limit is recorded rather than hidden. The harness does not detect duplicates, because that needs
+a cosine between two documents and a lexical configuration has no vectors. So `duplicate` is counted
+as zero in every report from this path, and a zero there means not measured rather than none found.
+The open question in section 13 carries it.
+
+### 11.2 What this table got wrong, and how
+
+Three separate failures, all of them invisible while every test was green.
+
+The numbers pointed at the wrong lines. The row for `categories.test.js` carried number 11, which is
+the behaviour about Djinni, while the two behaviours that file actually tests, 15 and 16, appeared
+nowhere. Rows 3, 4 and 5 named `judgments.test.js` for behaviours that `corpus-loader.test.js` tests.
+The tests themselves are named after their behaviour lines verbatim, as
+`docs/standards/TESTING_STANDARD.md` section 8 requires, so the code was right and the table was
+wrong.
+
+Thirteen behaviours had no row at all: 14 through 26. Ten of them are the judge, which is the part of
+this apparatus that spends money and produces the answer key, and nine of those ten do have passing
+tests. The table simply stopped at 13 and resumed at 27.
+
+Two rows are genuinely missing tests rather than missing entries, and they are named here so that
+they stop being invisible. Behaviour 24 requires three distinct named errors for transport failure,
+unparseable content and an unfinished response, and only the first two are tested. Behaviour 25,
+that a pass reports its failed pairs and writes no answer key while any remain unresolved, has no
+test at all, which is uncomfortable given that section 9.2 exists because exactly that failure
+happened once already.
 
 Reporting the count of unjudged results belongs to the harness, which section 3 puts out of scope
 here. It is carried into `docs/plans/retrieval-quality.md` phase 3 rather than left unwritten.

@@ -4,6 +4,12 @@ const path = require('path');
 
 const constants = require('../search-constants');
 const { loadDataset, DEFAULT_ROOT } = require('./beir-loader');
+const {
+  buildDocumentFrequency,
+  deriveCategory,
+  lexicalOverlap,
+  CATEGORIES,
+} = require('./categories');
 const { embedMany, embedOne, loadVectors, saveVectors } = require('./embedder');
 const { ndcgAtK, recallAtK } = require('./metrics');
 const { retrieve } = require('./retrieval');
@@ -87,6 +93,41 @@ function mean(values) {
   return values.length === 0 ? 0 : values.reduce((total, value) => total + value, 0) / values.length;
 }
 
+function documentTexts(dataset, configuration) {
+  return new Map(
+    dataset.documents.map((document) => [
+      document.id,
+      configuration.fields.map((field) => document[field] || '').join(' '),
+    ]),
+  );
+}
+
+function categoriseRanking(context) {
+  const { queryId, queryText, ranking, texts, judgments, frequency } = context;
+
+  return ranking.slice(0, constants.evaluationK).map((documentId) => {
+    const content = texts.get(documentId) || '';
+    const overlap = lexicalOverlap(queryText, content, frequency);
+    const grade = judgments[documentId] ?? 0;
+
+    return {
+      queryId,
+      documentId,
+      grade,
+      overlap,
+      category: deriveCategory({ grade }, { id: documentId, content }, { overlap }),
+    };
+  });
+}
+
+function countCategories(rows) {
+  const counts = Object.fromEntries(CATEGORIES.map((category) => [category, 0]));
+  for (const row of rows) {
+    counts[row.category] += 1;
+  }
+  return counts;
+}
+
 /* istanbul ignore next */
 async function cachedVectors(dataset, configuration, root, onProgress) {
   const directory = path.join(root || DEFAULT_ROOT, dataset.name);
@@ -126,7 +167,11 @@ async function runConfiguration(options) {
   const dataset = typeof requested === 'string' ? loadDataset(requested, { root }) : requested;
   const index = await prepareIndex(dataset, configuration, options);
 
+  const texts = documentTexts(dataset, configuration);
+  const frequency = buildDocumentFrequency([...texts.values()].map((content) => ({ content })));
+
   const scored = [];
+  const categorised = [];
   for (const query of dataset.queries) {
     const judgments = Object.fromEntries(dataset.qrels.get(query.id));
     const ranking = await retrieve.forQuery(index, query.text, configuration, constants.evaluationRecallK);
@@ -136,6 +181,16 @@ async function runConfiguration(options) {
       ndcg: ndcgAtK(ranking, judgments, constants.evaluationK),
       recall: recallAtK(ranking, judgments, constants.evaluationRecallK),
     });
+    categorised.push(
+      ...categoriseRanking({
+        queryId: query.id,
+        queryText: query.text,
+        ranking,
+        texts,
+        judgments,
+        frequency,
+      }),
+    );
   }
 
   const ndcgName = `nDCG@${constants.evaluationK}`;
@@ -153,6 +208,8 @@ async function runConfiguration(options) {
       [ndcgName]: scored.map((row) => ({ queryId: row.id, value: row.ndcg })),
       [recallName]: scored.map((row) => ({ queryId: row.id, value: row.recall })),
     },
+    categories: countCategories(categorised),
+    categorised,
   };
 }
 
