@@ -4,7 +4,7 @@
   "description": "Universal semantic search engine with pluggable sources, profile-based filtering, and action dispatching",
   "main": "src/server.js",
   "engines": {
-    "node": ">=20.19.0"
+    "node": ">=24.0.0"
   },
   "scripts": {
     "start": "node src/server.js",
@@ -31,7 +31,7 @@
     "@anthropic-ai/sdk": "^0.116.0",
     "@huggingface/transformers": "^4.2.0",
     "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^11.7.0",
+    "better-sqlite3": "^13.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",

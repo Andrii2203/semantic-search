@@ -1,4 +1,4 @@
-FROM node:20-slim AS backend-builder
+FROM node:24-slim AS backend-builder
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends python3 make g+
     && rm -rf /var/lib/apt/lists/* \
     && npm ci --omit=dev
 
-FROM node:20-slim AS frontend-builder
+FROM node:24-slim AS frontend-builder
 
 WORKDIR /app/client
 
@@ -16,7 +16,7 @@ RUN npm ci
 COPY client/ ./
 RUN npm run build
 
-FROM node:20-slim AS test
+FROM node:24-slim AS test
 
 WORKDIR /app
 
@@ -35,7 +35,7 @@ COPY eval/ ./eval/
 
 CMD ["npm", "test"]
 
-FROM node:20-slim
+FROM node:24-slim
 
 WORKDIR /app
 

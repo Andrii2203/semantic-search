@@ -141,6 +141,53 @@ with Node 24 and `better-sqlite3` 13, `npm install` should find a prebuilt binar
 Python and a compiler, which would make the Docker only gate of `docs/standards/WORKFLOW.md` a choice
 rather than the only option. That is verified by running it on the host, once.
 
+### 5.1 Step 1, done 2026-08-15 13:18:46 +0200
+
+The expectation above held. Measured on the host, Windows 11, Node 24.18.0, npm 11.16.0, with no
+Python installed:
+
+| What | Result |
+|---|---|
+| `npm install` | 539 packages in 19 seconds, no compiler, no node-gyp, no Python |
+| `better-sqlite3` 13.0.3 loads and runs a query | yes, prebuilt binary for Node 24 on Windows |
+| `onnxruntime-node` loads | yes |
+| `npm test` on the host | 68 suites passed, 1 skipped, 617 passed, 6 skipped, zero failures, 23 seconds |
+| `npm run lint` | 0 errors, the same 3 unused variable warnings recorded in phase 0 |
+| `npm run test:client` | 4 files, 20 tests, all passed |
+
+The diagnosis in `docs/plans/retrieval-quality.md` section 6.1 is confirmed and its workaround is
+retired. The build never needed Linux. It needed the host and the manifest to agree on a Node
+version, which is now enforced by `.nvmrc`, `engines` at `>=24.0.0`, `engine-strict=true` in
+`.npmrc`, four `FROM node:24-slim` stages and `node-version: '24'` in CI, with
+`__tests__/engines.test.js` failing if any of the four drifts.
+
+23 seconds on the host against a Docker image build, which is the whole argument for the change.
+
+One thing npm 11 does that is worth knowing before it causes a confusing failure: it no longer runs
+install scripts by default and prints `allow-scripts` warnings for `onnxruntime-node`, `sharp`,
+`protobufjs`, `@swc/core`, `esbuild` and `msw`. Nothing here needed them, checked by loading both
+native modules and running both suites, but a future dependency that does need its install script
+will fail in a way that does not name itself.
+
+### 5.2 A red gate found on arrival, and it is not this change
+
+`npm run verify` fails, and it failed before this step. Branch coverage is 78.13 percent against the
+threshold of 80 in `jest.config.js`. The number is identical with this change stashed and unstashed,
+measured both ways at 2026-08-15 13:14 +0200, so this step moved it by zero.
+
+The cause is `src/eval`, at 66.26 percent branches: `embedder.js` at 0, `categories.js` at 47.72,
+`corpus-loader.js` and `intent-coverage.js` at 50, `judgments.js` at 56.25. Those modules were built
+on 2026-08-14 after the green run recorded in `docs/plans/retrieval-quality.md` section 6.1, which
+counted 575 tests. There are 617 now.
+
+So the last full green gate in this repository was 2026-08-14 18:06 +0200, and everything built after
+it, which is the entire evaluation apparatus that produced ADR-008, was never gated. The tests for
+that code pass. The branches its own suite never enters are the gap.
+
+This is recorded rather than fixed here, because fixing it means writing tests for evaluation code
+and that is a different piece of work from a toolchain upgrade. It is the first thing that should
+happen after step 2, and until it does, no step in this plan can claim a green gate.
+
 ## 6. Behaviours
 
 1. `npm install` on a clean checkout succeeds on the Node version named in `engines`.
