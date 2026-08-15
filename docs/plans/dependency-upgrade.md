@@ -205,6 +205,71 @@ integration run covers and a unit run cannot.
 passed, 6 skipped, 4 client files with 20 tests, lint clean of errors with the same 3 warnings, on
 the host, on Node 24.
 
+### 5.3 Step 2, done 2026-08-15 14:05:53 +0200
+
+ESLint 8.57.1 to 10.8.1, `eslint-plugin-sonarjs` 1.0.4 to 4.2.0, `.eslintrc.json` deleted and
+`eslint.config.js` written by hand rather than by the migration tool, because the file is 67 lines and
+the tool's output would still have needed reading line by line.
+
+Behaviours 2 and 3 of section 6 were checked the only way a linter can be checked, by writing a file
+that violates it. A function with a complexity of 16, a cognitive complexity of 19, a `==` and four
+levels of nesting produced four errors from four different rules, so the enforcement survived the
+migration rather than merely appearing to.
+
+Three things the new engine found that the old one did not.
+
+Two complexity errors in code nobody had changed. ESLint 9 began counting default parameters,
+optional chaining and nullish coalescing towards cyclomatic complexity, so
+`extractKeywordsFallback` read 11 and `fromText` read 13 against a limit of 10 that has not moved.
+Both were split into named helpers with no change of behaviour, `countWords` and `boostTechTerms` in
+`src/keyword-extractor.js`, `resolveKeywords` and `safeEmbedding` in `src/profile-generator.js`. The
+limit was not raised and neither file joined the debt list in `docs/standards/COMPLEXITY.md`.
+
+Unused caught errors. ESLint 9 changed the default of `no-unused-vars` from ignoring caught errors to
+reporting them. `caughtErrorsIgnorePattern` is set to `^_` so the existing `catch (_err)` convention
+still passes, and the one remaining case, `src/server.js` line 100, is a real unused binding that the
+old configuration could not see. It is a warning and it stays visible.
+
+A stale path in the `Dockerfile`. Its test stage copied `.eslintrc.json`, which no longer exists, so
+the container build would have failed on a file that the host no longer needs. Found by searching for
+the name rather than by the gate, because the gate does not build the image.
+
+`npm run verify` exits 0: 68 suites, 621 tests, 20 client tests, 0 lint errors, 4 warnings, branches
+at 80.17 percent.
+
+### 5.4 A rule the documents claim and the configuration never had
+
+`docs/reference/search-constants.md` behaviour 4 states that `npm run lint` fails when a module in
+the retrieval path contains a numeric literal, and its test table records this as enforced by the
+`no-magic-numbers` rule in `.eslintrc.json`. That rule was not in `.eslintrc.json` and is not in
+`eslint.config.js`. The behaviour has never been enforced by anything.
+
+Measured at 2026-08-15 14:00 +0200 by enabling the rule in a throwaway configuration over
+`src/search-engine.js`, `src/routes/search.js`, `src/reranker.js`, `src/junk-filter.js` and
+`src/chunker/`: 26 literals, of which 12 are HTTP status codes and belong in the ignore list, leaving
+14 that are retrieval constants.
+
+| Literal | Occurrences | The name it already has in `src/search-constants.js` |
+|---|---|---|
+| 50 | 3 | `chunkMinWords`, `preFilterMinChars`, depending on the site |
+| 20 | 2 | `resultsReturned` |
+| 60 | 1 | `rrfK` |
+| 300 | 1 | `chunkMaxWords` |
+| 1.3 | 1 | `tokensPerWord` |
+| 0.65 | 1 | `semanticCutoffSearch`, deleted by `docs/adr/011-one-cutoff-one-origin.md` |
+| 0.6 | 1 | `semanticWeight` |
+| 0.5 | 1 | `mmrLambda` |
+| 0.4 | 1 | `bm25Weight` |
+| 4000, 4 | 2 | no name yet |
+
+So phase 2 of `docs/plans/retrieval-quality.md`, constants extraction with no value change, is not
+done, and this is its size: fourteen literals, twelve of which already have a name three lines away.
+
+The rule is not switched on in this step. Switching it on before the extraction turns the gate red on
+work that belongs to another plan, and `docs/adr/011-one-cutoff-one-origin.md` removes one of the
+fourteen outright. It is switched on in the commit that finishes phase 2, and that is the moment
+behaviour 4 of `docs/reference/search-constants.md` stops being a claim.
+
 ## 6. Behaviours
 
 1. `npm install` on a clean checkout succeeds on the Node version named in `engines`.

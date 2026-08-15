@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends python3 make g+
 COPY package*.json ./
 RUN npm ci
 
-COPY jest.config.js .eslintrc.json .env.example ./
+COPY jest.config.js eslint.config.js .env.example ./
 COPY src/ ./src/
 COPY __tests__/ ./__tests__/
 COPY __mocks__/ ./__mocks__/

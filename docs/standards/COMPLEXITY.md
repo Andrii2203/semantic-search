@@ -61,7 +61,7 @@ decision that runs through `DECISION_PROTOCOL.md` and lands in an ADR.
 
 ## 5. The debt list
 
-The files below exceeded the limits before these limits existed. They are listed in `.eslintrc.json`
+The files below exceeded the limits before these limits existed. They are listed in `eslint.config.js`
 under `overrides`, where the two complexity rules are turned off for them. Nothing else in the
 repository is exempt, so new code cannot add to this list by accident.
 
@@ -93,4 +93,4 @@ Not applicable. This document configures the linter, it does not change the runn
 
 - `npm run verify` fails on a function that exceeds any limit in section 3, outside the debt list.
 - CI runs the same command on Node 18 and Node 20.
-- The debt list in section 5 matches the `overrides` block in `.eslintrc.json` exactly.
+- The debt list in section 5 matches the `COMPLEXITY_EXEMPT` list in `eslint.config.js` exactly.

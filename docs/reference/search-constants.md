@@ -196,12 +196,26 @@ here corrupts every number the project reports and they belong under the same ru
 | 1 | L1 | `__tests__/search-constants.test.js` |
 | 2 | L1 | `__tests__/search-constants.test.js` |
 | 3 | L1 | `__tests__/search-constants.test.js` |
-| 4 | not a test | enforced by the `no-magic-numbers` rule in `.eslintrc.json`, scoped to the retrieval path |
+| 4 | not a test | not enforced by anything. See the note below, added 2026-08-15 14:05:53 +0200 |
 | 5 | L3 | `__tests__/routes/search.test.js` |
 | 6 | L2 | `__tests__/chunker/index.test.js` |
 
 Behaviours 1 to 3 are checked by reading this document and the module and comparing the two name
 sets. That makes the document a machine checked artefact rather than prose that drifts.
+
+Except that `__tests__/search-constants.test.js` does not exist, found 2026-08-15 14:05:53 +0200.
+Behaviours 1 to 3 have no test, and the row above said they had one. The same check on behaviour 4
+found that the `no-magic-numbers` rule it names was never present in `.eslintrc.json` either, so all
+four rows of this table were describing enforcement that does not exist.
+
+The size of behaviour 4 is now a number rather than an intention:
+`docs/plans/dependency-upgrade.md` section 5.4 records 14 numeric literals in the retrieval path, 12
+of which already have a name in `src/search-constants.js`. The rule is switched on in the commit that
+finishes phase 2 of `docs/plans/retrieval-quality.md`, because switching it on first would turn the
+gate red on work that belongs to that plan.
+
+Recorded here rather than quietly fixed, because a table claiming a test that was never written is
+the same failure this document was created to catch in constants.
 
 ## 8. Definition of done
 

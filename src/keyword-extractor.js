@@ -23,6 +23,28 @@ const STOP_WORDS = new Set([
   'new', 'year', 'years',
 ]);
 
+function countWords(words) {
+  const freq = new Map();
+  for (const word of words) {
+    if (word.length < 2 || STOP_WORDS.has(word)) {continue;}
+    freq.set(word, (freq.get(word) || 0) + 1);
+  }
+  return freq;
+}
+
+function boostTechTerms(freq, text) {
+  const techPatterns = text.match(
+    /\b(?:[A-Z][a-z]+\.js|[A-Z][a-z]*(?:SQL|DB|API|UI|UX|CI|CD|ML|AI)|[A-Z]{2,}(?:\s+[A-Z][a-z]+)?|[A-Za-z]+\+\+|[A-Za-z]+#|[A-Za-z]+\.(?:js|py|ts|go|rs))\b/g,
+  );
+
+  if (!techPatterns) {return;}
+
+  for (const term of techPatterns) {
+    const key = term.toLowerCase();
+    freq.set(key, (freq.get(key) || 0) + 3);
+  }
+}
+
 function extractKeywordsFallback(text, maxKeywords = 15) {
   if (!text || typeof text !== 'string') {return [];}
 
@@ -32,22 +54,8 @@ function extractKeywordsFallback(text, maxKeywords = 15) {
     .split(/\s+/)
     .filter(Boolean);
 
-  const freq = new Map();
-  for (const word of words) {
-    if (word.length < 2 || STOP_WORDS.has(word)) {continue;}
-    freq.set(word, (freq.get(word) || 0) + 1);
-  }
-
-  const techPatterns = text.match(
-    /\b(?:[A-Z][a-z]+\.js|[A-Z][a-z]*(?:SQL|DB|API|UI|UX|CI|CD|ML|AI)|[A-Z]{2,}(?:\s+[A-Z][a-z]+)?|[A-Za-z]+\+\+|[A-Za-z]+#|[A-Za-z]+\.(?:js|py|ts|go|rs))\b/g,
-  );
-
-  if (techPatterns) {
-    for (const term of techPatterns) {
-      const key = term.toLowerCase();
-      freq.set(key, (freq.get(key) || 0) + 3);
-    }
-  }
+  const freq = countWords(words);
+  boostTechTerms(freq, text);
 
   return [...freq.entries()]
     .sort((a, b) => b[1] - a[1])
