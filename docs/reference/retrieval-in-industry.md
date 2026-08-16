@@ -318,6 +318,54 @@ differentiator any more, which `docs/product/COMPETITORS.md` section 6 states fr
 What remains scarce is the apparatus for deciding which configuration is right for a given subject
 area, and this repository has one.
 
+## 8.4 Chunking, where the field disagrees with itself and where it does not
+
+Added 2026-08-16 10:27:06 +0200. Section 7 names axis C as the indexed text, and every option on that
+axis assumes a chunk exists. What decides the chunk itself lives in `docs/adr/004-chunking-strategies.md`
+and in three constants, and none of it had a source.
+
+The one controlled study, and it contradicts the common advice. Chroma published an evaluation of
+chunking strategies for retrieval, read at https://www.trychroma.com/research/evaluating-chunking on
+2026-08-16 10:20 +0200.
+
+| Finding | Number |
+|---|---|
+| Smaller chunks raise precision sharply | precision 7.0 percent at 200 tokens against 1.5 percent at 800 |
+| The choice of strategy is not cosmetic | up to 9 percent recall between strategies |
+| Removing overlap improved intersection over union while keeping recall competitive | overlap spends storage and retrieval budget on redundancy |
+| The widely copied default of 800 tokens with 400 overlap | slightly below average recall and the lowest score on every other metric |
+| A recursive splitter at 200 tokens with no overlap | consistently high on every metric measured |
+
+The 2026 secondary writing says something else: 400 to 512 tokens with 10 to 20 percent overlap as
+the starting point, and recursive splitting beating semantic chunking on end to end answer accuracy,
+69 percent against 54, with semantic chunking about fourteen times slower to build.
+
+That disagreement is recorded rather than resolved, because the two are not measuring the same thing.
+Chroma measures token level overlap between what was retrieved and what was needed, which rewards
+precision. The others measure whether a language model got the answer right, which tolerates extra
+text. A project that reports nDCG and recall, as this one does, is closer to Chroma's question than
+to theirs.
+
+What both agree on, and what section 5 of this document already recorded from the production systems:
+the size of the chunk is not where the wins are. The wins are in what goes into it. Anthropic
+prepends 50 to 100 tokens of generated document context and its measured top 20 failure rate falls
+from 5.7 to 3.7 percent. DoorDash reports roughly 31 percent from language model generated entity
+profiles against roughly 6 percent from upgrading the embedding model, which is the only direct
+comparison of text quality against model quality in this document.
+
+Late chunking, published by Jina and read at
+https://jina.ai/news/late-chunking-in-long-context-embedding-models/ on 2026-08-16 10:22 +0200,
+inverts the pipeline: the whole document is encoded first, then the token level representations are
+partitioned, so every chunk keeps the document's context without a language model generating
+anything. It is the cheapest version of axis C's third option and it is unavailable here, because it
+needs an encoder with a long window and the active model accepts 256 tokens. That is the same
+constraint `docs/adr/012-embedding-model-context-window.md` records, arriving from a second direction.
+
+The consequence for this repository, and it is not a plan, only what the evidence implies. Axis C is
+where the largest published improvements are, larger than the fusion and reranking axes it is
+scheduled after. Prepending the document title to a chunk is the middle option of axis C, costs no
+model call, and has never been measured here.
+
 ## 9. Behaviours
 
 Not applicable. This document records external evidence. It changes no running behaviour, so there is
@@ -368,6 +416,10 @@ Not applicable. A reference document carries no runtime risk.
 | Elastic, on choosing b and k1 | https://www.elastic.co/blog/practical-bm25-part-3-considerations-for-picking-b-and-k1-in-elasticsearch | added 2026-08-14 12:44 +0200 |
 | Cormack, Clarke and Buettcher 2009, the origin of the rank constant | https://research.google/pubs/reciprocal-rank-fusion-outperforms-condorcet-and-individual-rank-learning-methods/ | source not read directly. Two attempts at the IR Anthology returned 404. The value and its flat optimum are held on secondary authority, see section 5.1 |
 | EmbeddingGemma, the model card and its publisher's post, for section 8.3 and ADR-012 | https://huggingface.co/blog/embeddinggemma | 2026-08-15 11:02 +0200 |
+| Chroma, the controlled evaluation of chunking strategies in section 8.4 | https://www.trychroma.com/research/evaluating-chunking | 2026-08-16 10:20 +0200 |
+| Jina, late chunking | https://jina.ai/news/late-chunking-in-long-context-embedding-models/ | 2026-08-16 10:22 +0200 |
+| Late chunking, the paper behind that post | https://arxiv.org/pdf/2409.04701 | not read directly, held on the publisher's own description |
+| The 2026 chunk size consensus of 400 to 512 tokens, and recursive against semantic splitting | several independent 2026 write ups surfaced by search, no primary engineering source from a named company | surfaced 2026-08-16 10:18 +0200, held as secondary and marked as disagreeing with Chroma |
 | Qwen3-Embedding-0.6B model card | https://huggingface.co/Qwen/Qwen3-Embedding-0.6B | 2026-08-15 11:04 +0200 |
 | The Hub's own model index, for which ONNX builds of embedders and rerankers exist and their download counts | https://huggingface.co/api/models | 2026-08-15 between 11:05 and 11:06 +0200 |
 | OpenSearch, agentic relevance tuning, the 2026 addition named in section 8.3 | https://opensearch.org/blog/agentic-relevance-tuning/ | surfaced 2026-08-15 11:08 +0200, not read directly |
