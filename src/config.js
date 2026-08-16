@@ -97,7 +97,7 @@ const config = Object.freeze({
   }),
 
   search: Object.freeze({
-    defaultMode: env('SEARCH_MODE', 'sequential'),
+    defaultMode: env('SEARCH_MODE', 'parallel'),
     bm25Weight: envFloat('BM25_WEIGHT', 0.4),
     semanticWeight: envFloat('SEMANTIC_WEIGHT', 0.6),
     batchSize: envInt('EMBEDDING_BATCH_SIZE', 20),
@@ -109,7 +109,7 @@ const config = Object.freeze({
 
   live(key) {
     const defaults = {
-      searchThreshold:          this.similarityThreshold,
+      inboxThreshold:          this.similarityThreshold,
       searchMode:               this.search.defaultMode,
       bm25Weight:               this.search.bm25Weight,
       semanticWeight:           this.search.semanticWeight,

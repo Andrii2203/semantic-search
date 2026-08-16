@@ -52,19 +52,19 @@ describe('Settings API (Phase 3)', () => {
     const res = await request(app)
       .post('/api/settings')
       .set('Cookie', cookie)
-      .send({ key: 'searchThreshold', value: 0.42 });
+      .send({ key: 'inboxThreshold', value: 0.42 });
     expect(res.statusCode).toBe(200);
 
     const got = await request(app).get('/api/settings').set('Cookie', cookie);
-    expect(got.body.settings.searchThreshold).toBe(0.42); // number, not "0.42"
-    expect(db.getSetting('searchThreshold')).toBe(0.42);
+    expect(got.body.settings.inboxThreshold).toBe(0.42); // number, not "0.42"
+    expect(db.getSetting('inboxThreshold')).toBe(0.42);
   });
 
   test('POST /api/settings number out of range → 400', async () => {
     const res = await request(app)
       .post('/api/settings')
       .set('Cookie', cookie)
-      .send({ key: 'searchThreshold', value: 5 });
+      .send({ key: 'inboxThreshold', value: 5 });
     expect(res.statusCode).toBe(400);
   });
 

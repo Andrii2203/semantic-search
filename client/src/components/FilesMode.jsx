@@ -57,7 +57,6 @@ export function FilesMode() {
         batchId: wholeLibrary ? undefined : lastBatchId,
         topN: useAI ? 20 : 50,
         useReranker: useAI,
-        threshold: 0.3,
         mmrLambda: 1.0,
       })
       setResults(res.results || [])

@@ -82,7 +82,7 @@ afterEach(() => {
 // ═══════════════════════════════════════════════════════════════
 
 describe('POST /api/search', () => {
-  it('returns results when query is provided (sequential mode)', async () => {
+  it('returns results when query is provided, in the default parallel mode', async () => {
     const res = await request(app)
       .post('/api/search')
       .send({ query: 'javascript tutorial' })
@@ -94,7 +94,59 @@ describe('POST /api/search', () => {
     );
     expect(res.body).toHaveProperty('results');
     expect(res.body).toHaveProperty('stats');
-    expect(res.body.stats.mode).toBe('sequential');
+    expect(res.body.stats.mode).toBe('parallel');
+  });
+
+  it('a search request that sends a threshold returns the same results as one that does not', async () => {
+    SearchEngine.groupByParent.mockReturnValue([
+      { parentId: 'item-1', matchedChunks: [], bestScore: 0.2 },
+    ]);
+
+    const without = await request(app).post('/api/search').send({ query: 'javascript' }).expect(200);
+    const with065 = await request(app)
+      .post('/api/search')
+      .send({ query: 'javascript', threshold: 0.65 })
+      .expect(200);
+
+    expect(with065.body.results).toEqual(without.body.results);
+    for (const call of SearchEngine.scoreChunksByVector.mock.calls) {
+      expect(call).toHaveLength(2);
+    }
+  });
+
+  it('search returns at most topN results, ordered by score, with no score based exclusion', async () => {
+    const many = Array.from({ length: 30 }, (_value, index) => ({
+      parentId: `item-${index}`,
+      matchedChunks: [],
+      bestScore: 0.01 * (30 - index),
+    }));
+    SearchEngine.groupByParent.mockReturnValue(many);
+
+    const res = await request(app).post('/api/search').send({ query: 'javascript' }).expect(200);
+
+    expect(res.body.results).toHaveLength(20);
+    expect(res.body.results[0].parentId).toBe('item-0');
+    expect(res.body.results.every((doc) => doc.bestScore < 0.65)).toBe(true);
+  });
+
+  it('both branches generate candidates over the whole corpus by default, so a chunk containing no query keyword can be returned', async () => {
+    db.insertItem(makeItem({ id: 'silent-item', content: 'A treatise on maritime insurance and freight' }));
+    db.insertChunksBatch([
+      {
+        id: 'silent-chunk',
+        parentId: 'silent-item',
+        content: 'A treatise on maritime insurance and freight',
+        chunkIndex: 0,
+        strategy: 'fixed',
+        vector: MOCK_VECTOR_BUF,
+      },
+    ]);
+
+    const res = await request(app).post('/api/search').send({ query: 'javascript' }).expect(200);
+
+    expect(res.body.stats.mode).toBe('parallel');
+    const corpus = SearchEngine.scoreChunksByVector.mock.calls[0][0];
+    expect(corpus.map((chunk) => chunk.id)).toContain('silent-chunk');
   });
 
   it('uses loadProfile when profileId is provided', async () => {
@@ -122,7 +174,7 @@ describe('POST /api/search', () => {
     expect(res.body.profile.keywords).toEqual(['react', 'frontend']);
   });
 
-  it('sequential mode: scores BM25 results by vector when both exist', async () => {
+  it('scores candidate chunks by vector when both branches produce something', async () => {
     const fakeChunks = [
       { id: 'c1', parent_id: 'item-1', content: 'javascript stuff', rank: 1 },
     ];
@@ -143,7 +195,7 @@ describe('POST /api/search', () => {
     expect(res.body.results).toBeDefined();
   });
 
-  it('sequential mode: returns BM25-only results when profileVector is null', async () => {
+  it('returns lexical results only when the profile has no vector', async () => {
     SearchEngine.deserializeVector.mockReturnValue(null);
 
     const res = await request(app)
@@ -155,7 +207,7 @@ describe('POST /api/search', () => {
     expect(SearchEngine.scoreChunksByVector).not.toHaveBeenCalled();
   });
 
-  it('sequential mode: handles empty BM25 results without error', async () => {
+  it('handles a profile with no keywords without error', async () => {
     // Profile has no keywords → bm25Chunks stays []
     ProfileGenerator.fromText.mockResolvedValue({ ...MOCK_PROFILE, keywords: [] });
 
@@ -281,7 +333,7 @@ describe('POST /api/search', () => {
 
     const { stats } = res.body;
     expect(stats).toMatchObject({
-      mode: 'sequential',
+      mode: 'parallel',
       bm25Results: expect.any(Number),
       semanticResults: expect.any(Number),
       totalChunks: expect.any(Number),

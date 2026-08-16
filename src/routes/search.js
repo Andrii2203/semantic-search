@@ -9,6 +9,7 @@ const { hydeExpand } = require('../hyde');
 const db = require('../db');
 const logger = require('../logger');
 const config = require('../config');
+const constants = require('../search-constants');
 const { AppError, ErrorCodes } = require('../errors');
 const scheduler = require('../scheduler');
 const events = require('../events');
@@ -16,10 +17,9 @@ const events = require('../events');
 const router = express.Router();
 
 const DEFAULTS = {
-  mode: 'sequential',
-  threshold: 0.65,
-  maxBm25Results: 100,
-  topN: 20,
+  mode: 'parallel',
+  maxBm25Results: constants.candidateLimitBm25,
+  topN: constants.resultsReturned,
 };
 
 function readSearchRequest(body) {
@@ -27,9 +27,8 @@ function readSearchRequest(body) {
     query: body.query,
     profileId: body.profileId,
     customKeywords: body.keywords,
-    mode: body.mode || DEFAULTS.mode,
+    mode: body.mode || config.live('searchMode') || DEFAULTS.mode,
     weights: body.weights,
-    threshold: body.threshold ?? DEFAULTS.threshold,
     maxBm25Results: body.maxBm25Results ?? DEFAULTS.maxBm25Results,
     topN: body.topN ?? DEFAULTS.topN,
     useReranker: body.useReranker === true,
@@ -111,7 +110,7 @@ function retrieveCandidates(request, profile, profileVector, userId) {
 
   return {
     bm25List,
-    semanticList: SearchEngine.scoreChunksByVector(corpus, profileVector, request.threshold),
+    semanticList: SearchEngine.scoreChunksByVector(corpus, profileVector),
   };
 }
 

@@ -340,6 +340,35 @@ describe('scheduler source selection', () => {
   });
 });
 
+describe('scheduler inbox cutoff', () => {
+  const constants = require('../src/search-constants');
+  const config = require('../src/config');
+
+  test('the admission decision reads the stored inbox cutoff when one exists, and search-constants otherwise', () => {
+    expect(config.live('inboxThreshold')).toBe(constants.semanticCutoffInbox);
+
+    db.setSetting('inboxThreshold', 0.9, 'number');
+
+    expect(config.live('inboxThreshold')).toBe(0.9);
+  });
+
+  test('changing the inbox cutoff setting changes which items are admitted on the next cycle', async () => {
+    sources.fetchAll.mockResolvedValue(makeSourceItems(3));
+
+    db.setSetting('inboxThreshold', 0, 'number');
+    const admitted = await scheduler.runCycle();
+
+    db.setSetting('inboxThreshold', 1, 'number');
+    db.getDb().prepare('DELETE FROM user_matches').run();
+    db.getDb().prepare('DELETE FROM items').run();
+    sources.fetchAll.mockResolvedValue(makeSourceItems(3));
+    const refused = await scheduler.runCycle();
+
+    expect(admitted.matches).toBeGreaterThan(0);
+    expect(refused.matches).toBe(0);
+  });
+});
+
 describe('scheduler junk filter', () => {
   test('keyword stuffed items are counted as pre-filtered and never reach the corpus', async () => {
     const stuffed = 'rust async tokio rust async await futures rust concurrency rust async guide rust async tokio rust async tutorial rust async rust async rust';

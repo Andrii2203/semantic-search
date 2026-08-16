@@ -22,10 +22,28 @@ function rowsOfConstantTables() {
 }
 
 
+function sourceFiles(directory) {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const full = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      return sourceFiles(full);
+    }
+    return entry.name.endsWith('.js') ? [full] : [];
+  });
+}
+
 describe('src/search-constants.js against docs/reference/search-constants.md', () => {
+  test('no file under src contains the literal 0.65', () => {
+    const offenders = sourceFiles(path.join(root, 'src'))
+      .filter((file) => /(^|[^\d.])0\.65([^\d]|$)/.test(fs.readFileSync(file, 'utf8')))
+      .map((file) => path.relative(root, file).replace(/\\/g, '/'));
+
+    expect(offenders).toEqual([]);
+  });
+
   test('search-constants exports every name listed in section 5 of the document', () => {
     const missing = rowsOfConstantTables()
-      .filter((row) => !row.origin.startsWith('absent'))
+      .filter((row) => !/^(absent|removed)/.test(row.origin))
       .filter((row) => !(row.name in constants))
       .map((row) => row.name);
 

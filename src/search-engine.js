@@ -55,7 +55,7 @@ function deserializeVector(blob) {
   return Array.from(new Float32Array(buffer.buffer, buffer.byteOffset, buffer.byteLength / 4));
 }
 
-function scoreChunksByVector(chunks, profileVector, threshold = 0.65) {
+function scoreChunksByVector(chunks, profileVector) {
   if (!chunks || chunks.length === 0 || !profileVector) {return [];}
 
   const scored = [];
@@ -67,9 +67,7 @@ function scoreChunksByVector(chunks, profileVector, threshold = 0.65) {
     if (!chunkVector) {continue;}
 
     const score = cosineSimilarity(chunkVector, profileVector);
-    if (score >= threshold) {
-      scored.push({ ...chunk, score, semanticScore: score });
-    }
+    scored.push({ ...chunk, score, semanticScore: score });
   }
 
   return scored.sort((a, b) => b.score - a.score);

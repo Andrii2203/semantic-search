@@ -60,18 +60,18 @@ export function SettingsPage() {
         </div>
 
         <Section title="Search">
-          <Row label="Similarity threshold" hint={`${(s.searchThreshold ?? 0.35).toFixed(2)} — lower = more results`}>
+          <Row label="Similarity threshold" hint={`${(s.inboxThreshold ?? 0.35).toFixed(2)} — lower = more results`}>
             <input
               type="range" min="0" max="1" step="0.05"
-              defaultValue={s.searchThreshold ?? 0.35}
-              onMouseUp={(e) => set('searchThreshold', Number(e.target.value))}
-              onTouchEnd={(e) => set('searchThreshold', Number(e.target.value))}
+              defaultValue={s.inboxThreshold ?? 0.35}
+              onMouseUp={(e) => set('inboxThreshold', Number(e.target.value))}
+              onTouchEnd={(e) => set('inboxThreshold', Number(e.target.value))}
               className="w-32 accent-accent"
             />
           </Row>
           <Row label="Search mode">
             <select
-              value={s.searchMode ?? 'sequential'}
+              value={s.searchMode ?? 'parallel'}
               onChange={(e) => set('searchMode', e.target.value)}
               className="bg-surface-2 border border-border rounded-sm text-xs font-mono text-fg px-2 py-1"
             >

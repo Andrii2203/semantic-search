@@ -9,7 +9,7 @@ const { AppError, ErrorCodes } = require('../errors');
 const router = express.Router();
 
 const SETTINGS_SCHEMA = {
-  searchThreshold:          { type: 'number', min: 0, max: 1 },
+  inboxThreshold:          { type: 'number', min: 0, max: 1 },
   searchMode:               { type: 'string', enum: ['sequential', 'parallel'] },
   bm25Weight:               { type: 'number', min: 0, max: 1 },
   semanticWeight:           { type: 'number', min: 0, max: 1 },

@@ -81,14 +81,13 @@ const SearchRequestSchema = z.object({
   query: z.string().min(1).optional(),
   profileId: z.string().min(1).optional(),
   keywords: z.array(z.string()).optional(),
-  mode: z.enum(['sequential', 'parallel']).default('sequential'),
+  mode: z.enum(['sequential', 'parallel']).default('parallel'),
   weights: z
     .object({
       bm25: z.number().min(0).max(1).default(0.4),
       semantic: z.number().min(0).max(1).default(0.6),
     })
     .optional(),
-  threshold: z.number().min(0).max(1).default(0.65),
   maxBm25Results: z.number().int().min(1).max(1000).default(100),
   topN: z.number().int().min(1).max(200).default(20),
   useReranker: z.boolean().default(false),

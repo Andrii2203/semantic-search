@@ -138,6 +138,41 @@ Behaviour 7 is a test that reads the source files, which is unusual and is the p
 ADR fixes was one concept written as a literal in six places, and only a check over the text can stop
 it returning.
 
+## 7.2 Done 2026-08-16 13:52:26 +0200
+
+Landed in one commit with axis A, as `docs/plans/retrieval-quality.md` section 7 requires.
+
+The literal is gone from the code, and `semanticCutoffSearch` is gone from `src/search-constants.js`
+rather than retuned, with its row in section 5 of `docs/reference/search-constants.md` marked removed.
+`__tests__/search-constants.test.js` fails if the literal returns to any file under `src/`.
+
+Two defects of the same family were found while doing it and are recorded rather than passed over.
+`SearchRequestSchema` is exported and used by nothing, so the search route never validated its input,
+which is why behaviour 1 had to be corrected. And `searchMode`, a stored setting the interface can
+change, reached no code at all: the route read its own constant. Both now resolve through
+`config.live`, so the two controls in the interface do what their labels say.
+
+The setting is renamed from `searchThreshold` to `inboxThreshold`, carried by migration 015, because
+the old name described a decision it had not made since the day it was written.
+
+Measured on a live server, one Ars Technica feed, 20 ingested articles, on the query "companies
+protecting the natural world", whose words appear in none of them:
+
+| Configuration | Results returned |
+|---|---|
+| `parallel`, the new default | 20 |
+| `sequential`, the old default | 2 |
+
+Ten times the candidates, and the two highest scoring were about wildfire smoke and about solar power
+plants, neither of which shares a content word with the query. Both scored 0.032, so under the cutoff
+this ADR deletes, every one of them would have been discarded and the search would have returned
+nothing at all. That is the compound defect of `docs/plans/retrieval-quality.md` section 7 shown in
+one measurement rather than argued.
+
+A lexical query was run in the same session to check the other branch survives: "Google antitrust app
+store ruling" put the Google story first. Both branches work, which is the whole point of running
+them in parallel.
+
 ## 8. Definition of done
 
 - Every behaviour in section 7 has a passing test.

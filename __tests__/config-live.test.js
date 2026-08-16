@@ -14,27 +14,27 @@ describe('config.live — settings override .env (Phase 3)', () => {
 
   test('returns the .env/default value when the setting is not set', () => {
     db.init(':memory:');
-    // searchThreshold default comes from config.similarityThreshold
-    expect(config.live('searchThreshold')).toBe(config.similarityThreshold);
+    // inboxThreshold default comes from config.similarityThreshold
+    expect(config.live('inboxThreshold')).toBe(config.similarityThreshold);
     expect(config.live('groqModel')).toBe(config.groq.model);
     expect(config.live('useHyde')).toBe(false);
   });
 
   test('a value set via settings overrides the default, typed', () => {
     db.init(':memory:');
-    db.setSetting('searchThreshold', 0.5, 'number');
+    db.setSetting('inboxThreshold', 0.5, 'number');
     db.setSetting('useHyde', true, 'boolean');
     db.setSetting('groqModel', 'llama-custom', 'string');
 
-    expect(config.live('searchThreshold')).toBe(0.5);
+    expect(config.live('inboxThreshold')).toBe(0.5);
     expect(config.live('useHyde')).toBe(true);
     expect(config.live('groqModel')).toBe('llama-custom');
   });
 
   test('falls back to the default when the DB is not initialized (no throw)', () => {
     db.close(); // ensure uninitialized
-    expect(() => config.live('searchThreshold')).not.toThrow();
-    expect(config.live('searchThreshold')).toBe(config.similarityThreshold);
+    expect(() => config.live('inboxThreshold')).not.toThrow();
+    expect(config.live('inboxThreshold')).toBe(config.similarityThreshold);
   });
 
   test('reset restores defaults', () => {

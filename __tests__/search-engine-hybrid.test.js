@@ -45,7 +45,7 @@ describe('SearchEngine: Hybrid Functions', () => {
 
   // ─── scoreChunksByVector ──────────────────────────────────
 
-  test('scores chunks above threshold', () => {
+  test('scores every chunk and orders them by score', () => {
     const profileVector = [1, 0, 0];
     const chunks = [
       { id: 'c1', content: 'a', vector: [1, 0, 0] },       // score 1.0
@@ -53,10 +53,22 @@ describe('SearchEngine: Hybrid Functions', () => {
       { id: 'c3', content: 'c', vector: [0.8, 0.6, 0] },   // score ~0.8
     ];
 
-    const result = SearchEngine.scoreChunksByVector(chunks, profileVector, 0.5);
-    expect(result).toHaveLength(2); // c1 and c3
-    expect(result[0].id).toBe('c1');
+    const result = SearchEngine.scoreChunksByVector(chunks, profileVector);
+    expect(result.map((chunk) => chunk.id)).toEqual(['c1', 'c3', 'c2']);
     expect(result[0].score).toBeCloseTo(1.0);
+  });
+
+  test('a corpus where every chunk scores below 0.65 still returns results', () => {
+    const profileVector = [1, 0, 0];
+    const chunks = [
+      { id: 'low1', content: 'a', vector: [0.5, 0.866, 0] },
+      { id: 'low2', content: 'b', vector: [0.3, 0.954, 0] },
+    ];
+
+    const result = SearchEngine.scoreChunksByVector(chunks, profileVector);
+
+    expect(result).toHaveLength(2);
+    expect(result.every((chunk) => chunk.score < 0.65)).toBe(true);
   });
 
   test('returns empty for no chunks', () => {

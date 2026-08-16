@@ -1,7 +1,6 @@
 'use strict';
 
 const retrieval = {
-  semanticCutoffSearch: 0.65,
   semanticCutoffInbox: 0.35,
   rrfK: 60,
   bm25K1: 1.2,

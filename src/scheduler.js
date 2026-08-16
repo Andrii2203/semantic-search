@@ -212,7 +212,7 @@ function allowedSourceKeys(userId) {
 }
 
 async function matchUsers(users, newItems, itemVectors) {
-  const matchThreshold = config.live('searchThreshold');
+  const matchThreshold = config.live('inboxThreshold');
   let totalMatches = 0;
 
   for (const user of users) {

@@ -189,6 +189,13 @@ const migrations = [
       CREATE INDEX IF NOT EXISTS idx_user_sources_user ON user_sources(user_id, enabled);
     `,
   },
+  {
+    name: '015_rename_search_threshold_to_inbox_threshold',
+    up: `
+      DELETE FROM settings WHERE key = 'inboxThreshold';
+      UPDATE settings SET key = 'inboxThreshold' WHERE key = 'searchThreshold';
+    `,
+  },
 ];
 
 function contentHash(content) {
