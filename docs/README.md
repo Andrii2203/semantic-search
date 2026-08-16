@@ -56,6 +56,9 @@ Descriptions of parts of the system that outlive any plan.
 
 | File | Covers |
 |---|---|
+| `reference/system-anatomy.md` | What is connected to what, taken from the import graph |
+| `reference/search-constants.md` | Every retrieval number and where it came from |
+| `reference/retrieval-in-industry.md` | What eleven production systems publish about retrieval |
 | `reference/scheduler.md` | The ingest cycle |
 | `reference/resume-parser.md` | PDF to structured resume |
 | `reference/living-design.md`, `reference/living-design-tech.md` | The optional third theme, not built |

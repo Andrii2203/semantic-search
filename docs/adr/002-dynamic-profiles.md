@@ -1,3 +1,8 @@
+Status: partly superseded by `docs/adr/014-a-profile-per-interest.md` at 2026-08-16 14:56:45 +0200.
+A profile still moves with feedback, which is what this ADR decided. What is superseded is that a
+person holds exactly one of them: three interests averaged into one vector point at none of them, so
+a person now holds one profile per interest.
+
 # ADR-002: Dynamic Profiles замість статичних JSON
 
 ## Проблема

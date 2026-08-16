@@ -80,6 +80,40 @@ directly.
 Measured on the 2026-08-13 snapshot: 77 articles, median 126 words, minimum 27, maximum 322, against
 59 posts. Compare that with the headline corpus this replaced, where the median was 9 words.
 
+## 4.1 The local corpus mirrors the subject areas of the public collections
+
+Added 2026-08-16 14:56:45 +0200, decided by the repository owner.
+
+`docs/plans/public-benchmark.md` section 4 chose the public collections so that each one stands for a
+subject area this engine may be sold into. That choice only pays off if the local corpus covers the
+same subject areas, because otherwise the two benches answer questions about different worlds and no
+result carries from one to the other.
+
+So the sections fetched from the news publishers are chosen to match the public collections rather
+than to match what is interesting to read.
+
+| Public collection | Subject it stands for | What the local corpus collects today |
+|---|---|---|
+| SciFact | Science and research | Guardian `science`, and Ars Technica |
+| FiQA-2018 | Finance | Guardian `business`, which is adjacent rather than identical |
+| NFCorpus | Medicine and health | nothing, and this is the gap |
+| held for later, CQADupStack | Technical community questions | Guardian `technology`, and Ars Technica |
+
+Two consequences follow and both are work rather than opinion.
+
+Health is missing. `scripts/fetch-eval-corpus.js` line 20 fetches `technology`, `science` and
+`business`, so the vertical with a full public collection behind it has no local counterpart at all. A
+health or society section joins that list.
+
+Technology has the opposite problem: it is well covered locally and has no public collection that is
+fetchable today, since CQADupStack is held behind the index trigger in
+`docs/plans/public-benchmark.md` section 4. It stays in the local corpus, and any technology result
+stands on the local bench alone until that trigger fires.
+
+Business is kept and its imprecision is recorded rather than smoothed. FiQA is financial question
+answering and Guardian business is general business reporting. They overlap, they are not the same
+subject, and a configuration that wins on one is evidence about the other rather than proof.
+
 ## 5. Two groups of intents
 
 Intents are split deliberately, because a bench made only of answerable questions measures half the
@@ -530,7 +564,7 @@ subject matter the corpus covers, then keeping only topics with at least three r
 
 | Question | Trigger that forces an answer |
 |---|---|
-| How many intents are needed before a difference between configurations exceeds run to run noise | The baseline records its own variation across repeated runs. TREC settled on 50 topics, which is the working target |
+| How many intents are needed before a difference between configurations exceeds run to run noise. Answered 2026-08-16 14:56:45 +0200 as two numbers, not one, because they answer two different questions. Forty is the floor: `docs/eval/local-news-axis-a.md` section 12 computes it from this bench's own interval width, 0.2 wide on nDCG@10 at eight answerable intents, so below roughly forty the metric cannot be resolved at all. Fifty is the target, and it is TREC's convention rather than a property of our data. The bench is built toward 50 and anything under 40 is not worth running for ranking quality | closed, and 50 is the number to build toward |
 | Whether the grade threshold for relevance is 2 or 3 | The first report shows the two thresholds ranking configurations differently |
 | Whether ingestion should fetch the linked article body for the product itself, not only for the bench | Already triggered, see `docs/plans/retrieval-quality.md` section 12 |
 | Whether the judge should also grade the Ukrainian holdout, given the model is multilingual | The English measurement produces a winner |
