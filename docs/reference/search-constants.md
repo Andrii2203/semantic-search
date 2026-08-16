@@ -132,13 +132,15 @@ a range wider than anyone would tune within. Sources for both are in
 of the eleven systems, is what text gets indexed, whether candidates are generated in parallel, and
 whether a reranker exists. Those are axes C, A and E, and they are measured rather than argued.
 
-Two names in section 5.1 below and eleven more in `src/search-constants.js` have no row in either
-table. They were added after this document was written and the drift went unnoticed because
-behaviours 1 and 2 have no test, which section 7 lists and nobody built. The list is
-`judgeProvider`, `judgeSecondModel`, `judgeMaxTokens`, `judgeInputCostPerMillion`,
-`judgeOutputCostPerMillion`, `judgeCallsPerMinute`, `gradeMin`, `gradeMax`, `calibrationSampleSize`
-and `calibrationMinimumKappa`, plus `judgeModel` whose recorded value is stale. Recorded here at
-2026-08-14 17:57 +0200 as a known gap with its cause, rather than left to be rediscovered.
+Closed 2026-08-16 11:07:48 +0200. Twelve names in `src/search-constants.js` had no row in either
+table, and `judgeModel` carried a value that ADR-007 had changed and this document never followed.
+The cause was named correctly when the gap was recorded on 2026-08-14 17:57 +0200: behaviours 1 and 2
+had no test, which section 7 listed and nobody built.
+
+`__tests__/search-constants.test.js` now exists and is the test section 7 always claimed. It reads
+this document, parses both constant tables and compares the two name sets in each direction, so the
+drift that produced this paragraph fails the suite instead of accumulating. The twelve rows were
+written from the code and from the ADRs that introduced them, not invented.
 
 Three rows above stopped being true on 2026-08-15 11:10:48 +0200 and the table is not rewritten until
 the code moves, per the definition of done of each ADR. Recorded here so the gap is visible rather
@@ -160,7 +162,19 @@ here corrupts every number the project reports and they belong under the same ru
 
 | Name | Value | Origin | Justification, or the trigger that forces one |
 |---|---|---|---|
-| `judgeModel` | `openai/gpt-oss-120b` | borrowed | Chosen as a family the system itself does not use, so the judge cannot reward its own output. Verified live against the provider on 2026-08-13 |
+| `judgeProvider` | `anthropic` | measured | Chosen by `docs/adr/007-judge-on-anthropic.md` after the free Groq tier stopped the pass at 324 of 947 pairs, having spent 199,844 of 200,000 daily tokens |
+| `judgeModel` | `claude-haiku-4-5` | borrowed | Chosen as a family the system itself does not use, so the judge cannot reward its own output. The value read `openai/gpt-oss-120b` in this table until 2026-08-16 11:07:48 +0200, which was stale from the day ADR-007 changed it |
+| `judgeSecondModel` | `openai/gpt-oss-120b` | measured | The 324 pairs it graded before the rate limit are kept as an independent second opinion. Cohen's kappa between the two families on that overlap is 0.526, recorded in `docs/plans/evaluation-corpus.md` section 12 |
+| `judgeMaxTokens` | 512 | arbitrary | A grade and one sentence of reason fit far inside it. Forced by a judgment truncated mid reason |
+| `judgeInputCostPerMillion` | 1 | borrowed, from the provider's price list | Used only to print the cost of a pass. Forced when the provider reprices |
+| `judgeOutputCostPerMillion` | 5 | borrowed, from the same list | The same |
+| `judgeCallsPerMinute` | 25 | measured | On the tier in use the sixth consecutive raw call returned 429, recorded in `docs/plans/evaluation-corpus.md` section 9.2. The limiter in `src/groq-client.js` is what a judging pass calls through |
+| `gradeMin` | 0 | borrowed | The floor of the graded scale in `docs/plans/evaluation-corpus.md` section 6. A grade outside it is rejected rather than stored |
+| `gradeMax` | 3 | borrowed | The ceiling of the same scale |
+| `embeddingModel` | `Xenova/all-MiniLM-L6-v2` | measured | The model the product runs, so the bench embeds what the product embeds. Changes when axis F picks a winner under `docs/adr/012-embedding-model-context-window.md` |
+| `embeddingBatchSize` | 64 | arbitrary | How many texts go to the encoder at once. Forced by a measured throughput difference at another size, which nothing has taken |
+| `calibrationSampleSize` | 60 | arbitrary | How many pairs the owner labels by hand. Forced when the kappa interval at this size is too wide to decide whether the judge passes its floor |
+| `calibrationMinimumKappa` | 0.4 | borrowed, source named | The floor below which the judge is rejected. Published agreement between language model judges and human assessors is roughly 0.3 to 0.5, and UMBRELA reports 0.418 to 0.499 on TREC deep learning collections, recorded in `docs/plans/evaluation-corpus.md` section 9 |
 | `judgeTemperature` | 0 | borrowed | A rerun must reproduce the answer key. Any other value makes the key drift silently |
 | `judgePromptVersion` | 1 | measured | Stored on every judgment so a row graded under an older prompt is visible rather than mixed in |
 | `judgeIntentChars` | 1200 | arbitrary | How much of the post the judge sees. Forced when an intent longer than this is truncated mid sentence |

@@ -97,13 +97,46 @@ project's own news bench.
 
 ## 7. Behaviours
 
-1. A search request that sends a threshold is rejected as an unknown field rather than honoured.
-2. Search returns at most `resultsReturned` results, ordered by score, with no score based exclusion.
-3. Search over a corpus where every document scores below 0.65 still returns results.
-4. The admission decision reads the stored inbox cutoff when one exists, and `search-constants`
+1. A search request that sends a threshold returns the same results as one that does not.
+2. Search returns at most `topN` results, ordered by score, with no score based exclusion.
+3. Search over a corpus where every chunk scores below 0.65 still returns results.
+4. Both branches generate candidates over the whole corpus by default, so a chunk containing no query
+   keyword can be returned.
+5. The admission decision reads the stored inbox cutoff when one exists, and `search-constants`
    otherwise.
-5. Changing the inbox cutoff setting changes which items are admitted on the next cycle.
-6. No file under `src/` contains the literal 0.65.
+6. Changing the inbox cutoff setting changes which items are admitted on the next cycle.
+7. No file under `src/` contains the literal 0.65.
+
+Behaviour 1 was written on 2026-08-15 as "rejected as an unknown field" and corrected on
+2026-08-16 11:07:48 +0200, because the premise was wrong. `SearchRequestSchema` in
+`src/validation.js` is exported and used by nothing: `src/routes/search.js` reads the body directly
+in `readSearchRequest`. So the search route has never validated its input against that schema, and a
+behaviour promising rejection would have described a check that does not exist. The schema's
+`threshold` field is removed with the rest, and the honest behaviour is that the field is ignored.
+
+That is the third artefact found this way in two days, after `src/eval/categories.js` and the
+`no-magic-numbers` rule, and all three shared one shape: something written, exported and never wired
+to a caller.
+
+Behaviour 4 belongs to axis A rather than to this ADR, and it is listed here because
+`docs/plans/retrieval-quality.md` section 7 requires the two to land in one commit. Measured
+separately each looks like a failure.
+
+## 7.1 Tests
+
+| # | Level | File |
+|---|---|---|
+| 1 | L3 | `__tests__/routes/search.test.js` |
+| 2 | L3 | `__tests__/routes/search.test.js` |
+| 3 | L2 | `__tests__/search-engine.test.js` |
+| 4 | L3 | `__tests__/routes/search.test.js` |
+| 5 | L2 | `__tests__/scheduler.test.js` |
+| 6 | L2 | `__tests__/scheduler.test.js` |
+| 7 | L1 | `__tests__/search-constants.test.js` |
+
+Behaviour 7 is a test that reads the source files, which is unusual and is the point: the defect this
+ADR fixes was one concept written as a literal in six places, and only a check over the text can stop
+it returning.
 
 ## 8. Definition of done
 
