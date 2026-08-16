@@ -84,10 +84,29 @@ an open question below rather than a decision here, because
 2. A profile belongs to exactly one person and is never visible to another.
 3. An item is admitted when it clears the cutoff against any one of that person's profiles.
 4. A match records which profile admitted it.
-5. Feedback on an item moves the profile that admitted it and no other.
-6. Two profiles of the same person that receive opposite feedback move in opposite directions.
+5. Feedback on an item moves the profile that admitted it and leaves every other profile of that
+   person unchanged.
+6. An item that matches one interest of a person is admitted, where the average of that person's
+   interests would have scored it below the cutoff.
 7. A search does not overwrite any profile unless it names one.
 8. A person with no profiles receives no matches rather than an error.
+
+Behaviour 6 was written on 2026-08-16 14:56:45 +0200 as "two profiles that receive opposite feedback
+move in opposite directions" and rewritten at 17:40:55 +0200 because that sentence does not mean
+anything. Two profiles are independent, so there is no such thing as feedback that is opposite
+between them: a star on one is simply not an event for the other. The word "opposite" had been
+carried over from the defect, where a star and a skip land on the same vector and cancel, and it does
+not survive the move to separate vectors.
+
+What was actually being claimed splits in two. That feedback stays where it belongs is behaviour 5,
+and the original line was a badly worded duplicate of it. That separate interests beat their average
+is a different claim, and it is now behaviour 6, stated as the outcome a person would notice rather
+than as vector arithmetic: an item on one subject reaches the inbox, where the averaged vector would
+have scored it below the cutoff and dropped it.
+
+Behaviour 6 is the one that proves the decision rather than the plumbing, and it is impossible to
+satisfy under the current shape for the obvious reason: with one vector per person there is no
+"average of the interests" to lose to, because the average is all there is.
 
 ## 8. Tests
 

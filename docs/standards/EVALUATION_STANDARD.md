@@ -15,6 +15,31 @@ writes the answer key, reads the score, then adjusts the system until the score 
 goes up and nothing about the product got better. That is the failure this document exists to
 prevent.
 
+## 1.1 Three words that are not synonyms
+
+Added 2026-08-16 17:40:55 +0200, because they were used interchangeably in conversation and the
+difference decides what a number means. The vocabulary is the field's, from TREC, and this project
+borrows it.
+
+| Word | What it is | Ours |
+|---|---|---|
+| Corpus | The set of documents being searched. Only documents, no questions and no answers | `eval/snapshots/2026-08-13/corpus.json`, 2509 articles |
+| Topic | One information need. In this repository it is called an intent: the text a person would write about what they want | `eval/intents.json`, 50 of them |
+| Collection | A corpus plus topics plus relevance judgments, all three together. This is the measuring instrument | SciFact, NFCorpus, FiQA, and our own local bench |
+
+So a corpus alone measures nothing, because there is no question and no correct answer. Topics alone
+measure nothing, because there is nothing to search. A collection measures, because it has all three.
+
+Two consequences that keep coming up.
+
+When the field says fifty topics, it counts questions, not documents. Our 2509 articles are a corpus
+of decent size attached to a collection with far too few topics, and adding articles does not fix
+that.
+
+A subject area, such as medicine or finance, is a property of a whole collection rather than a fourth
+kind of thing. When this repository says a vertical, it means a collection whose corpus and topics
+both sit in one subject area, plus the configuration that won on it.
+
 ## 2. The oracle
 
 An oracle is the answer key: for a given intent and a given item, the verdict a person would give.

@@ -114,6 +114,29 @@ Business is kept and its imprecision is recorded rather than smoothed. FiQA is f
 answering and Guardian business is general business reporting. They overlap, they are not the same
 subject, and a configuration that wins on one is evidence about the other rather than proof.
 
+### 4.2 The medical feeds, measured rather than chosen from a list
+
+Added 2026-08-16 17:40:55 +0200. Three candidates were fetched and parsed with this project's own
+`src/sources/feed-reader.js`, so the numbers below are what the ingest path would actually receive
+rather than what a directory claims.
+
+| Feed | Items per fetch | Median words per item | Note |
+|---|---|---|---|
+| `https://www.statnews.com/feed/` | 20 | 135 | The only one above the current corpus median of 126. Some items are marked STAT+ and may be partial |
+| `https://www.sciencedaily.com/rss/health_medicine.xml` | 60 | 53 | The most items by far, and research derived, which is the register NFCorpus is in. Sits just above `thinArticleWords` of 50, so roughly half its items will classify as thin |
+| `https://medicalxpress.com/rss-feed/` | 30 | 47 | Below the thin threshold at the median. Kept as a third source for volume, not for body quality |
+
+All three parse. Taken together they are 110 items per fetch, which at the daily cadence of
+`scripts/fetch-eval-corpus.js` reaches the scale of the existing sections within days.
+
+STAT News and ScienceDaily are the pair to add. STAT carries the bodies, ScienceDaily carries the
+volume and the research register, and Medical Xpress is held in reserve because half its items would
+be classified thin before any retrieval happens.
+
+Recorded as a measurement rather than a decision to build: `scripts/fetch-eval-corpus.js` still
+fetches only `technology`, `science` and `business`, and adding these two is the work this section
+authorises.
+
 ## 5. Two groups of intents
 
 Intents are split deliberately, because a bench made only of answerable questions measures half the
@@ -560,11 +583,49 @@ measuring what the system lets through when the right answer is nothing, and the
 and paid for. What is missing is the other half, and it is rebuilt by choosing intent sources whose
 subject matter the corpus covers, then keeping only topics with at least three relevant articles.
 
+### 12.1 What fifty means, and how many of it exists
+
+Counted from `eval/intents.json` and `eval/judgments.json` at 2026-08-16 17:40:55 +0200.
+
+Fifty is fifty topics, not fifty documents and not fifty judgments. A topic counts toward the fifty
+only when the answer key gives it at least three articles graded 2 or 3, which is TREC's own minimum
+and the rule section 10.1 already adopted. A topic with one relevant article is not a hard topic, it
+is an unresolvable one: every configuration either finds that single article or does not, and the
+metric has nothing to rank.
+
+| State | Intents | Dev | Locked |
+|---|---|---|---|
+| Three or more relevant articles, counts toward the fifty | 11 | 4 | 7 |
+| One or two relevant, too thin to count | 5 | 4 | 1 |
+| No relevant article, the unanswerable group of section 5 | 34 | 26 | 8 |
+| Total judged | 50 | 34 | 16 |
+
+So the bench holds 11 of the 50 topics it needs, and the working half holds 4.
+
+The 34 unanswerable intents are not waste and are not counted as progress either. Section 5 keeps
+them deliberately, to measure what the system lets through when the right answer is nothing, and they
+are already judged and paid for. They simply do not contribute to ranking quality, which is what the
+fifty is for.
+
+How a topic is made, in the order that produces one:
+
+| Step | What it does | Cost |
+|---|---|---|
+| Fetch | `scripts/fetch-eval-corpus.js` adds a day of articles and posts to the snapshot | network, minutes |
+| Choose | Every candidate post is embedded and ranked by how well the corpus covers its subject, per section 10.1 | the embedding model, minutes |
+| Pool | The union of the top results across configurations becomes the pairs to judge | minutes |
+| Judge | `claude-haiku-4-5` grades each pair 0 to 3 | about a dollar per thousand pairs |
+| Prune | A topic survives with three or more articles graded 2 or 3, otherwise it moves to the unanswerable group or is dropped | free |
+
+The bottleneck is not judging and it is not money. It is coverage: a topic only survives if the
+corpus already contains three articles on its subject, which is why section 4.1 aligns the corpus
+with the subject areas and why more snapshot days are the cheapest way to raise the count.
+
 ## 13. Open questions
 
 | Question | Trigger that forces an answer |
 |---|---|
-| How many intents are needed before a difference between configurations exceeds run to run noise. Answered 2026-08-16 14:56:45 +0200 as two numbers, not one, because they answer two different questions. Forty is the floor: `docs/eval/local-news-axis-a.md` section 12 computes it from this bench's own interval width, 0.2 wide on nDCG@10 at eight answerable intents, so below roughly forty the metric cannot be resolved at all. Fifty is the target, and it is TREC's convention rather than a property of our data. The bench is built toward 50 and anything under 40 is not worth running for ranking quality | closed, and 50 is the number to build toward |
+| How many intents are needed before a difference between configurations exceeds run to run noise. Answered 2026-08-16 17:40:55 +0200: fifty, and only fifty. An earlier answer that day offered forty as a floor, derived from this bench's own interval width. That number is withdrawn, because it is an estimate produced from a measurement taken at eight topics and it has never been checked at any other size. The target is TREC's fifty, and section 12.1 counts how far we are from it | closed |
 | Whether the grade threshold for relevance is 2 or 3 | The first report shows the two thresholds ranking configurations differently |
 | Whether ingestion should fetch the linked article body for the product itself, not only for the bench | Already triggered, see `docs/plans/retrieval-quality.md` section 12 |
 | Whether the judge should also grade the Ukrainian holdout, given the model is multilingual | The English measurement produces a winner |
