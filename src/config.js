@@ -59,18 +59,6 @@ const config = Object.freeze({
     rateLimit: envInt('GROQ_RATE_LIMIT', 10),
   }),
 
-  reddit: Object.freeze({
-    subreddits: env('REDDIT_SUBREDDITS', 'programming,technology,webdev').split(',').map((s) => s.trim()),
-    limit: envInt('REDDIT_LIMIT', 50),
-  }),
-
-  djinni: Object.freeze({
-    keywords: env('DJINNI_KEYWORDS', 'AI').split(',').map(s => s.trim()),
-    limit: envInt('DJINNI_LIMIT', 130),
-  }),
-
-    
-
   activeProfile: env('ACTIVE_PROFILE', 'content'),
   profiles: Object.freeze({
     content: path.resolve(__dirname, 'profiles', 'content.json'),

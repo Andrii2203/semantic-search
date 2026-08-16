@@ -158,7 +158,6 @@ async function register(req, res) {
   db.createUser({ id, email: normalizedEmail, passwordHash });
 
   try {
-    db.seedBuiltinSourcesForUser(id);
     db.seedWelcomeForUser(id);
   } catch (err) {
     logger.warn({ err, userId: id }, 'Failed to seed welcome messages');

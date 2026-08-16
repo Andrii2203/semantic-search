@@ -38,13 +38,11 @@ describe('src/routes/sources.js', () => {
     expect(res.status).toBe(401);
   });
 
-  test('starts a new account with the built in sources enabled', async () => {
+  test('a new account starts with no sources', async () => {
     const res = await request(app).get('/api/sources').set('Cookie', cookie);
 
     expect(res.status).toBe(200);
-    const builtins = res.body.sources.filter((source) => source.type === 'builtin');
-    expect(builtins.map((source) => source.url).sort()).toEqual(['djinni', 'hn', 'reddit']);
-    expect(builtins.every((source) => source.enabled)).toBe(true);
+    expect(res.body.sources).toEqual([]);
   });
 
   test('stores a feed the person adds', async () => {

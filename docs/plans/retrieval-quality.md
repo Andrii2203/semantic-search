@@ -234,7 +234,7 @@ the open question in `docs/reference/search-constants.md` section 10.
 
 | Question | Trigger that forces an answer |
 |---|---|
-| Whether ingestion fetches the linked article body instead of indexing the headline | Already triggered. Measured on 2026-08-13: 54 of 59 ingested items carry fewer than 50 words. Needs the decision protocol and its own ADR before any axis is measured, because it changes what every later number is measured on |
+| Answered for the product 2026-08-16 11:07:48 +0200. Whether ingestion fetches the linked article body instead of indexing the headline. It does not fetch anything: the three sources that produced headlines were removed by `docs/adr/010-sources-narrowed-to-user-feeds.md`, and RSS carries bodies without a scraper. Measured on a live cycle the same day: an Ars Technica feed saved 20 items with real bodies. It stays open for the bench, whose intents are Hacker News and Reddit posts | closed for the product, open for the bench |
 | Whether the search cutoff and the inbox cutoff become two settings | Phase 4 raises recall and admission volume rises with it |
 | How large the evaluation corpus must be before a difference between two configurations is real rather than noise | Two configurations differ by less than the run to run variation recorded in phase 3 |
 | Whether the language model features stay, given that the Groq model named in `src/config.js` no longer exists and no key is configured | Phase 4 measures axis D and axis E with the language model paths disabled |

@@ -11,9 +11,7 @@ function SourceRow({ source, onToggle, onRemove }) {
 
       <div className="flex-1 min-w-0">
         <div className="text-sm text-fg truncate">{name}</div>
-        <div className="text-[10px] font-mono text-fg-2 truncate">
-          {source.type === 'builtin' ? 'built in' : source.url}
-        </div>
+        <div className="text-[10px] font-mono text-fg-2 truncate">{source.url}</div>
       </div>
 
       <button
@@ -24,15 +22,13 @@ function SourceRow({ source, onToggle, onRemove }) {
         {source.enabled ? 'On' : 'Off'}
       </button>
 
-      {source.type !== 'builtin' && (
-        <button
-          onClick={() => onRemove(source)}
-          aria-label={`Remove ${name}`}
-          className="p-1 rounded-sm text-fg-2 hover:text-red-500 hover:bg-surface-2 transition-colors"
-        >
-          <TrashIcon className="w-3.5 h-3.5" />
-        </button>
-      )}
+      <button
+        onClick={() => onRemove(source)}
+        aria-label={`Remove ${name}`}
+        className="p-1 rounded-sm text-fg-2 hover:text-red-500 hover:bg-surface-2 transition-colors"
+      >
+        <TrashIcon className="w-3.5 h-3.5" />
+      </button>
     </div>
   )
 }
@@ -109,7 +105,9 @@ export function SourcesPage() {
           ))}
 
           {!isLoading && (sources || []).length === 0 && (
-            <p className="px-4 py-8 text-xs font-mono text-fg-2 text-center">No sources yet</p>
+            <p className="px-4 py-8 text-xs font-mono text-fg-2 text-center">
+              No sources yet. Add a feed above and your inbox starts filling on the next cycle.
+            </p>
           )}
         </div>
       </div>

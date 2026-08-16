@@ -191,6 +191,14 @@ describe('getItems', () => {
     expect(items).toHaveLength(3); // 2 hn + 1 reddit з beforeEach
   });
 
+  test('an item stored by a retired source stays readable and searchable', () => {
+    db.insertItem(makeItem({ id: 'legacy-1', content: 'A job posting stored before the source was retired', source: 'djinni', type: 'job' }));
+
+    expect(db.getItemById('legacy-1')).not.toBeNull();
+    expect(db.getItems({ source: 'djinni' }).map((item) => item.id)).toContain('legacy-1');
+    expect(db.getSources()).toContain('djinni');
+  });
+
 });
 
 // ─── Get by ID ───────────────────────────────────────────────

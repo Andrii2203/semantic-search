@@ -45,7 +45,7 @@ Out of scope, deferred with their triggers:
 3. A source can be switched off without deleting it, and can be deleted.
 4. A URL that is not http or https is rejected with a validation error.
 5. The same feed added twice by one person is stored once.
-6. A new account starts with the three built in sources enabled.
+6. A new account starts with no sources.
 7. The cycle fetches each distinct enabled source once, however many people subscribe to it.
 8. The cycle does not fetch a source that every subscriber has switched off.
 9. A person is matched only against items from sources they have enabled.
@@ -53,6 +53,21 @@ Out of scope, deferred with their triggers:
 11. The feed reader reads RSS 2.0 and Atom, returning title, link, body, author and published time.
 12. The feed reader returns nothing for a body that is not a feed, rather than throwing.
 13. The Sources screen lists the person's sources, adds one by URL, toggles and removes one.
+14. No built in source is registered, so a cycle with no enabled user source fetches nothing rather
+    than falling back to a compiled in set.
+15. An item stored by a retired source stays readable and searchable.
+16. The Sources screen with no sources names adding a feed as the next action.
+
+Behaviour 6 was rewritten and 14 and 15 were added at 2026-08-16 10:27:06 +0200, under
+`docs/adr/010-sources-narrowed-to-user-feeds.md`. It previously read that a new account starts with
+the three built in sources enabled. The measurement that reversed it is in
+`docs/plans/evaluation-corpus.md` section 1: 54 of 59 ingested items carried fewer than 50 words and
+26 of 29 Hacker News items had content identical to their own title.
+
+Behaviour 14 is the one that carries risk, and it is stated as the behaviour rather than as a
+consequence because it is what a person will notice. A new account now has an empty inbox until a
+feed is added, which `docs/adr/010-sources-narrowed-to-user-feeds.md` section 4 records as the single
+visible effect of the removal and section 9 leaves as an open question.
 
 ## 5. Tests
 
@@ -71,6 +86,9 @@ Out of scope, deferred with their triggers:
 | 11 | L4 | `__tests__/sources/feed-reader.test.js` |
 | 12 | L4 | `__tests__/sources/feed-reader.test.js` |
 | 13 | client | `client/src/components/SourcesPage.test.jsx` |
+| 14 | L2 | `__tests__/sources/registry.test.js` |
+| 15 | L2 | `__tests__/db.test.js` |
+| 16 | client | `client/src/components/SourcesPage.test.jsx` |
 
 ## 6. Definition of done
 

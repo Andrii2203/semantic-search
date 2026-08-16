@@ -98,6 +98,35 @@ distinction is later refused, the bench needs a new intent population and that i
 | Keep them disabled by default rather than deleted | A disabled module still carries tests, configuration and a scraper that breaks. `docs/standards/DECISION_PROTOCOL.md` treats carrying cost as a cost, and nothing is bought by keeping them |
 | Replace them with one curated starter feed list | Not rejected, deferred. It is the answer to the empty inbox in section 4 and belongs to the plan that carries this ADR |
 
+## 6.1 Done 2026-08-16 11:07:48 +0200
+
+Built on `feature/toolchain-upgrade`. Behaviour 6 of `docs/plans/phase-4b-dynamic-sources.md` was
+rewritten and 14 to 16 were added there before any code moved.
+
+| Removed | |
+|---|---|
+| `src/sources/hn.js`, `reddit.js`, `djinni.js` and their three registrations | the registry itself stays, and a test asserts it still accepts a source |
+| `BUILTIN_SOURCES` and `seedBuiltinSourcesForUser` in `src/db.js`, and the call in `src/middleware/auth.js` | |
+| `REDDIT_SUBREDDITS`, `REDDIT_LIMIT`, `DJINNI_KEYWORDS`, `DJINNI_LIMIT` from `src/config.js`, `.env.example`, `docker-compose.yml` and `README.md` | |
+| The `builtin` branches in `client/src/components/SourcesPage.jsx` | a source row is now always removable, which it was not before |
+| `__tests__/sources/hn.test.js`, `reddit.test.js`, `djinni.test.js`, `djinni.smoke.js` | deleted with their subject rather than skipped |
+
+The suite went from 621 tests to 600, which is the honest direction for a removal. `npm run verify`
+exits 0, branches at 80.15 percent, and the client carries 21 tests.
+
+Then the application was run, because section 4 predicted one visible change and a suite cannot see
+it:
+
+| Check | Result |
+|---|---|
+| A cycle with no sources configured | `fetchAll complete, totalItems 0`, and no request to any of the three retired sites |
+| A newly registered account | `{"sources":[]}` |
+| Adding an Ars Technica feed by URL | 201, stored as type `rss` |
+| A cycle after that | the feed was read and 20 items were saved |
+
+So the replacement path is not a plan, it works end to end, and the product now ingests only what a
+person chose.
+
 ## 7. Definition of done
 
 - No module under `src/sources/` fetches Hacker News, Reddit or Djinni.

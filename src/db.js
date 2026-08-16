@@ -635,8 +635,6 @@ function userCanAccessItem(item, userId) {
   return !item.user_id || item.user_id === userId;
 }
 
-const BUILTIN_SOURCES = ['hn', 'reddit', 'djinni'];
-
 function rowToSource(row) {
   return row ? { ...row, enabled: row.enabled === 1 } : null;
 }
@@ -682,12 +680,6 @@ function deleteUserSource({ id, userId }) {
     getDb().prepare('DELETE FROM user_sources WHERE id = ? AND user_id = ?').run(id, userId)
       .changes > 0
   );
-}
-
-function seedBuiltinSourcesForUser(userId) {
-  for (const name of BUILTIN_SOURCES) {
-    addUserSource({ userId, type: 'builtin', url: name, label: name });
-  }
 }
 
 function seedWelcomeForUser(userId) {
@@ -1083,7 +1075,6 @@ module.exports = {
   getEnabledSources,
   setUserSourceEnabled,
   deleteUserSource,
-  seedBuiltinSourcesForUser,
   getSetting,
   getAllSettings,
   setSetting,

@@ -6,7 +6,6 @@ import { captureRequests, renderWithProviders } from '../test/render'
 
 const SOURCES = {
   sources: [
-    { id: 's1', type: 'builtin', url: 'hn', label: 'hn', enabled: true },
     { id: 's2', type: 'rss', url: 'https://example.test/feed.xml', label: 'Example blog', enabled: true },
     { id: 's3', type: 'rss', url: 'https://quiet.test/feed.xml', label: 'Quiet blog', enabled: false },
   ],
@@ -27,7 +26,13 @@ describe('client/src/components/SourcesPage.jsx', () => {
 
     expect(await screen.findByText('Example blog')).toBeInTheDocument()
     expect(screen.getByText('Quiet blog')).toBeInTheDocument()
-    expect(screen.getByText('hn')).toBeInTheDocument()
+  })
+
+  test('the sources screen with no sources names adding a feed as the next action', async () => {
+    captureRequests({ '/api/sources': { sources: [] } })
+    renderWithProviders(<SourcesPage />)
+
+    expect(await screen.findByText(/add a feed above/i)).toBeInTheDocument()
   })
 
   test('marks a source that is switched off', async () => {

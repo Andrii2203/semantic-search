@@ -68,10 +68,6 @@ function clearSources() {
   sources.clear();
 }
 
-register(require('./hn'));
-register(require('./reddit'));
-register(require('./djinni'));
-
 module.exports = {
   register,
   fetchAll,
