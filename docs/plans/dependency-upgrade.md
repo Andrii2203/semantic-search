@@ -54,7 +54,7 @@ In scope:
 
 Out of scope, each with its reason:
 - Changing the embedding model, because it is a retrieval decision carried by
-  `docs/adr/012-multilingual-embedding-model.md` and measured, not a version bump.
+  `docs/adr/012-embedding-model-context-window.md` and measured, not a version bump.
 - Removing `groq-sdk`, because whether the language model paths survive is the open question in
   `docs/plans/retrieval-quality.md` section 12 and is answered by axis D and axis E.
 - Adding a vector index extension such as `sqlite-vec`. Its own repository states it is pre v1 with

@@ -93,10 +93,11 @@ the other five.
 
 ## 5. Language
 
-Superseded on 2026-08-15 11:10:48 +0200 by `docs/adr/012-multilingual-embedding-model.md`. Ukrainian
-stops being a holdout and becomes a supported language with a bench of its own. The isolation argument
-below still holds for the five axes measured on the current model, which is why the English
-collections stay the place where the axes are decided. See section 6.2.
+This section stands as written. A note added at 2026-08-15 11:10:48 +0200 claimed it was superseded
+and that Ukrainian became a supported language. That note was withdrawn at 14:51:56 +0200 and the
+reason is recorded in section 0 of `docs/adr/012-embedding-model-context-window.md`: it came from
+misreading the repository owner, who had said the opposite. Ukrainian is out of scope, not held out
+for a later decision.
 
 Measurement is in English. The reason is isolation: the measured cross language score of 0.182 is
 larger than the difference any other axis will produce, so a mixed language corpus would report the
@@ -160,7 +161,7 @@ scheduled. They are recorded here because a plan that contradicts its own ADRs i
 |---|---|---|
 | The three built in sources are retired | `docs/adr/010-sources-narrowed-to-user-feeds.md` | Section 4 is superseded in part. The first open question of section 12, whether ingestion fetches the article body, is answered for the product: RSS carries bodies, so the product stops indexing headlines. It stays open for the bench, whose intents are Hacker News and Reddit posts |
 | The search cutoff is deleted rather than retuned | `docs/adr/011-one-cutoff-one-origin.md` | Section 7 said axis A and the cutoff move together in one commit. They still do, and the cutoff's half of that commit is now a deletion. The second open question of section 12, whether search and inbox cutoffs split, is closed: one of the two stops existing |
-| Ukrainian becomes supported and axis F is promoted | `docs/adr/012-multilingual-embedding-model.md` | Section 5 is superseded. Phase 6 moves next to phase 4 in section 6, because every constant measured on `all-MiniLM-L6-v2` is void when the model changes, and measuring axes on a model that is about to be replaced spends the work twice |
+| Axis F carries a reason it cannot be dropped, and stays in phase 6 | `docs/adr/012-embedding-model-context-window.md` | Nothing moves. The order in section 6 is unchanged. The ADR records that the model's 256 token window cannot read a 300 word chunk, which is an English defect and not a language question. An earlier version of this row said Ukrainian became supported and axis F was promoted to phase 4. Both were withdrawn at 2026-08-15 14:51:56 +0200 |
 | Dependencies are audited before a phase | `docs/standards/DEPENDENCY_STANDARD.md`, `docs/plans/dependency-upgrade.md` | Phase 0 is reopened as one step of the upgrade plan. Node 20 went end of life on 2026-04-30, and the native module that broke the build in section 6.1 is two majors behind |
 
 The order in section 6 therefore reads: the dependency upgrade first, because the gate runs on it,

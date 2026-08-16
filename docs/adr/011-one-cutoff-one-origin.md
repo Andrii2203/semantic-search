@@ -63,7 +63,7 @@ scores that are not comparable removes documents by their language and length ra
 relevance.
 
 Retuning would also have to be redone twice. Once when `docs/adr/008-parallel-candidate-generation.md`
-lands and the candidate set changes, and again when `docs/adr/012-multilingual-embedding-model.md`
+lands and the candidate set changes, and again when `docs/adr/012-embedding-model-context-window.md`
 changes the model and with it the entire scale on which 0.65 meant anything.
 
 ## 5. What changes, named exactly
@@ -127,5 +127,5 @@ project's own news bench.
 
 | Question | Trigger that forces an answer |
 |---|---|
-| What value the inbox cutoff takes once the model changes | `docs/adr/012-multilingual-embedding-model.md` produces a winner. Every threshold measured on `all-MiniLM-L6-v2` is void on a different model |
-| Whether the inbox needs a per source or per language cutoff | The Ukrainian bench of ADR-012 shows one number cannot serve both languages |
+| What value the inbox cutoff takes once the model changes | `docs/adr/012-embedding-model-context-window.md` produces a winner. Every threshold measured on `all-MiniLM-L6-v2` is void on a different model |
+| Whether the inbox needs a per source cutoff | One source floods the inbox at a threshold that serves the others. There is no per language question, because measurement is English only per `docs/plans/retrieval-quality.md` section 5 |

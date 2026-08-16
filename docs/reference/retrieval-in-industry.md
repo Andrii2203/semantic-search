@@ -307,7 +307,7 @@ is an option in this runtime today, which is worth writing down before somebody 
 axis: both need an index shape `src/eval/bm25.js` and the vector table do not have.
 
 What is available without training anything, verified on the Hub on 2026-08-15 between 11:02 and
-11:06 +0200 and recorded with counts in `docs/adr/012-multilingual-embedding-model.md` section 4: a
+11:06 +0200 and recorded with counts in `docs/adr/012-embedding-model-context-window.md` section 4: a
 multilingual embedding model under 500M parameters that runs in this project's existing ONNX runtime,
 and a multilingual cross encoder reranker in the same runtime. Axis E was written on the assumption
 that reranking means either a language model API or a cross encoder somebody would have to host. It

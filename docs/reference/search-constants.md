@@ -149,7 +149,7 @@ returns the top `resultsReturned` in rank order and applies no cosine floor.
 `semanticCutoffInbox` becomes the only threshold in the system and the only one a person can move.
 
 Every row of section 4, the model facts, is void when
-`docs/adr/012-multilingual-embedding-model.md` picks a model. The 384 dimensions, the 256 token window
+`docs/adr/012-embedding-model-context-window.md` picks a model. The 384 dimensions, the 256 token window
 and the English only language row are properties of `Xenova/all-MiniLM-L6-v2` and of nothing else.
 
 ## 5.1 Evaluation constants
