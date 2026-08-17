@@ -104,21 +104,41 @@ the bench is evidence about the bench.
 Measured by the import graph, excluding `src/server.js` which is the entry point and `scripts/`, which
 nothing is supposed to import.
 
+Retaken 2026-08-17 12:45:00 +0200 by rebuilding the import graph from `src/server.js` and every file
+in `scripts/`. The table below replaces the one taken on 2026-08-16, which was incomplete.
+
 | Module | Note |
 |---|---|
 | `src/dispatcher.js` | Nothing under `src/` or `scripts/` requires it |
-| `src/eval/intent-selection.js` | Has four passing tests and no caller. It is the chooser rewritten on 2026-08-14 after the first selection rule produced 8 answerable intents, and `scripts/choose-intents.js` does not use it |
+| `src/actions/index.js` | The action registry. Its only importer is `src/dispatcher.js`, so it is unreachable for the same reason. `src/routes/items.js` line 104 requires `src/actions/generate-comment.js` directly and never asks the registry |
+| `src/eval/intent-selection.js` | Has four passing tests and no caller. It is the pruning half of the chooser rewritten on 2026-08-14, and the script that was to call it, `scripts/prune-intents.js`, named in the header comment of `scripts/choose-intents.js` line 11, was never written |
 
-Five more of the same family were found and connected or removed between 2026-08-15 and 2026-08-16,
-and they are listed here because the pattern matters more than any one of them:
-`src/eval/categories.js` written and never called, the `no-magic-numbers` rule claimed by a document
-and absent from the configuration, `SearchRequestSchema` exported and never validating anything,
-`searchMode` a control the interface could change that reached no code, and `searchThreshold` a slider
-that moved a number the search route did not read.
+Sixteen exported names have no reference outside the test suite, and five of the eleven keys the
+Settings page can write are read by nothing. Both lists are in `__tests__/reachability.test.js` rather
+than here, because a list in a document goes stale and a list in a test cannot.
 
-None was caught by the suite, because each had passing tests of its own. Four were caught by
-comparing a document's behaviour list against its test table, and one by searching the configuration
-for a rule name.
+### 7.1 What the 2026-08-16 table got wrong
+
+It said five artefacts of this family were found and connected or removed between 2026-08-15 and
+2026-08-16. Four were. `SearchRequestSchema` was not: it is still exported by `src/validation.js` and
+still referenced by nothing, and `docs/adr/011-one-cutoff-one-origin.md` section 7.2 recorded it as a
+defect found rather than as a defect fixed. This document read that record as a fix.
+
+That is the argument for `docs/adr/018-reachability-is-checked-by-the-suite.md` stated as plainly as it
+can be. A reference document describing what is connected to what was wrong about its own subject
+within a day of being written, because the only thing keeping it true was a person remembering.
+
+### 7.2 Why the suite never saw any of it
+
+Each had passing tests of its own. `src/dispatcher.js` reports 100 percent statement coverage and
+`src/eval/intent-selection.js` reports 100 percent, because a test that calls dead code covers it
+perfectly. The coverage threshold in `jest.config.js` has never failed on this class of defect and
+cannot.
+
+Of the seven found before today, four were caught by comparing a document's behaviour list against its
+test table, one by searching the configuration for a rule name, and two by reading the import graph by
+hand. Since 2026-08-17 12:47:23 +0200 the graph is read by `__tests__/reachability.test.js` on every
+run instead, and `.githooks/pre-push` runs `npm run verify` before a push.
 
 ## 8. What the code depends on most
 
@@ -181,5 +201,5 @@ Not applicable. A reference document carries no runtime risk.
 | Question | Trigger that forces an answer |
 |---|---|
 | Whether the product and the bench become one retrieval implementation | An axis result is quoted as a fact about the product |
-| Whether `src/dispatcher.js` and `src/eval/intent-selection.js` are wired up or deleted | The next time either subject is worked on |
-| How often this document is retaken, given it is a snapshot | A reader is surprised by something it says |
+| Whether `src/dispatcher.js`, `src/actions/index.js` and `src/eval/intent-selection.js` are wired up or deleted | The next time either subject is worked on. `docs/adr/016-cover-letter-generation-removed.md` removed one of the registry's two actions and `docs/adr/017-comment-generation-deferred.md` deferred the other, so the registry now holds one entry |
+| How often this document is retaken, given it is a snapshot | A reader is surprised by something it says. Section 7 is no longer the only record: `__tests__/reachability.test.js` fails the moment it goes stale |

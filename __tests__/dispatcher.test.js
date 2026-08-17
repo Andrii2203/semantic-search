@@ -58,15 +58,6 @@ describe('dispatch', () => {
     );
   });
 
-  test('type: "job" → calls GenerateCoverLetter action', async () => {
-    mockGroqSuccess('Dear hiring manager...');
-
-    const result = await dispatch(makeItem('job'));
-
-    expect(result.response).toBe('Dear hiring manager...');
-    expect(result.status).toBe('new');
-  });
-
   test('unknown type → returns null + skipped status (no error)', async () => {
     const result = await dispatch(makeItem('ui_component'));
 
@@ -168,28 +159,14 @@ describe('RateLimiter', () => {
 
 });
 
-describe('action registry isolation', () => {
-  test('actions do not know about each other', () => {
-    const comment = require('../src/actions/generate-comment');
-    const cover = require('../src/actions/generate-cover');
+describe('action registry', () => {
+  test('maps the type post and no other type', () => {
+    const registered = actionsRegistry.getRegisteredActions();
 
-    // Each action module is independent
-    expect(comment.name).not.toBe(cover.name);
-    expect(comment.types).not.toEqual(cover.types);
-
-    // Neither imports the other (check module doesn't reference other action)
-    const fs = require('fs');
-    const path = require('path');
-    const commentSrc = fs.readFileSync(
-      path.join(__dirname, '..', 'src', 'actions', 'generate-comment.js'),
-      'utf-8',
-    );
-    expect(commentSrc).not.toContain('generate-cover');
+    expect(registered).toEqual({ post: 'generate-comment' });
   });
 
-  test('registered actions map correctly', () => {
-    const registered = actionsRegistry.getRegisteredActions();
-    expect(registered.post).toBe('generate-comment');
-    expect(registered.job).toBe('generate-cover');
+  test('returns null for the type job, whose action was removed by ADR-016', () => {
+    expect(actionsRegistry.getAction('job')).toBeNull();
   });
 });

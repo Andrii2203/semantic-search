@@ -36,7 +36,6 @@ function clearActions() {
 }
 
 register(require('./generate-comment'));
-register(require('./generate-cover'));
 
 module.exports = {
   register,

@@ -1041,19 +1041,6 @@ function getRecentInternetChunkVectors(limit = 200) {
     .map((row) => row.vector);
 }
 
-function getActiveProfile() {
-  const d = getDb();
-  const row = d.prepare('SELECT * FROM profiles ORDER BY created_at DESC LIMIT 1').get();
-  if (!row) {
-    throw new AppError('No active profile found. Create a profile first.', ErrorCodes.DB_ERROR);
-  }
-  return {
-    ...row,
-    keywords: row.keywords ? JSON.parse(row.keywords) : [],
-    vector: row.vector ? new Float32Array(row.vector) : null,
-  };
-}
-
 module.exports = {
   init,
   close,
@@ -1097,7 +1084,6 @@ module.exports = {
   getProfile,
   getAllProfiles,
   deleteProfile,
-  getActiveProfile,
   getProfileByUserId,
   saveProfileForUser,
   createUser,

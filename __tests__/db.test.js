@@ -308,3 +308,18 @@ describe('close', () => {
     db.init(':memory:');
   });
 });
+
+describe('src/db.js profile queries', () => {
+  function profileQueries() {
+    const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'db.js'), 'utf8');
+    return [...source.matchAll(/FROM profiles[^`'"]*/g)].map((match) => match[0]);
+  }
+
+  test('no query selects a single profile by recency alone', () => {
+    const byRecency = profileQueries().filter(
+      (query) => query.includes('LIMIT 1') && !query.includes('WHERE'),
+    );
+
+    expect(byRecency).toEqual([]);
+  });
+});
