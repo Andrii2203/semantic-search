@@ -3,6 +3,7 @@
 const chunkSemantic = require('./semantic');
 const { getGroqClient } = require('../groq-client');
 const logger = require('../logger');
+const constants = require('../search-constants');
 
 async function chunkHierarchical(text, options = {}) {
   const summary = await generateSummary(text);
@@ -41,10 +42,10 @@ async function generateSummary(text) {
         },
         {
           role: 'user',
-          content: `Summarize this document:\n\n${text.slice(0, 4000)}`,
+          content: `Summarize this document:\n\n${text.slice(0, constants.summaryInputChars)}`,
         },
       ],
-      { maxTokens: 256, temperature: 0.2 },
+      { maxTokens: constants.summaryMaxTokens, temperature: constants.summaryTemperature },
     );
 
     return response.trim() || fallbackSummary(text);
@@ -56,7 +57,7 @@ async function generateSummary(text) {
 
 function fallbackSummary(text) {
   const words = text.split(/\s+/).filter(Boolean);
-  return words.slice(0, 200).join(' ');
+  return words.slice(0, constants.summaryFallbackWords).join(' ');
 }
 
 module.exports = chunkHierarchical;

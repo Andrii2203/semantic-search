@@ -2,6 +2,7 @@
 
 const path = require('path');
 const os = require('os');
+const constants = require('./search-constants');
 
 require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
 
@@ -65,10 +66,10 @@ const config = Object.freeze({
     job_hunter: path.resolve(__dirname, 'profiles', 'job_hunter.json'),
   }),
 
-  similarityThreshold: envFloat('SIMILARITY_THRESHOLD', 0.35),
+  similarityThreshold: envFloat('SIMILARITY_THRESHOLD', constants.semanticCutoffInbox),
 
-  dedupThreshold: envFloat('DEDUP_THRESHOLD', 0.95),
-  dedupWindow: envInt('DEDUP_WINDOW', 200),
+  dedupThreshold: envFloat('DEDUP_THRESHOLD', constants.dedupCosine),
+  dedupWindow: envInt('DEDUP_WINDOW', constants.dedupWindow),
 
   upload: Object.freeze({
     maxFiles: envInt('UPLOAD_MAX_FILES', 200),
@@ -92,19 +93,19 @@ const config = Object.freeze({
 
   chunking: Object.freeze({
     defaultStrategy: env('CHUNKING_STRATEGY', 'semantic'),
-    chunkSize: envInt('CHUNK_SIZE', 200),
-    overlap: envInt('CHUNK_OVERLAP', 50),
+    chunkSize: envInt('CHUNK_SIZE', constants.chunkSizeWords),
+    overlap: envInt('CHUNK_OVERLAP', constants.chunkOverlapWords),
   }),
 
   search: Object.freeze({
     defaultMode: env('SEARCH_MODE', 'parallel'),
-    bm25Weight: envFloat('BM25_WEIGHT', 0.4),
-    semanticWeight: envFloat('SEMANTIC_WEIGHT', 0.6),
+    bm25Weight: envFloat('BM25_WEIGHT', constants.bm25Weight),
+    semanticWeight: envFloat('SEMANTIC_WEIGHT', constants.semanticWeight),
     batchSize: envInt('EMBEDDING_BATCH_SIZE', 20),
-    maxBm25Results: envInt('MAX_BM25_RESULTS', 100),
+    maxBm25Results: envInt('MAX_BM25_RESULTS', constants.candidateLimitBm25),
     useRrf: env('USE_RRF', 'true') !== 'false',
-    rrfK: envInt('RRF_K', 60),
-    mmrLambda: envFloat('MMR_LAMBDA', 0.5),
+    rrfK: envInt('RRF_K', constants.rrfK),
+    mmrLambda: envFloat('MMR_LAMBDA', constants.mmrLambda),
   }),
 
   live(key) {
@@ -113,7 +114,7 @@ const config = Object.freeze({
       searchMode:               this.search.defaultMode,
       bm25Weight:               this.search.bm25Weight,
       semanticWeight:           this.search.semanticWeight,
-      topN:                     20,
+      topN:                     constants.resultsReturned,
       cronEnabled:              true,
       cronSchedule:             this.cronSchedule,
       groqModel:                this.groq.model,

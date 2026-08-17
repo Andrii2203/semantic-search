@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const cron = require('node-cron');
 const config = require('../src/config');
+const constants = require('../src/search-constants');
 
 function readEnvExample() {
   const raw = fs.readFileSync(path.join(__dirname, '..', '.env.example'), 'utf-8');
@@ -38,6 +39,30 @@ describe('src/config.js', () => {
   test('points uploads at a temp directory on disk', () => {
     expect(typeof config.upload.tempDir).toBe('string');
     expect(config.upload.tempDir.length).toBeGreaterThan(0);
+  });
+
+  test('every retrieval default is the value search-constants exports for the same concept', () => {
+    expect(config.similarityThreshold).toBe(constants.semanticCutoffInbox);
+    expect(config.dedupThreshold).toBe(constants.dedupCosine);
+    expect(config.dedupWindow).toBe(constants.dedupWindow);
+    expect(config.chunking.chunkSize).toBe(constants.chunkSizeWords);
+    expect(config.chunking.overlap).toBe(constants.chunkOverlapWords);
+    expect(config.search.bm25Weight).toBe(constants.bm25Weight);
+    expect(config.search.semanticWeight).toBe(constants.semanticWeight);
+    expect(config.search.maxBm25Results).toBe(constants.candidateLimitBm25);
+    expect(config.search.rrfK).toBe(constants.rrfK);
+    expect(config.search.mmrLambda).toBe(constants.mmrLambda);
+    expect(config.live('topN')).toBe(constants.resultsReturned);
+  });
+
+  test('no retrieval default in the module is written as a literal', () => {
+    const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'config.js'), 'utf-8');
+    const retrieval = source
+      .split('\n')
+      .filter((line) => /SIMILARITY_THRESHOLD|DEDUP_|CHUNK_SIZE|CHUNK_OVERLAP|BM25_WEIGHT|SEMANTIC_WEIGHT|MAX_BM25_RESULTS|RRF_K|MMR_LAMBDA/.test(line))
+      .filter((line) => /,\s*[\d.]+\s*\)/.test(line));
+
+    expect(retrieval).toEqual([]);
   });
 });
 

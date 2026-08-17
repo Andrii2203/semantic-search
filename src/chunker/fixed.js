@@ -1,7 +1,9 @@
 'use strict';
 
+const constants = require('../search-constants');
+
 function chunkFixed(text, options = {}) {
-  const { chunkSize = 200, overlap = 50 } = options;
+  const { chunkSize = constants.chunkSizeWords, overlap = constants.chunkOverlapWords } = options;
   const words = text.split(/\s+/).filter(Boolean);
   const chunks = [];
 

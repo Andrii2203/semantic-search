@@ -1,5 +1,7 @@
 'use strict';
 
+const constants = require('./search-constants');
+
 let pipeline = null;
 
 /* istanbul ignore next */
@@ -52,7 +54,13 @@ function serializeVector(arr) {
 function deserializeVector(blob) {
   if (!blob) {return null;}
   const buffer = Buffer.isBuffer(blob) ? blob : Buffer.from(blob);
-  return Array.from(new Float32Array(buffer.buffer, buffer.byteOffset, buffer.byteLength / 4));
+  return Array.from(
+    new Float32Array(
+      buffer.buffer,
+      buffer.byteOffset,
+      buffer.byteLength / Float32Array.BYTES_PER_ELEMENT,
+    ),
+  );
 }
 
 function scoreChunksByVector(chunks, profileVector) {
@@ -74,7 +82,7 @@ function scoreChunksByVector(chunks, profileVector) {
 }
 
 function mergeResults(bm25Results, semanticResults, weights = {}) {
-  const { bm25Weight = 0.4, semanticWeight = 0.6 } = weights;
+  const { bm25Weight = constants.bm25Weight, semanticWeight = constants.semanticWeight } = weights;
   const merged = new Map();
 
   const maxBm25Rank = Math.max(...bm25Results.map((r) => Math.abs(r.rank || 0)), 1);
@@ -109,7 +117,7 @@ function mergeResults(bm25Results, semanticResults, weights = {}) {
 }
 
 function rrfMerge(bm25Results, semanticResults, options = {}) {
-  const k = options.k || 60;
+  const k = options.k || constants.rrfK;
   const merged = new Map();
 
   (bm25Results || []).forEach((chunk, i) => {
@@ -144,8 +152,8 @@ function rrfMerge(bm25Results, semanticResults, options = {}) {
 }
 
 function mmrSelect(chunks, options = {}) {
-  const lambda = options.lambda ?? 0.5;
-  const topN = options.topN || 20;
+  const lambda = options.lambda ?? constants.mmrLambda;
+  const topN = options.topN || constants.resultsReturned;
 
   if (!chunks || chunks.length === 0) {return [];}
   if (lambda >= 1) {return chunks.slice(0, topN);}
@@ -155,7 +163,7 @@ function mmrSelect(chunks, options = {}) {
     vector: Array.isArray(chunk.vector) ? chunk.vector : deserializeVector(chunk.vector),
   }));
 
-  const maxScore = Math.max(...chunks.map((c) => c.score || 0), 1e-9);
+  const maxScore = Math.max(...chunks.map((c) => c.score || 0), constants.scoreFloorEpsilon);
   const selected = [];
   const selectedVectors = [];
 

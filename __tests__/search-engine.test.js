@@ -59,11 +59,12 @@ describe('SearchEngine Module', () => {
     });
   });
 
-  test('search-engine.js does not import any project modules (isolation check)', () => {
+  test('search-engine.js imports no project module other than search-constants (isolation check)', () => {
     const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'search-engine.js'), 'utf-8');
     const projectImports = source
       .split('\n')
-      .filter((line) => line.includes(`require('./`) || line.includes(`require('../`));
+      .filter((line) => line.includes(`require('./`) || line.includes(`require('../`))
+      .filter((line) => !line.includes(`require('./search-constants')`));
     expect(projectImports).toHaveLength(0);
   });
 });

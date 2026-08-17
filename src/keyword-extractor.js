@@ -2,6 +2,7 @@
 
 const { getGroqClient } = require('./groq-client');
 const logger = require('./logger');
+const constants = require('./search-constants');
 
 const STOP_WORDS = new Set([
   'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
@@ -26,7 +27,7 @@ const STOP_WORDS = new Set([
 function countWords(words) {
   const freq = new Map();
   for (const word of words) {
-    if (word.length < 2 || STOP_WORDS.has(word)) {continue;}
+    if (word.length < constants.keywordMinWordChars || STOP_WORDS.has(word)) {continue;}
     freq.set(word, (freq.get(word) || 0) + 1);
   }
   return freq;
@@ -41,11 +42,11 @@ function boostTechTerms(freq, text) {
 
   for (const term of techPatterns) {
     const key = term.toLowerCase();
-    freq.set(key, (freq.get(key) || 0) + 3);
+    freq.set(key, (freq.get(key) || 0) + constants.keywordTechTermBoost);
   }
 }
 
-function extractKeywordsFallback(text, maxKeywords = 15) {
+function extractKeywordsFallback(text, maxKeywords = constants.keywordsExtracted) {
   if (!text || typeof text !== 'string') {return [];}
 
   const words = text
@@ -63,8 +64,8 @@ function extractKeywordsFallback(text, maxKeywords = 15) {
     .map(([word]) => word);
 }
 
-async function extractKeywords(text, maxKeywords = 15) {
-  if (!text || typeof text !== 'string' || text.trim().length < 10) {
+async function extractKeywords(text, maxKeywords = constants.keywordsExtracted) {
+  if (!text || typeof text !== 'string' || text.trim().length < constants.keywordMinTextChars) {
     return extractKeywordsFallback(text, maxKeywords);
   }
 
@@ -81,10 +82,10 @@ async function extractKeywords(text, maxKeywords = 15) {
         },
         {
           role: 'user',
-          content: text.slice(0, 4000),
+          content: text.slice(0, constants.keywordInputChars),
         },
       ],
-      { maxTokens: 256, temperature: 0.1 },
+      { maxTokens: constants.keywordMaxTokens, temperature: constants.keywordTemperature },
     );
 
     let jsonStr = response.trim();

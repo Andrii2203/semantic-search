@@ -5,6 +5,7 @@ const chunkFixed = require('./fixed');
 const chunkSemantic = require('./semantic');
 const chunkHierarchical = require('./hierarchical');
 const { AppError, ErrorCodes } = require('../errors');
+const constants = require('../search-constants');
 
 const strategies = {
   fixed: chunkFixed,
@@ -17,7 +18,7 @@ async function chunk(text, strategy = 'semantic', options = {}) {
     return [];
   }
 
-  if (countTokens(text) <= 200) {
+  if (countTokens(text) <= constants.chunkingSkippedBelowTokens) {
     return [
       {
         content: text.trim(),

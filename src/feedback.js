@@ -4,11 +4,12 @@ const db = require('./db');
 const searchEngine = require('./search-engine');
 const scheduler = require('./scheduler');
 const logger = require('./logger');
+const constants = require('./search-constants');
 
 const ACTION_WEIGHTS = {
-  star: 0.15,
-  approve: 0.1,
-  skip: -0.05,
+  star: constants.feedbackWeightStar,
+  approve: constants.feedbackWeightApprove,
+  skip: constants.feedbackWeightSkip,
 };
 
 function averageVectors(vectors) {

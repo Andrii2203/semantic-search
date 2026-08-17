@@ -1,9 +1,10 @@
 'use strict';
 
 const { countWords, splitBySections, splitByParagraphs, mergeSmallChunks } = require('./utils');
+const constants = require('../search-constants');
 
 function chunkSemantic(text, options = {}) {
-  const { maxChunkSize = 300, minChunkSize = 50 } = options;
+  const { maxChunkSize = constants.chunkMaxWords, minChunkSize = constants.chunkMinWords } = options;
 
   const sections = splitBySections(text);
 

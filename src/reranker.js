@@ -2,8 +2,9 @@
 
 const { getGroqClient } = require('./groq-client');
 const logger = require('./logger');
+const constants = require('./search-constants');
 
-async function rerank(results, originalQuery, topN = 20) {
+async function rerank(results, originalQuery, topN = constants.resultsReturned) {
   if (!results || results.length === 0) {return [];}
   if (!originalQuery || originalQuery.trim().length === 0) {return results;}
 
@@ -13,7 +14,7 @@ async function rerank(results, originalQuery, topN = 20) {
   const groq = getGroqClient();
   const scored = [];
 
-  const batchSize = 5;
+  const batchSize = constants.rerankBatchSize;
   for (let i = 0; i < toRerank.length; i += batchSize) {
     const batch = toRerank.slice(i, i + batchSize);
 
@@ -33,7 +34,7 @@ async function rerank(results, originalQuery, topN = 20) {
 
 async function scoreBatch(groq, query, items) {
   const itemTexts = items
-    .map((item, i) => `[${i}] ${(item.content || '').slice(0, 500)}`)
+    .map((item, i) => `[${i}] ${(item.content || '').slice(0, constants.rerankContentChars)}`)
     .join('\n---\n');
 
   const response = await groq.chat(
@@ -46,10 +47,10 @@ async function scoreBatch(groq, query, items) {
       },
       {
         role: 'user',
-        content: `Query: ${query.slice(0, 500)}\n\nDocuments:\n${itemTexts}`,
+        content: `Query: ${query.slice(0, constants.rerankContentChars)}\n\nDocuments:\n${itemTexts}`,
       },
     ],
-    { maxTokens: 128, temperature: 0.1 },
+    { maxTokens: constants.rerankMaxTokens, temperature: constants.rerankTemperature },
   );
 
   try {

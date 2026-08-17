@@ -1,7 +1,9 @@
 'use strict';
 
+const constants = require('../search-constants');
+
 function countTokens(text) {
-  return Math.ceil(countWords(text) * 1.3);
+  return Math.ceil(countWords(text) * constants.tokensPerWord);
 }
 
 function countWords(text) {
@@ -49,7 +51,7 @@ function splitByParagraphs(text) {
     .filter((p) => p.length > 0);
 }
 
-function mergeSmallChunks(chunks, minSize = 50) {
+function mergeSmallChunks(chunks, minSize = constants.chunkMinWords) {
   if (!chunks || chunks.length <= 1) {return chunks || [];}
 
   const merged = [];
