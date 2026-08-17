@@ -890,9 +890,9 @@ function saveProfile(profile) {
   return profile.id;
 }
 
-function getProfile(id) {
+function getProfile(id, userId) {
   const d = getDb();
-  const row = d.prepare('SELECT * FROM profiles WHERE id = ?').get(id);
+  const row = d.prepare('SELECT * FROM profiles WHERE id = ? AND user_id = ?').get(id, userId);
   if (!row) {return null;}
   return {
     ...row,
@@ -900,20 +900,20 @@ function getProfile(id) {
   };
 }
 
-function getAllProfiles() {
+function getAllProfiles(userId) {
   const d = getDb();
   return d
-    .prepare('SELECT * FROM profiles ORDER BY created_at DESC')
-    .all()
+    .prepare('SELECT * FROM profiles WHERE user_id = ? ORDER BY created_at DESC')
+    .all(userId)
     .map((row) => ({
       ...row,
       keywords: row.keywords ? JSON.parse(row.keywords) : [],
     }));
 }
 
-function deleteProfile(id) {
+function deleteProfile(id, userId) {
   const d = getDb();
-  return d.prepare('DELETE FROM profiles WHERE id = ?').run(id).changes > 0;
+  return d.prepare('DELETE FROM profiles WHERE id = ? AND user_id = ?').run(id, userId).changes > 0;
 }
 
 function createUser({ id, email, passwordHash }) {

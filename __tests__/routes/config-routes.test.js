@@ -22,6 +22,10 @@ beforeAll(() => {
   configRouter = require('../../src/routes/config-routes');
   app = express();
   app.use(express.json());
+  app.use((req, _res, next) => {
+    req.userId = req.get('x-test-user');
+    next();
+  });
   app.use('/api/config', configRouter);
   app.use((err, _req, res, _next) => {
     res.status(err.statusCode || 500).json({ error: { code: err.code, message: err.message } });
@@ -129,20 +133,45 @@ describe('POST /api/config/chunking', () => {
 // GET /api/config/profiles
 // ═══════════════════════════════════════════════════════════════
 
+function saveFor(userId, profile) {
+  db.createUser({ id: userId, email: `${userId}@example.com`, passwordHash: 'hash' });
+  db.saveProfileForUser(userId, profile);
+}
+
 describe('GET /api/config/profiles', () => {
   it('returns empty profiles array when no profiles', async () => {
-    const res = await request(app).get('/api/config/profiles').expect(200);
+    const res = await request(app)
+      .get('/api/config/profiles')
+      .set('x-test-user', 'alice')
+      .expect(200);
 
     expect(res.body.profiles).toEqual([]);
   });
 
   it('returns saved profiles', async () => {
-    db.saveProfile({ id: 'test-p', keywords: ['js'], rawInput: 'javascript' });
+    saveFor('alice', { id: 'test-p', keywords: ['js'], rawInput: 'javascript' });
 
-    const res = await request(app).get('/api/config/profiles').expect(200);
+    const res = await request(app)
+      .get('/api/config/profiles')
+      .set('x-test-user', 'alice')
+      .expect(200);
 
     expect(res.body.profiles).toHaveLength(1);
     expect(res.body.profiles[0].id).toBe('test-p');
+  });
+
+  it('returns only profiles whose user_id is the caller', async () => {
+    saveFor('alice', { id: 'alice-p', keywords: ['js'], rawInput: 'alice intent' });
+    saveFor('bob', { id: 'bob-p', keywords: ['bob-secret-keyword'], rawInput: 'BOB PRIVATE INTENT TEXT' });
+
+    const res = await request(app)
+      .get('/api/config/profiles')
+      .set('x-test-user', 'alice')
+      .expect(200);
+
+    expect(res.body.profiles).toHaveLength(1);
+    expect(res.body.profiles[0].id).toBe('alice-p');
+    expect(JSON.stringify(res.body)).not.toContain('BOB PRIVATE INTENT TEXT');
   });
 });
 
@@ -151,23 +180,37 @@ describe('GET /api/config/profiles', () => {
 // ═══════════════════════════════════════════════════════════════
 
 describe('DELETE /api/config/profiles/:id', () => {
-  it('deletes existing profile', async () => {
-    db.saveProfile({ id: 'to-delete', keywords: ['js'], rawInput: 'js' });
+  it('deletes the profile when it belongs to the caller', async () => {
+    saveFor('alice', { id: 'to-delete', keywords: ['js'], rawInput: 'js' });
 
     const res = await request(app)
       .delete('/api/config/profiles/to-delete')
+      .set('x-test-user', 'alice')
       .expect(200);
 
     expect(res.body.success).toBe(true);
-    expect(db.getProfile('to-delete')).toBeNull();
+    expect(db.getProfile('to-delete', 'alice')).toBeNull();
   });
 
   it('returns 404 for non-existent profile', async () => {
     const res = await request(app)
       .delete('/api/config/profiles/ghost-profile')
+      .set('x-test-user', 'alice')
       .expect(404);
 
     expect(res.body.error).toBeDefined();
+  });
+
+  it('returns 404 when the profile belongs to another account', async () => {
+    saveFor('bob', { id: 'bob-p', keywords: ['bob'], rawInput: 'BOB PRIVATE INTENT TEXT' });
+
+    const res = await request(app)
+      .delete('/api/config/profiles/bob-p')
+      .set('x-test-user', 'alice')
+      .expect(404);
+
+    expect(res.body.error.code).toBe('NOT_FOUND');
+    expect(db.getProfile('bob-p', 'bob')).not.toBeNull();
   });
 });
 

@@ -41,7 +41,7 @@ function readSearchRequest(body) {
 
 async function resolveProfile(request, userId) {
   if (request.profileId) {
-    return ProfileGenerator.loadProfile(request.profileId);
+    return ProfileGenerator.loadProfile(request.profileId, userId);
   }
 
   if (!request.query) {
@@ -253,7 +253,7 @@ router.post('/explain', async (req, res, next) => {
 
     let profile;
     if (profileId) {
-      profile = ProfileGenerator.loadProfile(profileId);
+      profile = ProfileGenerator.loadProfile(profileId, req.userId);
     } else if (query) {
       profile = { keywords: [], rawInput: query };
     } else {

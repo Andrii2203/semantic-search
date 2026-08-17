@@ -81,6 +81,67 @@ afterEach(() => {
 // POST /api/search
 // ═══════════════════════════════════════════════════════════════
 
+describe('POST /api/search with a profileId that belongs to somebody', () => {
+  let ownedApp;
+
+  beforeAll(() => {
+    ownedApp = express();
+    ownedApp.use(express.json());
+    ownedApp.use((req, _res, next) => {
+      req.userId = req.get('x-test-user');
+      next();
+    });
+    ownedApp.use('/api/search', searchRouter);
+    ownedApp.use((err, _req, res, _next) => {
+      res.status(err.statusCode || 500).json({ error: { code: err.code, message: err.message } });
+    });
+  });
+
+  beforeEach(() => {
+    const real = jest.requireActual('../../src/profile-generator');
+    ProfileGenerator.loadProfile.mockImplementation(real.loadProfile);
+
+    db.createUser({ id: 'alice', email: 'alice@example.com', passwordHash: 'hash' });
+    db.createUser({ id: 'bob', email: 'bob@example.com', passwordHash: 'hash' });
+
+    db.saveProfileForUser('bob', {
+      id: 'bob-p',
+      keywords: ['bob-secret-keyword'],
+      rawInput: 'BOB PRIVATE INTENT TEXT',
+      vector: MOCK_VECTOR_BUF,
+    });
+    db.saveProfileForUser('alice', {
+      id: 'alice-p',
+      keywords: ['javascript'],
+      rawInput: 'alice intent',
+      vector: MOCK_VECTOR_BUF,
+    });
+  });
+
+  it('returns 404 and runs no search when the profile belongs to another account', async () => {
+    const res = await request(ownedApp)
+      .post('/api/search')
+      .set('x-test-user', 'alice')
+      .send({ profileId: 'bob-p' })
+      .expect(404);
+
+    expect(res.body.error.code).toBe('NOT_FOUND');
+    expect(JSON.stringify(res.body)).not.toContain('bob-secret-keyword');
+    expect(SearchEngine.scoreChunksByVector).not.toHaveBeenCalled();
+  });
+
+  it('returns results when the profile belongs to the caller', async () => {
+    const res = await request(ownedApp)
+      .post('/api/search')
+      .set('x-test-user', 'alice')
+      .send({ profileId: 'alice-p' })
+      .expect(200);
+
+    expect(res.body).toHaveProperty('results');
+    expect(res.body.profile.id).toBe('alice-p');
+  });
+});
+
 describe('POST /api/search', () => {
   it('returns results when query is provided, in the default parallel mode', async () => {
     const res = await request(app)
@@ -155,7 +216,7 @@ describe('POST /api/search', () => {
       .send({ profileId: 'test-profile' })
       .expect(200);
 
-    expect(ProfileGenerator.loadProfile).toHaveBeenCalledWith('test-profile');
+    expect(ProfileGenerator.loadProfile).toHaveBeenCalledWith('test-profile', undefined);
     expect(ProfileGenerator.fromText).not.toHaveBeenCalled();
   });
 

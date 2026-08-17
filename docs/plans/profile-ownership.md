@@ -1,8 +1,8 @@
 # Profile ownership
 
-Status: active
+Status: active, closed 2026-08-17 19:02:11 +0200, see section 9
 Owner: repository owner
-Last change: 2026-08-17 14:39:53 +0200
+Last change: 2026-08-17 19:02:11 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -127,5 +127,32 @@ the requirement rather than a detail.
 
 | Question | Trigger that forces an answer |
 |---|---|
-| Whether the same unowned pattern exists for other per person tables | The next audit. `user_sources` and `user_matches` were not checked when this was found, and stating they are safe without running the probe against them would repeat the mistake this document exists to record |
+| Answered 2026-08-17 18:56:40 +0200, by running the probe rather than by reading the code. Whether the same unowned pattern exists for other per person tables. It does not. Bob added a source labelled `BOB PRIVATE FEED`; Alice's listing came back empty, her toggle returned 404, her delete returned 404 and Bob's source survived. Bob's item match was invisible in Alice's item list and `getUserMatch` returned null for her. Every query against `user_sources` and `user_matches` in `src/db.js` carries a user identifier, with one exception that is correct: `getEnabledSources` reads every enabled feed across accounts and is called only by `fetchFromUserSources` in `src/scheduler.js`, which fetches feeds rather than answering a request | closed |
 | Whether `GET /api/config/profiles` is kept at all once it returns one row for the caller, given `GET /api/profiles/active` already answers that | The behaviours above are green and the endpoint has no caller in the client |
+| Whether `db.saveProfile` is deleted. Found while fixing this: it inserts a profile with no `user_id`, and no live path calls it. `src/profile-generator.js` reaches it only through `fromText({ save: true })`, and both callers under `src/routes/` pass `save: false`. A row it wrote could never be read again once reads are owner scoped | The next module touch, per `docs/standards/COMPLEXITY.md` section 5, or an ADR under the proof of not needed |
+
+## 9. Closed 2026-08-17 19:02:11 +0200
+
+The probe of section 1.1 was rerun, the same way it was first run: two accounts registered against the
+real Express app over supertest, Bob's profile carrying `BOB PRIVATE INTENT TEXT`, every request sent
+with Alice's session.
+
+| Request as Alice | Before | After |
+|---|---|---|
+| `GET /api/config/profiles` | 200 with Bob's row in full | 200 with an empty list |
+| `POST /api/search` with Bob's `profileId` | 200, search ran on Bob's profile and echoed his keywords | 404 `NOT_FOUND`, no search ran and no keyword of his appears in the response |
+| `DELETE /api/config/profiles/<Bob's id>` | 200 and Bob's profile was gone | 404 `NOT_FOUND` and Bob's profile is still there |
+
+The probe file was deleted after the run, as before. What replaces it permanently is the suite: six
+behaviours, five of them asserted from a second account's view, so the shape of test that could not
+see this defect is no longer the shape this code is tested with.
+
+One route outside section 3 was fixed with the others, and it is named here rather than left as a
+silent extra. `POST /api/search/explain` also loads a profile by identifier, at
+`src/routes/search.js` line 256. The plan's scope listed the three functions and the two routes that
+reach them, and missed this fourth caller. The definition of done is what caught it, because it asks
+whether any route handler passes a caller supplied identifier into a database function without the
+caller's own identifier, and that question does not care which routes section 3 happened to list.
+
+`npm run verify` is green: 70 suites, 636 tests passed, 6 skipped, 21 client tests, branches at 80.44
+percent, lint clean of errors.

@@ -58,8 +58,8 @@ async function fromText(inputText, options = {}) {
   return profile;
 }
 
-function loadProfile(profileId) {
-  const profile = db.getProfile(profileId);
+function loadProfile(profileId, userId) {
+  const profile = db.getProfile(profileId, userId);
   if (!profile) {
     throw new AppError(`Profile not found: ${profileId}`, ErrorCodes.NOT_FOUND, 404);
   }

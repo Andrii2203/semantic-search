@@ -322,4 +322,12 @@ describe('src/db.js profile queries', () => {
 
     expect(byRecency).toEqual([]);
   });
+
+  test('no query that reads or deletes a single profile row runs without a user identifier', () => {
+    const unowned = profileQueries()
+      .filter((query) => /WHERE id = \?/.test(query))
+      .filter((query) => !query.includes('user_id'));
+
+    expect(unowned).toEqual([]);
+  });
 });

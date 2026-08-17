@@ -49,9 +49,9 @@ router.post('/chunking', (req, res, next) => {
   }
 });
 
-router.get('/profiles', (_req, res, next) => {
+router.get('/profiles', (req, res, next) => {
   try {
-    const profiles = db.getAllProfiles();
+    const profiles = db.getAllProfiles(req.userId);
     res.json({ profiles });
   } catch (err) {
     next(err);
@@ -60,7 +60,7 @@ router.get('/profiles', (_req, res, next) => {
 
 router.delete('/profiles/:id', (req, res, next) => {
   try {
-    const deleted = db.deleteProfile(req.params.id);
+    const deleted = db.deleteProfile(req.params.id, req.userId);
     if (!deleted) {
       throw new AppError(`Profile not found: ${req.params.id}`, ErrorCodes.NOT_FOUND, 404);
     }
