@@ -7,6 +7,7 @@ module.exports = {
     '!src/server.js',
     '!src/anthropic-client.js',
     '!src/eval/embedder.js',
+    '!src/eval/cross-encoder.js',
   ],
   coverageDirectory: 'coverage',
   coverageThreshold: {

@@ -1,8 +1,8 @@
 # Retrieval quality
 
-Status: draft
+Status: active
 Owner: repository owner
-Last change: 2026-08-14 18:07:30 +0200
+Last change: 2026-08-17 15:45:14 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -116,10 +116,10 @@ its own entry in `docs/eval/`.
 |---|---|---|---|---|
 | 0 | A build that runs | main | nothing | Closed 2026-08-14 18:06 +0200. See section 6.1 |
 | 1 | Evaluation corpus for internet search | main | 0 | Nothing that follows can be judged without an answer key, and the existing harness only covers files mode |
-| 2 | Constants extraction, no value changes | main | 1 | Turns every axis into configuration. Behaviour identical before and after, verified by re-running phase 1 |
+| 2 | Constants extraction, no value changes | main | 1 | Turns every axis into configuration. Behaviour identical before and after, verified by re-running phase 1. Closed 2026-08-17 15:45:14 +0200, see section 6.3 |
 | 3 | Baseline recorded | main | 2 | The number every later number is compared against |
 | 3.5 | A public test collection as the primary bench for the engine axes | main | 2 | Added 2026-08-14. Instrument validated the same day: SciFact, NFCorpus and FiQA fetched and pinned, and BM25 reproduced the published baseline within 0.027 on all three. See `docs/eval/beir-bm25-control.md`. Remaining: a significance test, because the bench's resolution is now known to be coarse |
-| 4 | Axes A, B, D, E as a matrix | `phase-8-retrieval` | 3, 3.5 | The four axes that are pure configuration once phase 2 lands. Measured on the public collection first, where the statistical power is, then on the local bench for the product's own task |
+| 4 | Axes A, B, D, E as a matrix | `phase-8-retrieval` | 3, 3.5 | The four axes that are pure configuration once phase 2 lands. Measured on the public collection first, where the statistical power is, then on the local bench for the product's own task. Measured 2026-08-17, see sections 6.4 to 6.6. Two axes decided, two corpus dependent, no product code changed |
 | 5 | Axis C, constructed chunk text | `phase-8-context` | 4 | Requires reindexing, and its value depends on the retrieval fixed in phase 4 |
 | 6 | Axis F, embedding model | `phase-8-model` | 4 | Requires reindexing and a model version column. Multilingual keeps 384 dimensions, so the stored layout survives |
 | 7 | Query time chunking | `phase-8-query-chunking` | 5 | The Dropbox shape. Different data lifecycle, measured against phase 5 |
@@ -173,6 +173,104 @@ four axes on a model this project has already decided to replace, then repeating
 that keeps it honest is the one already in `docs/standards/EVALUATION_STANDARD.md` section 4, that a
 score without its configuration is a rumour, and the configuration now includes the model identifier.
 
+## 6.3 Phase 2, closed 2026-08-17 15:45:14 +0200
+
+Every number that steers retrieval now has one place it is written and one document that says where it
+came from. Measured before and after with the same probe, ESLint's `no-magic-numbers` over the seven
+paths named in `docs/reference/search-constants.md` section 8: 40 literals before, 5 after, and the 5
+are HTTP status codes that belong to the protocol rather than to this system.
+
+| What moved | Where it went |
+|---|---|
+| 12 unnamed literals in the three language model calls of the retrieval path | named in `src/search-constants.js`, with a row and a trigger each in section 5 of the reference |
+| 10 retrieval defaults duplicated in `src/config.js` | read from `src/search-constants.js`, so the environment overrides one value rather than a second copy of it |
+| The vector element size in `src/search-engine.js` | `Float32Array.BYTES_PER_ELEMENT`, because four is the language's number and not a retrieval decision |
+
+No value changed. That is asserted rather than claimed: `__tests__/config.test.js` compares every
+retrieval default against the constant of the same concept, and the suite ran 623 tests green with the
+same 6 skipped as before, plus 21 client tests.
+
+Behaviour 4 of `docs/reference/search-constants.md` is enforced for the first time since it was
+written. It had claimed a `no-magic-numbers` rule that no configuration ever contained, found on
+2026-08-15 14:05:53 +0200 and recorded in `docs/plans/dependency-upgrade.md` section 5.4. The rule is
+on, scoped to the retrieval path, and `__tests__/lint-magic-numbers.test.js` runs it through the ESLint
+Node API so the suite fails if it is ever switched off again. Verified file by file at 2026-08-17
+15:41 +0200: the rule fires on all eleven files of the retrieval path and on none outside it.
+
+Two findings came out of the extraction and neither is fixed here, because this phase moves values and
+changes none. The three language model calls run at temperature 0.1 and 0.2 rather than 0, so ingest
+and keyword extraction can disagree with themselves between two runs of the same input, which axis C
+and axis D will have to account for. And an orphan test was found: the isolation check on
+`src/search-engine.js` was owned by no active document, only by an archived review, which
+`CLAUDE.md` section 3 forbids as a source of truth. It is now behaviour 8 of the reference, narrowed
+to what it actually protects.
+
+## 6.4 Phase 4, axis D, measured 2026-08-17 17:06:39 +0200
+
+Full numbers in `docs/eval/beir-axis-d.md`. The result changes what this plan believes about its own
+section 1, so it is summarised here rather than only there.
+
+Sending extracted keywords to the lexical branch instead of the query text, which is the third of the
+four measured causes, costs +0.0044 nDCG@10 on SciFact, nothing on NFCorpus, +0.0051 on FiQA and
++0.0732 on the local news bench. Only the SciFact interval excludes zero, and 0.0044 is a fifth of
+that collection's resolution. Against axis A at +0.0397 nDCG@10 and +0.0875 Recall@100, the query side
+is a small effect on every bench that can measure it.
+
+The expensive version of this axis is the one the product does not do. Embedding the keywords instead
+of the person's text costs 0.0504 nDCG@10 and 0.0616 Recall@100 on FiQA, and 0.1937 of Recall@100 on
+the local bench, both excluding zero. `src/profile-generator.js` line 43 embeds the raw input, so this
+is a trap avoided rather than a defect found, and it is recorded because it is one function call away.
+
+Why the public bench understates the axis is measured rather than argued, in section 8.1 of the
+report: NFCorpus queries average 3.3 words, so there is nothing for an extractor to drop, while the
+product's intents average 97.8. The public collections have the statistical power and the wrong query
+shape; the local bench has the right shape and eight topics.
+
+## 6.5 Phase 4, axis E, measured 2026-08-17 18:15:34 +0200
+
+Full numbers in `docs/eval/beir-axis-e.md`, decision in
+`docs/adr/020-reranking-runs-locally-and-stays-off-by-default.md`.
+
+A local MS MARCO cross encoder, the option ADR-003 rejected in one line without a number, loses 0.0330
+nDCG@10 on SciFact, wins 0.0140 on NFCorpus, wins 0.0158 on FiQA and wins 0.0819 on the local news
+bench. The first two intervals exclude zero and point in opposite directions.
+
+The mechanism behind the flip is the useful half. Every reranked score lands within 0.018 of the
+published BM25+CE figure for the same collection, read from Table 2 of the BEIR paper on 2026-08-17
+18:12 +0200. The reranker does not add a fixed amount, it pulls the top of the ranking towards its own
+quality, so it raises a weak first stage and lowers a strong one. Whether it helps is decided by
+whether the current ranking is already better than the reranker is, which is a question about the
+corpus rather than about the axis.
+
+That is the second axis in this project to refuse a global answer, after axis B, and both refusals
+have the same shape as the vertical hypothesis in section 13. What ADR-020 settles is narrower: the
+reranker that runs here is local, because the Groq path in `src/reranker.js` cannot run at all with
+the model in `src/config.js` gone and no key configured, and reranking stays off by default because a
+stage that helps two collections and harms a third is not a default.
+
+## 6.6 What phase 4 has decided, and what it has not
+
+| Axis | Verdict | Where |
+|---|---|---|
+| A. Candidate generation | Parallel, decided on three collections, +0.0397 nDCG@10 and +0.0875 Recall@100 over sequential | `docs/eval/beir-axes-a-b.md` section 6 |
+| B. Fusion | Undecided. Weighted and rank fusion cannot be separated, and the shipped weights sit on the flat part of the curve | Same document, section 7.2 |
+| D. Query side | The keyword transform on the lexical branch is below the resolution of every bench that could measure it. Embedding the keywords instead of the text is expensive and the product does not do it | `docs/eval/beir-axis-d.md` |
+| E. Reranking | Corpus dependent, with the mechanism measured. Local cross encoder replaces the Groq path, off by default | `docs/eval/beir-axis-e.md`, ADR-020 |
+
+Two of the four axes came back undecided, and that is a result rather than a gap. The plan was built
+on the premise that four measured causes were waiting to be fixed in order of severity. Measured, the
+order is not what section 1 assumed: axis A carries almost all of the available gain, the query side
+carries very little, and reranking depends on the corpus. The remaining named cause, the 256 token
+window of the model, is axis F in phase 6 and is still unmeasured.
+
+What phase 4 has not done, and it is written here rather than discovered later. No product code
+changed, per the rule this plan has followed since `docs/eval/beir-axes-a-b.md` section 12: the
+matrix measures, and the winners ship under their own document. The per Guardian section reporting
+that section 13 asks for was not run, because the local bench has 8 answerable intents in its dev
+split and cannot carry a three way split. The vertical question was answered on the public bench
+instead, where FiQA disagrees with SciFact and NFCorpus about which configuration wins, and that
+disagreement is now visible on two axes rather than one.
+
 ## 7. Axis A note
 
 Axes A and the cutoff move together in one commit, and the reason is worth recording because it looks
@@ -218,7 +316,8 @@ the open question in `docs/reference/search-constants.md` section 10.
   named failures.
 - The locked half was run exactly once, after the winner was chosen.
 - ADR-001 and ADR-003 carry status superseded, with the replacement ADRs naming the measured numbers
-  that superseded them.
+  that superseded them. Done: ADR-001 by `docs/adr/008-parallel-candidate-generation.md`, ADR-003 by
+  `docs/adr/020-reranking-runs-locally-and-stays-off-by-default.md` at 2026-08-17 18:15:34 +0200.
 - The Ukrainian holdout was run once against the winner and its result is recorded, whatever it says.
 
 ## 11. Rollback
@@ -237,7 +336,7 @@ the open question in `docs/reference/search-constants.md` section 10.
 | Answered for the product 2026-08-16 11:07:48 +0200. Whether ingestion fetches the linked article body instead of indexing the headline. It does not fetch anything: the three sources that produced headlines were removed by `docs/adr/010-sources-narrowed-to-user-feeds.md`, and RSS carries bodies without a scraper. Measured on a live cycle the same day: an Ars Technica feed saved 20 items with real bodies. It stays open for the bench, whose intents are Hacker News and Reddit posts | closed for the product, open for the bench |
 | Whether the search cutoff and the inbox cutoff become two settings | Phase 4 raises recall and admission volume rises with it |
 | How large the evaluation corpus must be before a difference between two configurations is real rather than noise | Two configurations differ by less than the run to run variation recorded in phase 3 |
-| Whether the language model features stay, given that the Groq model named in `src/config.js` no longer exists and no key is configured | Phase 4 measures axis D and axis E with the language model paths disabled |
+| Partly answered 2026-08-17 18:15:34 +0200. Whether the language model features stay, given that the Groq model named in `src/config.js` no longer exists and no key is configured. Reranking no longer needs one, by ADR-020. Keyword extraction runs on its frequency fallback and axis D measured that fallback as costing almost nothing, so the language model half of it has never been shown to buy anything either. Summarisation in the hierarchical chunker is untouched and belongs to axis C | The remaining half is answered by axis C in phase 5, or by a key appearing and a measurement showing the language model paths win |
 | Whether one configuration serves every topic, or each vertical needs its own | Already answerable on data in hand, see section 13 |
 | Whether this engine is packaged per vertical | Not now. Trigger: section 13 shows the winning configuration differs by topic, and a second person asks for it |
 

@@ -1,6 +1,11 @@
 'use strict';
 
-const { retrieve, reciprocalRankFusion, weightedFusion } = require('../../src/eval/retrieval');
+const {
+  retrieve,
+  reciprocalRankFusion,
+  weightedFusion,
+  queryTexts,
+} = require('../../src/eval/retrieval');
 const constants = require('../../src/search-constants');
 
 const documents = [
@@ -89,6 +94,38 @@ describe('src/eval/retrieval.js', () => {
     const second = await ids(dense);
 
     expect(first).toEqual(second);
+  });
+
+  test('a configuration with no query transform sends the query text to both branches', () => {
+    expect(queryTexts(lexical, 'what were the quarterly earnings')).toEqual({
+      lexical: 'what were the quarterly earnings',
+      dense: 'what were the quarterly earnings',
+    });
+  });
+
+  test('a configuration whose lexical query is keywords sends the extracted keywords to the lexical branch and the query text to the dense branch', () => {
+    const text = 'what were the quarterly earnings of the group';
+    const texts = queryTexts({ ...lexical, lexicalQuery: 'keywords' }, text);
+
+    expect(texts.dense).toBe(text);
+    expect(texts.lexical.split(' ').sort()).toEqual(['earnings', 'group', 'quarterly']);
+  });
+
+  test('a configuration whose dense query is keywords sends the extracted keywords to the dense branch', () => {
+    const text = 'what were the quarterly earnings of the group';
+    const texts = queryTexts({ ...lexical, denseQuery: 'keywords' }, text);
+
+    expect(texts.lexical).toBe(text);
+    expect(texts.dense.split(' ').sort()).toEqual(['earnings', 'group', 'quarterly']);
+  });
+
+  test('the keyword transform uses the frequency extractor, so a run needs no language model and no key', async () => {
+    const keywordLexical = { ...lexical, lexicalQuery: 'keywords', denseQuery: 'keywords' };
+    const embed = jest.fn().mockResolvedValue([1, 0, 0]);
+    const index = await retrieve.prepare(documents, { ...keywordLexical, branches: ['dense'] }, embed);
+    await retrieve.forQuery(index, 'what are the quarterly earnings', { ...keywordLexical, branches: ['dense'] }, 4);
+
+    expect(embed).toHaveBeenLastCalledWith('quarterly earnings');
   });
 
   test('a lexical configuration never calls the embedder', async () => {

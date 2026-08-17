@@ -309,6 +309,16 @@ Proof of need, per `docs/standards/DECISION_PROTOCOL.md` section 3:
 23. Reciprocal rank fusion merges two rankings by the reciprocal of the rank constant plus the rank.
 24. Weighted fusion merges two rankings by normalised score at the configured weights.
 25. The retrieval path takes its embedder as an argument, so a run is reproducible without a model.
+26. A configuration with no query transform sends the query text to both branches.
+27. A configuration whose lexical query is keywords sends the extracted keywords to the lexical
+    branch and the query text to the dense branch.
+28. A configuration whose dense query is keywords sends the extracted keywords to the dense branch.
+29. The keyword transform uses the frequency extractor, so a run needs no language model and no key.
+30. A configuration with no reranker returns the fused ranking unchanged.
+31. A configuration with a reranker reorders the top of the ranking by the scorer and leaves the rest
+    of the ranking in the order the fusion produced.
+32. The reranker takes its scorer as an argument, so a run is reproducible without a model.
+33. Reranking at a depth at or below the recall cutoff leaves Recall@100 unchanged.
 
 ## 8. Tests
 
@@ -339,6 +349,14 @@ Proof of need, per `docs/standards/DECISION_PROTOCOL.md` section 3:
 | 23 | L1 | `__tests__/eval/retrieval.test.js` |
 | 24 | L1 | `__tests__/eval/retrieval.test.js` |
 | 25 | L2 | `__tests__/eval/retrieval.test.js` |
+| 26 | L1 | `__tests__/eval/retrieval.test.js` |
+| 27 | L1 | `__tests__/eval/retrieval.test.js` |
+| 28 | L1 | `__tests__/eval/retrieval.test.js` |
+| 29 | L2 | `__tests__/eval/retrieval.test.js` |
+| 30 | L1 | `__tests__/eval/rerank.test.js` |
+| 31 | L1 | `__tests__/eval/rerank.test.js` |
+| 32 | L1 | `__tests__/eval/rerank.test.js` |
+| 33 | L2 | `__tests__/eval/rerank.test.js` |
 
 Behaviours 6 to 10 are the ones that matter most and they need no corpus at all. They pin the metric
 against hand written rankings whose correct score can be computed on paper, which is what makes
@@ -359,6 +377,25 @@ relevant. These are the definitions BEIR's own tooling uses, which is what makes
 comparable outward.
 
 Behaviours 1 to 5, 11 and 12 remain, and they need the fetch script that does not exist yet.
+
+Behaviours 26 to 29 arrived with axis D on 2026-08-17, and they are the query side of the matrix in
+`docs/plans/retrieval-quality.md` phase 4. Only two of the four options that
+`docs/reference/retrieval-in-industry.md` section 7 lists for that axis are measurable here: raw query
+text and extracted keywords. Hypothetical document expansion and generated intent expansion both call
+a language model, and the key is absent while the model named in `src/config.js` no longer exists, so
+they are deferred with the trigger already recorded as an open question in
+`docs/plans/retrieval-quality.md` section 12. Behaviour 29 pins the consequence rather than leaving it
+implied: the keyword branch of this axis is the frequency extractor, which is what the product itself
+falls back to today, so the comparison measures the product's real behaviour rather than a version of
+it that needs a key nobody has.
+
+Behaviours 30 to 33 arrived with axis E on the same day, and the same constraint shapes them. Of the
+three options in that axis, none, language model scoring and a cross encoder, the language model one
+is unavailable for the reason above, so this bench measures none against a cross encoder. The model is
+`Xenova/ms-marco-MiniLM-L-6-v2`, which runs locally through the runtime this repository already
+depends on, so the axis costs no key and no dependency. Behaviour 33 is a property rather than a
+preference: a reranker that only reorders inside the recall cutoff cannot change Recall@100, so any
+movement in that metric would be a defect in the stage rather than a result.
 
 ## 9. Definition of done
 

@@ -1,5 +1,11 @@
 # ADR-003: Reranking Strategy
 
+Status: superseded by `docs/adr/020-reranking-runs-locally-and-stays-off-by-default.md` at
+2026-08-17 18:15:34 +0200. The trigger this file wrote for itself, an offline reranker, fired: the
+Groq model it chose no longer exists and no key is configured. The cross encoder it rejected in one
+line without a number was measured in `docs/eval/beir-axis-e.md` and reaches published BM25+CE quality
+on three collections at no cost in keys, money or dependencies.
+
 ## Проблема
 Hybrid search повертає результати з комбінованим BM25 + cosine score. Але цей score може бути неточним, BM25 і cosine мають різні шкали і характеристики.
 

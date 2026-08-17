@@ -2,7 +2,19 @@
 
 const constants = require('../search-constants');
 const { cosineSimilarity } = require('../search-engine');
+const { extractKeywordsFallback } = require('../keyword-extractor');
 const { buildIndex, score } = require('./bm25');
+
+function transformQuery(text, kind) {
+  return kind === 'keywords' ? extractKeywordsFallback(text).join(' ') : text;
+}
+
+function queryTexts(configuration, text) {
+  return {
+    lexical: transformQuery(text, configuration.lexicalQuery),
+    dense: transformQuery(text, configuration.denseQuery),
+  };
+}
 
 function textOf(document, fields) {
   return fields.map((field) => document[field] || '').join(' ');
@@ -142,18 +154,19 @@ function rankWith(context, configuration, limit) {
 }
 
 async function forQuery(index, queryText, configuration, limit) {
+  const texts = queryTexts(configuration, queryText);
   const wantsLexical = configuration.branches.includes('lexical');
-  const lexical = wantsLexical ? lexicalScores(index, queryText, configuration) : [];
+  const lexical = wantsLexical ? lexicalScores(index, texts.lexical, configuration) : [];
 
   if (!configuration.branches.includes('dense')) {
     return byScore(lexical).slice(0, limit).map((row) => row.id);
   }
 
-  const queryVector = await embedQuery(index, queryText, configuration);
+  const queryVector = await embedQuery(index, texts.dense, configuration);
 
   return rankWith({ index, lexical, queryVector }, configuration, limit);
 }
 
 const retrieve = { prepare, forQuery };
 
-module.exports = { retrieve, reciprocalRankFusion, weightedFusion, prepare, forQuery };
+module.exports = { retrieve, reciprocalRankFusion, weightedFusion, prepare, forQuery, queryTexts };

@@ -13,6 +13,7 @@ const {
 const { embedMany, embedOne, loadVectors, saveVectors } = require('./embedder');
 const { ndcgAtK, recallAtK } = require('./metrics');
 const { retrieve } = require('./retrieval');
+const { rerankRanking } = require('./rerank');
 
 const LEXICAL_FIELDS = ['title', 'text'];
 
@@ -78,6 +79,37 @@ for (const lexicalWeight of [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]) {
     weights: [lexicalWeight, 1 - lexicalWeight],
   });
 }
+
+CONFIGURATIONS['bm25-query-keywords'] = {
+  ...CONFIGURATIONS['bm25-repository-defaults'],
+  lexicalQuery: 'keywords',
+};
+
+CONFIGURATIONS['parallel-weighted-query-keywords'] = {
+  ...CONFIGURATIONS['parallel-weighted'],
+  lexicalQuery: 'keywords',
+};
+
+CONFIGURATIONS['parallel-weighted-query-keywords-both'] = {
+  ...CONFIGURATIONS['parallel-weighted'],
+  lexicalQuery: 'keywords',
+  denseQuery: 'keywords',
+};
+
+CONFIGURATIONS['dense-query-keywords'] = {
+  ...CONFIGURATIONS['dense-only'],
+  denseQuery: 'keywords',
+};
+
+CONFIGURATIONS['bm25-reranked'] = {
+  ...CONFIGURATIONS['bm25-repository-defaults'],
+  rerankDepth: constants.rerankDepth,
+};
+
+CONFIGURATIONS['parallel-weighted-reranked'] = {
+  ...CONFIGURATIONS['parallel-weighted'],
+  rerankDepth: constants.rerankDepth,
+};
 
 function resolveConfiguration(name) {
   const configuration = CONFIGURATIONS[name];
@@ -161,6 +193,15 @@ async function prepareIndex(dataset, configuration, options) {
   return retrieve.prepare(dataset.documents, configuration, embed, vectors);
 }
 
+/* istanbul ignore next */
+function crossEncoderScorer() {
+  return require('./cross-encoder').scoreAll;
+}
+
+function resolveScorer(options) {
+  return options.rerankScorer || crossEncoderScorer();
+}
+
 async function runConfiguration(options) {
   const { configuration: name, dataset: requested, root } = options;
   const configuration = resolveConfiguration(name);
@@ -170,11 +211,20 @@ async function runConfiguration(options) {
   const texts = documentTexts(dataset, configuration);
   const frequency = buildDocumentFrequency([...texts.values()].map((content) => ({ content })));
 
+  const scorer = configuration.rerankDepth ? resolveScorer(options) : null;
+
   const scored = [];
   const categorised = [];
   for (const query of dataset.queries) {
     const judgments = Object.fromEntries(dataset.qrels.get(query.id));
-    const ranking = await retrieve.forQuery(index, query.text, configuration, constants.evaluationRecallK);
+    const fused = await retrieve.forQuery(index, query.text, configuration, constants.evaluationRecallK);
+    const ranking = await rerankRanking({
+      ranking: fused,
+      queryText: query.text,
+      texts,
+      scorer,
+      depth: configuration.rerankDepth,
+    });
 
     scored.push({
       id: query.id,
