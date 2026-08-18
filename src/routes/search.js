@@ -155,7 +155,7 @@ async function rerankResults(request, results) {
     score: doc.bestScore,
   }));
 
-  const reranked = await rerank(flatResults, request.query, request.topN);
+  const reranked = await rerank(flatResults, request.query);
   return reranked.map((entry) => ({
     parentId: entry.parentId,
     item: entry.item,

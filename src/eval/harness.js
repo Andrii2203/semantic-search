@@ -195,7 +195,7 @@ async function prepareIndex(dataset, configuration, options) {
 
 /* istanbul ignore next */
 function crossEncoderScorer() {
-  return require('./cross-encoder').scoreAll;
+  return require('../cross-encoder').scoreAll;
 }
 
 function resolveScorer(options) {

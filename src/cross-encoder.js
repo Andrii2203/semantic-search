@@ -1,6 +1,6 @@
 'use strict';
 
-const constants = require('../search-constants');
+const constants = require('./search-constants');
 
 let loaded = null;
 

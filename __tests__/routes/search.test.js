@@ -22,6 +22,7 @@ const { rerank } = require('../../src/reranker');
 const { explain } = require('../../src/explainer');
 const SearchEngine = require('../../src/search-engine');
 const db = require('../../src/db');
+const constants = require('../../src/search-constants');
 
 // ─── Fixtures ────────────────────────────────────────────────
 
@@ -305,7 +306,33 @@ describe('POST /api/search', () => {
     expect(res.body.results).toBeDefined();
   });
 
-  it('calls reranker when useReranker=true and results are non-empty', async () => {
+  it('reranks to rerankDepth and then returns topN results, so a result outside the first topN of the fused list can appear in the answer', async () => {
+    const topN = 3;
+    const fused = Array.from({ length: constants.rerankDepth }, (_, index) => ({
+      parentId: `item-${index}`,
+      matchedChunks: [],
+      bestScore: 1 - index / constants.rerankDepth,
+    }));
+    SearchEngine.groupByParent.mockReturnValue(fused);
+    rerank.mockImplementation(async (results) =>
+      [...results].reverse().map((doc) => ({ ...doc, item: null, rerankScore: 0.95 })),
+    );
+
+    const res = await request(app)
+      .post('/api/search')
+      .send({ query: 'test', useReranker: true, topN })
+      .expect(200);
+
+    expect(rerank.mock.calls[0][0]).toHaveLength(constants.rerankDepth);
+    expect(res.body.results).toHaveLength(topN);
+    expect(res.body.results[0].parentId).toBe(`item-${constants.rerankDepth - 1}`);
+    expect(res.body.results[0].rerankScore).toBe(0.95);
+  });
+
+  it('calls the reranker only when the request sets useReranker', async () => {
+    await request(app).post('/api/search').send({ query: 'test' }).expect(200);
+    expect(rerank).not.toHaveBeenCalled();
+
     SearchEngine.groupByParent.mockReturnValue([
       { parentId: 'item-1', matchedChunks: [], bestScore: 0.9 },
     ]);
@@ -313,18 +340,8 @@ describe('POST /api/search', () => {
       { parentId: 'item-1', item: null, matchedChunks: [], bestScore: 0.9, rerankScore: 0.95 },
     ]);
 
-    const res = await request(app)
-      .post('/api/search')
-      .send({ query: 'test', useReranker: true })
-      .expect(200);
-
+    await request(app).post('/api/search').send({ query: 'test', useReranker: true }).expect(200);
     expect(rerank).toHaveBeenCalled();
-    expect(res.body.results[0].rerankScore).toBe(0.95);
-  });
-
-  it('skips reranker when useReranker=false (default)', async () => {
-    await request(app).post('/api/search').send({ query: 'test' }).expect(200);
-    expect(rerank).not.toHaveBeenCalled();
   });
 
   it('enriches results with item data from DB', async () => {

@@ -242,6 +242,12 @@ quality, so it raises a weak first stage and lowers a strong one. Whether it hel
 whether the current ranking is already better than the reranker is, which is a question about the
 corpus rather than about the axis.
 
+Shipped 2026-08-17 21:43:19 +0200 by `docs/plans/local-reranker.md`, which is the first product code
+this plan has changed since phase 2. It carries one correction to the row above: the product reranked
+`resultsReturned` while every number in ADR-020 was measured at `rerankDepth`, so the reranker could
+reorder the answer but never enlarge it. The route now reranks the fused list to depth 50 and returns
+the top 20 of the result, which is the configuration the numbers were taken on.
+
 That is the second axis in this project to refuse a global answer, after axis B, and both refusals
 have the same shape as the vertical hypothesis in section 13. What ADR-020 settles is narrower: the
 reranker that runs here is local, because the Groq path in `src/reranker.js` cannot run at all with

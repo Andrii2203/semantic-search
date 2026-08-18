@@ -1,70 +1,40 @@
 'use strict';
 
-const { getGroqClient } = require('./groq-client');
 const logger = require('./logger');
 const constants = require('./search-constants');
 
-async function rerank(results, originalQuery, topN = constants.resultsReturned) {
+/* istanbul ignore next */
+function loadedScorer() {
+  return require('./cross-encoder').scoreAll;
+}
+
+function probability(logit) {
+  return 1 / (1 + Math.exp(-logit));
+}
+
+async function rerank(results, originalQuery, options = {}) {
   if (!results || results.length === 0) {return [];}
   if (!originalQuery || originalQuery.trim().length === 0) {return results;}
 
-  const toRerank = results.slice(0, topN);
-  const rest = results.slice(topN);
+  const depth = options.depth || constants.rerankDepth;
+  const head = results.slice(0, depth);
+  const tail = results.slice(depth);
 
-  const groq = getGroqClient();
-  const scored = [];
-
-  const batchSize = constants.rerankBatchSize;
-  for (let i = 0; i < toRerank.length; i += batchSize) {
-    const batch = toRerank.slice(i, i + batchSize);
-
-    try {
-      const batchScores = await scoreBatch(groq, originalQuery, batch);
-      scored.push(...batchScores);
-    } catch (err) {
-      logger.warn({ err, batchIndex: i }, 'Rerank batch failed, keeping original scores');
-      scored.push(...batch.map((item) => ({ ...item, rerankScore: item.score || 0 })));
-    }
-  }
-
-  scored.sort((a, b) => b.rerankScore - a.rerankScore);
-
-  return [...scored, ...rest.map((item) => ({ ...item, rerankScore: 0 }))];
-}
-
-async function scoreBatch(groq, query, items) {
-  const itemTexts = items
-    .map((item, i) => `[${i}] ${(item.content || '').slice(0, constants.rerankContentChars)}`)
-    .join('\n---\n');
-
-  const response = await groq.chat(
-    [
-      {
-        role: 'system',
-        content:
-          'You are a relevance scoring engine. Score each document against the query on a scale of 0.0 to 1.0. ' +
-          'Return ONLY a JSON array of numbers (scores), in the same order as the documents. No explanation.',
-      },
-      {
-        role: 'user',
-        content: `Query: ${query.slice(0, constants.rerankContentChars)}\n\nDocuments:\n${itemTexts}`,
-      },
-    ],
-    { maxTokens: constants.rerankMaxTokens, temperature: constants.rerankTemperature },
-  );
-
+  let scores;
   try {
-    const scores = JSON.parse(response.trim());
-    if (Array.isArray(scores) && scores.length === items.length) {
-      return items.map((item, i) => ({
-        ...item,
-        rerankScore: Math.max(0, Math.min(1, Number(scores[i]) || 0)),
-      }));
-    }
-  } catch {
+    const scoreAll = options.scoreAll || loadedScorer();
+    scores = await scoreAll(originalQuery, head.map((entry) => entry.content || ''));
+  } catch (err) {
+    logger.warn({ err, depth: head.length }, 'Rerank failed, keeping the fused order');
+    return results;
   }
 
-  return items.map((item) => ({ ...item, rerankScore: item.score || 0 }));
+  const reordered = head
+    .map((entry, position) => ({ entry, logit: scores[position] }))
+    .sort((first, second) => second.logit - first.logit)
+    .map((scored) => ({ ...scored.entry, rerankScore: probability(scored.logit) }));
+
+  return [...reordered, ...tail.map((entry) => ({ ...entry, rerankScore: null }))];
 }
 
 module.exports = { rerank };

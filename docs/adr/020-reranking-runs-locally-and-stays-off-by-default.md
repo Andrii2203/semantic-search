@@ -94,6 +94,11 @@ Not applicable, for the same reason.
 - The numbers in section 4 exist in `docs/eval/beir-axis-e.md` with their intervals.
 - The product change is written down as not done, with the document that owns it.
 
+The document that owns it is `docs/plans/local-reranker.md`, written at 2026-08-17 21:43:19 +0200,
+and the product change is done there rather than here. It found one thing this ADR did not say: the
+product reranked `resultsReturned` while every number in section 4 was measured at `rerankDepth`, so
+shipping the scorer alone would have shipped a configuration nobody measured.
+
 ## 9. Rollback
 
 | If | Action | Time |

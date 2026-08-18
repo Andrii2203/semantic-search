@@ -7,6 +7,7 @@ const RETRIEVAL_PATH = [
   'src/search-engine.js',
   'src/routes/search.js',
   'src/reranker.js',
+  'src/cross-encoder.js',
   'src/keyword-extractor.js',
   'src/junk-filter.js',
   'src/feedback.js',

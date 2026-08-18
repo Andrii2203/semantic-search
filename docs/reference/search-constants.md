@@ -115,10 +115,13 @@ point of this table.
 | `keywordInputChars` | 4000 | `keyword-extractor.js` | arbitrary | How much of the text the extraction call sees. A term past it cannot be extracted. Forced by axis D |
 | `keywordMaxTokens` | 256 | `keyword-extractor.js` | arbitrary | An API call shape. A truncated response fails the JSON parse and falls back to frequency, which is the failure this number causes. Forced by that fallback firing on a normal query |
 | `keywordTemperature` | 0.1 | `keyword-extractor.js` | arbitrary | Not zero, so the same query can produce two different keyword sets and two different result lists. Forced by axis D, for the reason recorded against `summaryTemperature` |
-| `rerankBatchSize` | 5 | `reranker.js` | arbitrary | An API call shape, not a quality number. Disappears if axis E chooses a cross encoder |
-| `rerankContentChars` | 500 | `reranker.js` | arbitrary | Truncates the document the reranker judges. Forced by axis E |
-| `rerankMaxTokens` | 128 | `reranker.js` | arbitrary | Holds the JSON array of scores for one batch. Too small truncates the array, the parse fails and the batch keeps its original order. Forced by axis E |
-| `rerankTemperature` | 0.1 | `reranker.js` | arbitrary | Not zero, so reranking the same list twice can order it differently. Forced by axis E, which compares orderings |
+| `rerankBatchSize` | removed | nowhere | removed by `docs/plans/local-reranker.md` at 2026-08-17 21:43:19 +0200 | The row said it disappears if axis E chooses a cross encoder. Axis E chose one, in `docs/adr/020-reranking-runs-locally-and-stays-off-by-default.md`, and the batch of the local scorer is `crossEncoderBatchSize`, which is measured rather than guessed |
+| `rerankContentChars` | removed | nowhere | removed by the same work | It truncated the document at 500 characters before a language model saw it. The cross encoder's own tokeniser truncates at the model's window, and `docs/eval/beir-axis-e.md` measured the axis with no character truncation, so keeping this would ship a configuration nobody measured |
+| `rerankMaxTokens` | removed | nowhere | removed by the same work | The size of the JSON array of scores one Groq batch had to return. There is no JSON and no batch response any more |
+| `rerankTemperature` | removed | nowhere | removed by the same work | A cross encoder is deterministic, so the concern this row recorded, that reranking the same list twice can order it differently, stops existing |
+| `crossEncoderModel` | `Xenova/ms-marco-MiniLM-L-6-v2` | `cross-encoder.js` | borrowed, source named | The reranker the product runs, moved into this table from section 5.1 at 2026-08-17 21:43:19 +0200 because it now changes what search returns. A cross encoder trained on MS MARCO, in the ONNX conversion the runtime this repository already depends on can load, so it needs no key and no new dependency. Model card read at https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2 on 2026-08-17 17:06:39 +0200 |
+| `crossEncoderBatchSize` | 16 | `cross-encoder.js` | measured | Moved from section 5.1 with the row above. Throughput on this machine at 2026-08-17 17:12 +0200 was 17.8 pairs per second at batch 8, 18.8 at 16 and 17.6 at 32, so the size sits at the flat top of a curve rather than at a guess |
+| `rerankDepth` | 50 | `reranker.js` | borrowed, loosely, and now measured against | Moved from section 5.1 with the two rows above, and it is the number that made the move necessary: the product used to rerank `resultsReturned`, so it could reorder the answer but never enlarge it, while `docs/eval/beir-axis-e.md` measured every number in ADR-020 at depth 50. Published practice reranks 100 to 150 candidates, quoted in `docs/reference/retrieval-in-industry.md`, and 50 is the half of that this hardware can afford at 18 pairs per second. Forced by a measured gain that is still rising at 50 |
 | `dedupCosine` | 0.95 | `config.js` | arbitrary | Conventional near duplicate cutoff, never measured on this corpus |
 | `dedupWindow` | 200 | `config.js` | arbitrary | How many recent vectors a new chunk is compared against |
 | `preFilterMinChars` | 50 | `scheduler.js` | arbitrary | Refuted by the locked run: thin items pass it and then score 0.741, above genuine semantic matches at 0.509 |
@@ -180,6 +183,15 @@ document had ever said what any of those numbers were for. Two of them, `summary
 themselves between two runs of the same input. That is recorded here rather than fixed, because
 changing a value in the phase that only moves values would make the phase 3 baseline uncomparable.
 
+Three names crossed from section 5.1 into section 5 at 2026-08-17 21:43:19 +0200, and four left the
+table in the same work, recorded in `docs/plans/local-reranker.md`. The crossing is the part worth
+reading: `crossEncoderModel`, `crossEncoderBatchSize` and `rerankDepth` were written as evaluation
+constants because only the bench used them, and the sentence that opens section 5.1 says an
+evaluation constant does not change what search returns. Once the product's reranker became the one
+the bench measured, that sentence stopped being true of those three, so they moved rather than being
+duplicated. A constant that describes the product and a constant that describes the bench cannot be
+two rows with one name, which is the failure section 1 of this document exists to prevent.
+
 ## 5.1 Evaluation constants
 
 These do not change what search returns. They decide what a measurement means, so an arbitrary value
@@ -199,9 +211,6 @@ here corrupts every number the project reports and they belong under the same ru
 | `gradeMax` | 3 | borrowed | The ceiling of the same scale |
 | `embeddingModel` | `Xenova/all-MiniLM-L6-v2` | measured | The model the product runs, so the bench embeds what the product embeds. Changes when axis F picks a winner under `docs/adr/012-embedding-model-context-window.md` |
 | `embeddingBatchSize` | 64 | arbitrary | How many texts go to the encoder at once. Forced by a measured throughput difference at another size, which nothing has taken |
-| `crossEncoderModel` | `Xenova/ms-marco-MiniLM-L-6-v2` | borrowed, source named | The reranker of axis E. A cross encoder trained on MS MARCO, in the ONNX conversion the runtime this repository already depends on can load, so the axis needs no key and no new dependency. Model card read at https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2 on 2026-08-17 17:06:39 +0200. Changes when axis E picks a different reranker |
-| `crossEncoderBatchSize` | 16 | measured | Throughput on this machine at 2026-08-17 17:12 +0200 was 17.8 pairs per second at batch 8, 18.8 at 16 and 17.6 at 32, so the size is chosen at the flat top of a curve rather than guessed |
-| `rerankDepth` | 50 | borrowed, loosely | How many of the fused results the reranker reorders. Deep enough to move nDCG@10 and at or under the recall cutoff of 100, so behaviour 33 of `docs/plans/public-benchmark.md` holds by construction. Published practice reranks 100 to 150 candidates, quoted in `docs/reference/retrieval-in-industry.md`, and 50 is the half of that this hardware can afford at 18 pairs per second. Forced by a measured gain that is still rising at 50 |
 | `calibrationSampleSize` | 60 | arbitrary | How many pairs the owner labels by hand. Forced when the kappa interval at this size is too wide to decide whether the judge passes its floor |
 | `calibrationMinimumKappa` | 0.4 | borrowed, source named | The floor below which the judge is rejected. Published agreement between language model judges and human assessors is roughly 0.3 to 0.5, and UMBRELA reports 0.418 to 0.499 on TREC deep learning collections, recorded in `docs/plans/evaluation-corpus.md` section 9 |
 | `judgeTemperature` | 0 | borrowed | A rerun must reproduce the answer key. Any other value makes the key drift silently |
