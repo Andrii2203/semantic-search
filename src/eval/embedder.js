@@ -47,12 +47,13 @@ function embedOne(text) {
   return embedBatch([text]).then((vectors) => vectors[0]);
 }
 
-function cacheFile(directory) {
-  return path.join(directory, `vectors-${constants.embeddingModel.replace(/\W/g, '-')}.bin`);
+function cacheFile(directory, fields) {
+  const model = constants.embeddingModel.replace(/\W/g, '-');
+  return path.join(directory, `vectors-${model}-${fields.join('-')}.bin`);
 }
 
-function loadVectors(directory, ids) {
-  const file = cacheFile(directory);
+function loadVectors(directory, ids, fields) {
+  const file = cacheFile(directory, fields);
   if (!fs.existsSync(file)) {
     return null;
   }
@@ -68,13 +69,13 @@ function loadVectors(directory, ids) {
   return new Map(ids.map((id, index) => [id, floats.subarray(index * width, (index + 1) * width)]));
 }
 
-function saveVectors(directory, ids, vectors) {
+function saveVectors(directory, ids, vectors, fields) {
   fs.mkdirSync(directory, { recursive: true });
   const width = vectors[0].length;
   const floats = new Float32Array(ids.length * width);
 
   vectors.forEach((vector, index) => floats.set(vector, index * width));
-  fs.writeFileSync(cacheFile(directory), Buffer.from(floats.buffer));
+  fs.writeFileSync(cacheFile(directory, fields), Buffer.from(floats.buffer));
 }
 
 module.exports = { embedMany, embedOne, loadVectors, saveVectors, cacheFile };

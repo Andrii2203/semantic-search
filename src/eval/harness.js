@@ -16,6 +16,7 @@ const { retrieve } = require('./retrieval');
 const { rerankRanking } = require('./rerank');
 
 const LEXICAL_FIELDS = ['title', 'text'];
+const TEXT_ONLY = ['text'];
 
 const CONFIGURATIONS = {
   'bm25-beir-baseline': {
@@ -101,6 +102,16 @@ CONFIGURATIONS['dense-query-keywords'] = {
   denseQuery: 'keywords',
 };
 
+CONFIGURATIONS['bm25-text-only'] = {
+  ...CONFIGURATIONS['bm25-repository-defaults'],
+  fields: TEXT_ONLY,
+};
+
+CONFIGURATIONS['parallel-weighted-text-only'] = {
+  ...CONFIGURATIONS['parallel-weighted'],
+  fields: TEXT_ONLY,
+};
+
 CONFIGURATIONS['bm25-reranked'] = {
   ...CONFIGURATIONS['bm25-repository-defaults'],
   rerankDepth: constants.rerankDepth,
@@ -164,7 +175,7 @@ function countCategories(rows) {
 async function cachedVectors(dataset, configuration, root, onProgress) {
   const directory = path.join(root || DEFAULT_ROOT, dataset.name);
   const ids = dataset.documents.map((document) => document.id);
-  const cached = loadVectors(directory, ids);
+  const cached = loadVectors(directory, ids, configuration.fields);
 
   if (cached) {
     return cached;
@@ -174,7 +185,7 @@ async function cachedVectors(dataset, configuration, root, onProgress) {
     configuration.fields.map((field) => document[field] || '').join(' '),
   );
   const vectors = await embedMany(texts, onProgress);
-  saveVectors(directory, ids, vectors);
+  saveVectors(directory, ids, vectors, configuration.fields);
 
   return new Map(ids.map((id, index) => [id, vectors[index]]));
 }

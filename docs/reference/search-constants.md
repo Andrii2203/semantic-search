@@ -324,5 +324,5 @@ without a row in section 5 claiming that four is a retrieval decision.
 | Question | Trigger that forces an answer |
 |---|---|
 | Whether the search cutoff and the inbox cutoff should stay one number or become two | Axis A is measured, because raising recall in search will raise admission volume at the same cutoff |
-| Whether `tokensPerWord` should be replaced by the real tokeniser, which is already loaded | A chunk is measured as exceeding the model window in production |
+| Whether `tokensPerWord` should be replaced by the real tokeniser, which is already loaded. Partly answered 2026-08-18 11:05 +0200 by `docs/eval/beir-axis-c.md` section 8: on 1000 SciFact documents the model's own tokeniser reports 1.54 tokens per word against the constant's 1.3, and 629 of them exceed the 256 token window on their text alone. The constant understates by 18 percent on that corpus, so the chunker's decision about whether to chunk at all is taken on a number that is too small | A chunk is measured as exceeding the model window in production. The bench measurement above is not that trigger, because the bench does not chunk |
 | Whether client side retrieval knobs should exist at all | The server owns the defaults and the client stops sending them |

@@ -46,6 +46,27 @@ const queries = [
 
 const qrels = ['query-id\tcorpus-id\tscore', 'q1\tdoc1\t2', 'q2\tdoc2\t2'].join('\n');
 
+const TITLED_TITLE = 'Mangrove photosynthesis';
+const TITLED_TEXT = 'Leaves exchange gas with the air above the water.';
+
+const titledCorpus = [
+  { _id: 't1', title: TITLED_TITLE, text: TITLED_TEXT },
+  {
+    _id: 't2',
+    title: 'Railway timetables',
+    text: 'Photosynthesis appears here beside rolling stock schedules and photosynthesis again.',
+  },
+  {
+    _id: 't3',
+    title: 'Estuary mud',
+    text: 'Photosynthesis in the estuary channel, with sediment notes and photosynthesis once more.',
+  },
+];
+
+const titledQueries = [{ _id: 'tq1', text: 'mangrove photosynthesis' }];
+
+const titledQrels = ['query-id\tcorpus-id\tscore', 'tq1\tt1\t3', 'tq1\tt2\t0', 'tq1\tt3\t0'].join('\n');
+
 function writeDataset(root, name, dataset = {}) {
   const { rows = corpus, asked = queries, judged = qrels } = dataset;
   const directory = path.join(root, name);
@@ -68,6 +89,7 @@ describe('src/eval/harness.js', () => {
     root = fs.mkdtempSync(path.join(os.tmpdir(), 'harness-'));
     writeDataset(root, 'tiny');
     writeDataset(root, 'rich', { rows: richCorpus, asked: richQueries, judged: richQrels });
+    writeDataset(root, 'titled', { rows: titledCorpus, asked: titledQueries, judged: titledQrels });
   });
 
   afterAll(() => {
@@ -159,5 +181,48 @@ describe('src/eval/harness.js', () => {
     for (const category of CATEGORIES) {
       expect(typeof result.categories[category]).toBe('number');
     }
+  });
+
+  test('parallel-weighted-text-only differs from parallel-weighted in its fields and in nothing else', () => {
+    const { fields: withTitle, ...restWithTitle } = CONFIGURATIONS['parallel-weighted'];
+    const { fields: withoutTitle, ...restWithoutTitle } = CONFIGURATIONS['parallel-weighted-text-only'];
+
+    expect(withTitle).toEqual(['title', 'text']);
+    expect(withoutTitle).toEqual(['text']);
+    expect(restWithoutTitle).toEqual(restWithTitle);
+  });
+
+  test('bm25-text-only differs from bm25-repository-defaults in its fields and in nothing else', () => {
+    const { fields: withTitle, ...restWithTitle } = CONFIGURATIONS['bm25-repository-defaults'];
+    const { fields: withoutTitle, ...restWithoutTitle } = CONFIGURATIONS['bm25-text-only'];
+
+    expect(withTitle).toEqual(['title', 'text']);
+    expect(withoutTitle).toEqual(['text']);
+    expect(restWithoutTitle).toEqual(restWithTitle);
+  });
+
+  test('a term that appears only in a title retrieves the document with the title indexed and not without it, and the dense branch embeds no title without it', async () => {
+    const embedded = [];
+    const embed = (text) => {
+      embedded.push(text);
+      return Promise.resolve(text.toLowerCase().includes('mangrove') ? [1, 0] : [0, 1]);
+    };
+
+    const withTitle = await runConfiguration({
+      configuration: 'parallel-weighted', dataset: 'titled', root, embed,
+    });
+    const embeddedWithTitle = [...embedded];
+    embedded.length = 0;
+
+    const withoutTitle = await runConfiguration({
+      configuration: 'parallel-weighted-text-only', dataset: 'titled', root, embed,
+    });
+
+    expect(withTitle.categorised[0].documentId).toBe('t1');
+    expect(withoutTitle.categorised[0].documentId).not.toBe('t1');
+
+    expect(embeddedWithTitle).toContain(`${TITLED_TITLE} ${TITLED_TEXT}`);
+    expect(embedded).toContain(TITLED_TEXT);
+    expect(embedded.every((text) => !text.includes('Mangrove'))).toBe(true);
   });
 });

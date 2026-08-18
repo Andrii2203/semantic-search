@@ -119,14 +119,24 @@ its own entry in `docs/eval/`.
 | 2 | Constants extraction, no value changes | main | 1 | Turns every axis into configuration. Behaviour identical before and after, verified by re-running phase 1. Closed 2026-08-17 15:45:14 +0200, see section 6.3 |
 | 3 | Baseline recorded | main | 2 | The number every later number is compared against |
 | 3.5 | A public test collection as the primary bench for the engine axes | main | 2 | Added 2026-08-14. Instrument validated the same day: SciFact, NFCorpus and FiQA fetched and pinned, and BM25 reproduced the published baseline within 0.027 on all three. See `docs/eval/beir-bm25-control.md`. Remaining: a significance test, because the bench's resolution is now known to be coarse |
-| 4 | Axes A, B, D, E as a matrix | `phase-8-retrieval` | 3, 3.5 | The four axes that are pure configuration once phase 2 lands. Measured on the public collection first, where the statistical power is, then on the local bench for the product's own task. Measured 2026-08-17, see sections 6.4 to 6.6. Two axes decided, two corpus dependent, no product code changed |
-| 5 | Axis C, constructed chunk text | `phase-8-context` | 4 | Requires reindexing, and its value depends on the retrieval fixed in phase 4 |
-| 6 | Axis F, embedding model | `phase-8-model` | 4 | Requires reindexing and a model version column. Multilingual keeps 384 dimensions, so the stored layout survives |
-| 7 | Query time chunking | `phase-8-query-chunking` | 5 | The Dropbox shape. Different data lifecycle, measured against phase 5 |
+| 4 | Axes A, B, D, E as a matrix | `feature/toolchain-upgrade`, see below | 3, 3.5 | The four axes that are pure configuration once phase 2 lands. Measured on the public collection first, where the statistical power is, then on the local bench for the product's own task. Measured 2026-08-17, see sections 6.4 to 6.6. Two axes decided, two corpus dependent, no product code changed |
+| 4.5 | The phase 4 winner shipped | `feature/phase-4-ship-reranker` | 4 | Closed 2026-08-17 21:43:19 +0200 by `docs/plans/local-reranker.md`. The local cross encoder replaces a reranker that could not run, at the depth its numbers were measured on |
+| 5 | Axis C, the indexed text | `feature/phase-5-axis-c` | 4 | Requires reindexing, and its value depends on the retrieval fixed in phase 4. Measured 2026-08-18, see section 6.7 and `docs/eval/beir-axis-c.md` |
+| 6 | Axis F, embedding model | `feature/phase-6-axis-f` | 4 | Requires reindexing and a model version column. Multilingual keeps 384 dimensions, so the stored layout survives |
+| 7 | Query time chunking | `feature/phase-7-query-chunking` | 5 | The Dropbox shape. Different data lifecycle, measured against phase 5 |
 | 8 | Locked half, once | main | 4 to 7 | Spent once, on the winner, as the evaluation standard requires |
 
 Phases 0 to 3 change no ranking behaviour. That is deliberate: three phases of work before the first
 improvement, so that the first improvement can be believed.
+
+The branch column was rewritten at 2026-08-18 11:20 +0200 and the reason belongs in the record. It
+named `phase-8-retrieval`, `phase-8-context`, `phase-8-model` and `phase-8-query-chunking`, none of
+which matched `docs/standards/WORKFLOW.md` section 4, which requires `feature/<phase>-<slug>`, and
+none of which matched where the work actually happened. Checked at that moment: `phase-8-retrieval`
+last moved on 2026-08-13 and sits five commits behind `main` with nothing of its own, while every
+commit of phases 2 and 4 is on `feature/toolchain-upgrade`. Two naming schemes and a plan that
+pointed at an empty branch is how a person loses track of where their own work is, so the column now
+records what was used and what the next phases will use.
 
 ## 6.1 Phase 0, closed 2026-08-14 18:06 +0200
 
@@ -276,6 +286,35 @@ that section 13 asks for was not run, because the local bench has 8 answerable i
 split and cannot carry a three way split. The vertical question was answered on the public bench
 instead, where FiQA disagrees with SciFact and NFCorpus about which configuration wins, and that
 disagreement is now visible on two axes rather than one.
+
+## 6.7 Phase 5, axis C, measured 2026-08-18
+
+Full numbers in `docs/eval/beir-axis-c.md`, plan and defect fix in
+`docs/plans/axis-c-indexed-text.md`.
+
+Indexing the title with the text is worth 0.0154 nDCG@10 on SciFact and 0.0056 on NFCorpus in the
+hybrid configuration, both intervals excluding zero, and 0.0070 of Recall@100 on NFCorpus. FiQA
+carries no titles and returned exactly 0.0000 on both metrics, which is the control this run was
+built around.
+
+Two findings outrank the numbers.
+
+The instrument was wrong before it was right. The vector cache was named by the dataset and the model
+alone, so the first configuration to vary the indexed text would have read back the previous
+configuration's vectors, leaving the dense branch identical and reporting a fraction of the effect.
+It is now keyed by the field set, and the FiQA control at exactly zero is what says the fix works.
+
+The product does not index the title, and the bench always has. `src/scheduler.js` line 109 chunks
+`item.content` while the title sits in `item.metadata.title`. So every public number in
+`docs/eval/beir-axes-a-b.md`, `docs/eval/beir-axis-d.md` and `docs/eval/beir-axis-e.md` was taken on a
+configuration the product does not run, and the size of that gap, 0.0154 on SciFact, is larger than
+the whole effect axis D measured. The correction ships under its own document, per the rule this plan
+has followed since `docs/eval/beir-axes-a-b.md` section 12.
+
+A third result arrives from the same run and belongs to `docs/reference/search-constants.md`. Measured
+with the model's own tokeniser, SciFact averages 1.54 tokens per word against the `tokensPerWord`
+constant of 1.3, and 629 of 1000 documents exceed the 256 token window on their text alone. The title
+therefore does not add to most documents, it evicts the tail of the body and wins anyway.
 
 ## 7. Axis A note
 
