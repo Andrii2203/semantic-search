@@ -6,11 +6,10 @@ const { fetchWithTimeout } = require('../http');
 const { retry } = require('../retry');
 const { readFeed } = require('./feed-reader');
 const { validateIRBatch } = require('../validation');
-
-const MAX_BODY_LENGTH = 2000;
+const constants = require('../search-constants');
 
 function toIR(entry, feedUrl) {
-  const body = entry.body ? entry.body.slice(0, MAX_BODY_LENGTH) : '';
+  const body = entry.body ? entry.body.slice(0, constants.articleBodyChars) : '';
 
   return {
     id: crypto.createHash('sha256').update(`rss:${entry.id}`).digest('hex').slice(0, 16),

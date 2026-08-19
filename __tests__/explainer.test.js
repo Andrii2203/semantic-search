@@ -45,6 +45,22 @@ describe('explain', () => {
     expect(result).toBe('This matches because of JavaScript skills.');
   });
 
+  it('sends the language model at most explainerDocumentChars of the document and at most explainerQueryChars of the query', async () => {
+    const constants = require('../src/search-constants');
+    mockChat.mockResolvedValue('fine');
+
+    const document = 'd'.repeat(constants.explainerDocumentChars + 500);
+    const rawInput = 'q'.repeat(constants.explainerQueryChars + 500);
+
+    await explain({ ...ITEM, content: document }, { ...PROFILE, rawInput });
+
+    const sent = mockChat.mock.calls[0][0].find((message) => message.role === 'user').content;
+    expect(sent).toContain('d'.repeat(constants.explainerDocumentChars));
+    expect(sent).not.toContain('d'.repeat(constants.explainerDocumentChars + 1));
+    expect(sent).toContain('q'.repeat(constants.explainerQueryChars));
+    expect(sent).not.toContain('q'.repeat(constants.explainerQueryChars + 1));
+  });
+
   it('returns fallback explanation string when groq returns empty', async () => {
     mockChat.mockResolvedValue('');
 

@@ -2,6 +2,7 @@
 
 const { getGroqClient } = require('./groq-client');
 const logger = require('./logger');
+const constants = require('./search-constants');
 
 async function explain(item, profile) {
   if (!item || !profile) {
@@ -21,10 +22,13 @@ async function explain(item, profile) {
         },
         {
           role: 'user',
-          content: `Search Query:\n${(profile.rawInput || '').slice(0, 1000)}\n\nKeywords: ${(profile.keywords || []).join(', ')}\n\nDocument:\n${(item.content || '').slice(0, 2000)}`,
+          content:
+            `Search Query:\n${(profile.rawInput || '').slice(0, constants.explainerQueryChars)}\n\n` +
+            `Keywords: ${(profile.keywords || []).join(', ')}\n\n` +
+            `Document:\n${(item.content || '').slice(0, constants.explainerDocumentChars)}`,
         },
       ],
-      { maxTokens: 256, temperature: 0.2 },
+      { maxTokens: constants.explainerMaxTokens, temperature: constants.explainerTemperature },
     );
 
     return response.trim() || 'No explanation available.';
