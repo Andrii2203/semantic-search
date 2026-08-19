@@ -125,7 +125,7 @@ describe('src/eval/retrieval.js', () => {
     const index = await retrieve.prepare(documents, { ...keywordLexical, branches: ['dense'] }, embed);
     await retrieve.forQuery(index, 'what are the quarterly earnings', { ...keywordLexical, branches: ['dense'] }, 4);
 
-    expect(embed).toHaveBeenLastCalledWith('quarterly earnings');
+    expect(embed).toHaveBeenLastCalledWith('quarterly earnings', 'query');
   });
 
   test('a lexical configuration never calls the embedder', async () => {

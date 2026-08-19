@@ -11,6 +11,7 @@ const RETRIEVAL_PATH = [
   'src/keyword-extractor.js',
   'src/junk-filter.js',
   'src/feedback.js',
+  'src/explainer.js',
   'src/chunker/*.js',
 ];
 

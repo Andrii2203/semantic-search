@@ -106,7 +106,7 @@ async function prepare(documents, configuration, embed, cached) {
   }
 
   for (const document of documents) {
-    index.vectors.set(document.id, await embed(textOf(document, configuration.fields)));
+    index.vectors.set(document.id, await embed(textOf(document, configuration.fields), 'document'));
   }
 
   return index;
@@ -117,7 +117,7 @@ async function embedQuery(index, queryText, configuration) {
     return null;
   }
 
-  return index.embed(queryText);
+  return index.embed(queryText, 'query');
 }
 
 function fuse(lexical, dense, configuration, limit) {

@@ -183,6 +183,52 @@ describe('src/eval/harness.js', () => {
     }
   });
 
+  test('a configuration names the embedding model it is measured on, and the harness reports that model in its result', async () => {
+    const embed = () => Promise.resolve([1, 0]);
+
+    const baseline = await runConfiguration({
+      configuration: 'parallel-weighted', dataset: 'tiny', root, embed,
+    });
+    const candidate = await runConfiguration({
+      configuration: 'parallel-weighted-bge-small', dataset: 'tiny', root, embed,
+    });
+
+    expect(baseline.model).toBe('Xenova/all-MiniLM-L6-v2');
+    expect(candidate.model).toBe('Xenova/bge-small-en-v1.5');
+  });
+
+  test('a configuration reports the vector width it ranked at, and a configuration that truncates reports the shorter one', async () => {
+    const embed = () => Promise.resolve([1, 0]);
+
+    const full = await runConfiguration({
+      configuration: 'parallel-weighted-gemma', dataset: 'tiny', root, embed,
+    });
+    const truncated = await runConfiguration({
+      configuration: 'parallel-weighted-gemma-384', dataset: 'tiny', root, embed,
+    });
+
+    expect(full.dimensions).toBe(768);
+    expect(truncated.dimensions).toBe(384);
+    expect(truncated.model).toBe(full.model);
+  });
+
+  test('the harness tells the embedder which side it is embedding, a document or a query', async () => {
+    const sides = [];
+    const embed = (text, side) => {
+      sides.push({ text, side });
+      return Promise.resolve([1, 0]);
+    };
+
+    await runConfiguration({ configuration: 'dense-only', dataset: 'tiny', root, embed });
+
+    const documents = sides.filter((row) => row.side === 'document');
+    const asked = sides.filter((row) => row.side === 'query');
+
+    expect(documents).toHaveLength(3);
+    expect(asked).toHaveLength(2);
+    expect(sides.every((row) => row.side === 'document' || row.side === 'query')).toBe(true);
+  });
+
   test('parallel-weighted-text-only differs from parallel-weighted in its fields and in nothing else', () => {
     const { fields: withTitle, ...restWithTitle } = CONFIGURATIONS['parallel-weighted'];
     const { fields: withoutTitle, ...restWithoutTitle } = CONFIGURATIONS['parallel-weighted-text-only'];

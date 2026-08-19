@@ -11,6 +11,7 @@ const {
   CATEGORIES,
 } = require('./categories');
 const { embedMany, embedOne, loadVectors, saveVectors } = require('./embedder');
+const { coversChunk, factsFor, truncateVector } = require('./models');
 const { ndcgAtK, recallAtK } = require('./metrics');
 const { retrieve } = require('./retrieval');
 const { rerankRanking } = require('./rerank');
@@ -102,6 +103,20 @@ CONFIGURATIONS['dense-query-keywords'] = {
   denseQuery: 'keywords',
 };
 
+for (const [name, model] of Object.entries({
+  'bge-small': 'Xenova/bge-small-en-v1.5',
+  'gte-small': 'Xenova/gte-small',
+  gemma: 'onnx-community/embeddinggemma-300m-ONNX',
+})) {
+  CONFIGURATIONS[`parallel-weighted-${name}`] = { ...CONFIGURATIONS['parallel-weighted'], model };
+  CONFIGURATIONS[`dense-only-${name}`] = { ...CONFIGURATIONS['dense-only'], model };
+}
+
+CONFIGURATIONS['parallel-weighted-gemma-384'] = {
+  ...CONFIGURATIONS['parallel-weighted-gemma'],
+  dimensions: 384,
+};
+
 CONFIGURATIONS['bm25-text-only'] = {
   ...CONFIGURATIONS['bm25-repository-defaults'],
   fields: TEXT_ONLY,
@@ -171,11 +186,22 @@ function countCategories(rows) {
   return counts;
 }
 
+function modelOf(configuration) {
+  const model = configuration.model || constants.embeddingModel;
+  factsFor(model);
+  return model;
+}
+
+function dimensionsOf(configuration) {
+  return configuration.dimensions || factsFor(modelOf(configuration)).dimensions;
+}
+
 /* istanbul ignore next */
 async function cachedVectors(dataset, configuration, root, onProgress) {
   const directory = path.join(root || DEFAULT_ROOT, dataset.name);
   const ids = dataset.documents.map((document) => document.id);
-  const cached = loadVectors(directory, ids, configuration.fields);
+  const key = { fields: configuration.fields, model: modelOf(configuration) };
+  const cached = loadVectors(directory, ids, key);
 
   if (cached) {
     return cached;
@@ -184,22 +210,30 @@ async function cachedVectors(dataset, configuration, root, onProgress) {
   const texts = dataset.documents.map((document) =>
     configuration.fields.map((field) => document[field] || '').join(' '),
   );
-  const vectors = await embedMany(texts, onProgress);
-  saveVectors(directory, ids, vectors, configuration.fields);
+  const vectors = await embedMany(texts, { model: key.model, onProgress });
+  saveVectors(directory, ids, vectors, key);
 
   return new Map(ids.map((id, index) => [id, vectors[index]]));
 }
 
 async function prepareIndex(dataset, configuration, options) {
-  const embed = options.embed || embedOne;
+  const model = modelOf(configuration);
+  const width = configuration.dimensions;
+  const encode = options.embed || ((text, side) => embedOne(text, side, model));
+  const embed = (text, side) => Promise.resolve(encode(text, side)).then((vector) =>
+    truncateVector(vector, width),
+  );
 
   if (!configuration.branches.includes('dense')) {
     return retrieve.prepare(dataset.documents, configuration, embed);
   }
 
-  const vectors = options.embed
+  const cached = options.embed
     ? null
     : await cachedVectors(dataset, configuration, options.root, options.onProgress);
+  const vectors = cached && width
+    ? new Map([...cached].map(([id, vector]) => [id, truncateVector(vector, width)]))
+    : cached;
 
   return retrieve.prepare(dataset.documents, configuration, embed, vectors);
 }
@@ -260,6 +294,9 @@ async function runConfiguration(options) {
   return {
     configuration: name,
     dataset: dataset.name,
+    model: modelOf(configuration),
+    windowCoversChunk: coversChunk(modelOf(configuration), constants.tokensPerWord),
+    dimensions: dimensionsOf(configuration),
     queries: dataset.queries.length,
     metrics: [
       { name: ndcgName, value: mean(scored.map((row) => row.ndcg)) },

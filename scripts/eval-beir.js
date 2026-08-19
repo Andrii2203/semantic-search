@@ -35,7 +35,12 @@ async function main() {
     const ndcg = result.metrics[0].value;
     const gap = published === undefined ? '' : `  published ${published.toFixed(3)}  gap ${(ndcg - published).toFixed(4)}`;
 
-    console.log(`${dataset}  ${configuration}  queries ${result.queries}  ${values}${gap}  ${seconds}s`);
+    const window = result.windowCoversChunk ? '' : '  window truncates the configured chunk';
+
+    console.log(
+      `${dataset}  ${configuration}  ${result.model}  queries ${result.queries}  ` +
+        `${values}${gap}  ${seconds}s${window}`,
+    );
   }
 }
 
