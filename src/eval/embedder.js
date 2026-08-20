@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const constants = require('../search-constants');
-const { batchFor, withPrefix, slugFor } = require('./models');
+const { batchFor, withPrefix, slugFor } = require('../models');
 
 const pipelines = new Map();
 

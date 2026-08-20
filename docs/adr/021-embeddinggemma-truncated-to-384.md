@@ -2,7 +2,7 @@
 
 Status: accepted
 Owner: repository owner
-Last change: 2026-08-20 08:48:11 +0200
+Last change: 2026-08-20 17:06:14 +0200
 Supersedes: the model half of `docs/adr/012-embedding-model-context-window.md`, which chose the
 comparison rather than the winner
 
@@ -120,6 +120,11 @@ instruction prefixes are applied per side with a test that the two differ.
 Two lines are not met and belong to the shipping document: every vector row carrying its model and
 dimension, and the truncation measurement of 2026-08-13 repeated on the winner. The second one needs
 the product path, because the measurement was taken there.
+
+That document was written at 2026-08-20 17:06:14 +0200 and is
+`docs/plans/embedding-model-in-the-product.md`. Behaviours 6, 12 and 15 of it carry the first line and
+its definition of done carries the second. It ships the phase 5 title correction in the same work,
+because both changes require re-embedding every stored chunk and running that twice buys nothing.
 
 ## 9. Rollback
 

@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-18 12:38:13 +0200
+Last change: 2026-08-20 19:15:47 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -157,6 +157,10 @@ accepts, and the rest read a table or a file name.
   with a paired bootstrap interval, and states which candidates cleared the resolution in section 4.
 - The truncation measurement of 2026-08-13, a 520 word input embedding identically with and without an
   appended sentence, is repeated on the winner and recorded whether or not it still reproduces.
+  Done 2026-08-20 19:14 +0200 on the product path, under
+  `docs/plans/embedding-model-in-the-product.md`: it does not reproduce. The two inputs score cosine
+  0.827514 where the previous model scored 1.000000, so the sentence the old window never reached is
+  now inside the vector.
 - Any candidate whose card disagrees with the table in section 4 is corrected in this document, with
   the moment the card was read.
 

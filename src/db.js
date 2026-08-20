@@ -196,10 +196,34 @@ const migrations = [
       UPDATE settings SET key = 'inboxThreshold' WHERE key = 'searchThreshold';
     `,
   },
+  {
+    name: '016_add_vector_origin',
+    up: (d) => {
+      d.exec(`
+        ALTER TABLE chunks ADD COLUMN model TEXT;
+        ALTER TABLE chunks ADD COLUMN dimensions INTEGER;
+        ALTER TABLE profiles ADD COLUMN model TEXT;
+        ALTER TABLE profiles ADD COLUMN dimensions INTEGER;
+        CREATE INDEX IF NOT EXISTS idx_chunks_model ON chunks(model);
+      `);
+      backfillVectorOrigin(d);
+    },
+  },
 ];
 
 function contentHash(content) {
   return crypto.createHash('sha256').update(`${content}`).digest('hex').slice(0, 16);
+}
+
+function backfillVectorOrigin(d) {
+  const previousModel = 'Xenova/all-MiniLM-L6-v2';
+  const previousDimensions = 384;
+
+  for (const table of ['chunks', 'profiles']) {
+    d.prepare(
+      `UPDATE ${table} SET model = ?, dimensions = ? WHERE vector IS NOT NULL AND model IS NULL`,
+    ).run(previousModel, previousDimensions);
+  }
 }
 
 function backfillInternetCorpus(d) {
@@ -774,8 +798,8 @@ function close() {
 function insertChunk(chunk) {
   const d = getDb();
   const stmt = d.prepare(`
-    INSERT OR REPLACE INTO chunks (id, parent_id, content, chunk_index, level, strategy, vector, metadata)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT OR REPLACE INTO chunks (id, parent_id, content, chunk_index, level, strategy, vector, metadata, model, dimensions)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
   return stmt.run(
     chunk.id,
@@ -786,14 +810,16 @@ function insertChunk(chunk) {
     chunk.strategy,
     chunk.vector || null,
     JSON.stringify(chunk.metadata || {}),
+    chunk.model || null,
+    chunk.dimensions || null,
   );
 }
 
 function insertChunksBatch(chunks) {
   const d = getDb();
   const insert = d.prepare(`
-    INSERT OR REPLACE INTO chunks (id, parent_id, content, chunk_index, level, strategy, vector, metadata)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT OR REPLACE INTO chunks (id, parent_id, content, chunk_index, level, strategy, vector, metadata, model, dimensions)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const insertMany = d.transaction((rows) => {
@@ -808,6 +834,8 @@ function insertChunksBatch(chunks) {
         chunk.strategy,
         chunk.vector || null,
         JSON.stringify(chunk.metadata || {}),
+        chunk.model || null,
+        chunk.dimensions || null,
       );
       count++;
     }
@@ -879,13 +907,15 @@ function chunksSearch(keywords, options = {}) {
 function saveProfile(profile) {
   const d = getDb();
   d.prepare(`
-    INSERT OR REPLACE INTO profiles (id, keywords, vector, raw_input)
-    VALUES (?, ?, ?, ?)
+    INSERT OR REPLACE INTO profiles (id, keywords, vector, raw_input, model, dimensions)
+    VALUES (?, ?, ?, ?, ?, ?)
   `).run(
     profile.id,
     JSON.stringify(profile.keywords || []),
     profile.vector || null,
     profile.rawInput || '',
+    profile.model || null,
+    profile.dimensions || null,
   );
   return profile.id;
 }
@@ -949,22 +979,28 @@ function saveProfileForUser(userId, profile) {
   const existing = d.prepare('SELECT id FROM profiles WHERE user_id = ?').get(userId);
   if (existing) {
     d.prepare(`
-      UPDATE profiles SET keywords = ?, vector = ?, raw_input = ? WHERE user_id = ?
+      UPDATE profiles SET keywords = ?, vector = ?, raw_input = ?, model = ?, dimensions = ?
+       WHERE user_id = ?
     `).run(
       JSON.stringify(profile.keywords || []),
       profile.vector || null,
       profile.rawInput || '',
+      profile.model || null,
+      profile.dimensions || null,
       userId,
     );
   } else {
     d.prepare(`
-      INSERT INTO profiles (id, user_id, keywords, vector, raw_input) VALUES (?, ?, ?, ?, ?)
+      INSERT INTO profiles (id, user_id, keywords, vector, raw_input, model, dimensions)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(
       profile.id || `user-${userId}`,
       userId,
       JSON.stringify(profile.keywords || []),
       profile.vector || null,
       profile.rawInput || '',
+      profile.model || null,
+      profile.dimensions || null,
     );
   }
 }
@@ -1008,6 +1044,7 @@ function getAllChunksWithVectors(options = {}) {
   const collectionId = options.collectionId || null;
   const userId = options.userId || null;
   const batchId = options.batchId || null;
+  const model = options.model || null;
   const params = [];
 
   if (collectionId || userId) {
@@ -1017,27 +1054,53 @@ function getAllChunksWithVectors(options = {}) {
       whereClauses.push("json_extract(i.metadata, '$.batchId') = ?");
       params.push(batchId);
     }
+    if (model) {
+      whereClauses.push('c.model = ?');
+      params.push(model);
+    }
 
     return d.prepare(
       `SELECT c.* FROM chunks c JOIN items i ON c.parent_id = i.id WHERE ${whereClauses.join(' AND ')}`
     ).all(...params).map((row) => ({ ...row, metadata: row.metadata ? JSON.parse(row.metadata) : {} }));
   }
 
-  return d.prepare('SELECT * FROM chunks WHERE vector IS NOT NULL').all()
+  const modelClause = model ? ' AND model = ?' : '';
+  return d.prepare(`SELECT * FROM chunks WHERE vector IS NOT NULL${modelClause}`)
+    .all(...(model ? [model] : []))
     .map((row) => ({ ...row, metadata: row.metadata ? JSON.parse(row.metadata) : {} }));
 }
 
-function getRecentInternetChunkVectors(limit = 200) {
+function countChunksUnderOtherModel(options = {}) {
   const d = getDb();
+  const model = options.model || null;
+  if (!model) {return 0;}
+
+  const params = [];
+  const whereClauses = ['c.vector IS NOT NULL', 'c.model IS NOT ?'];
+  params.push(model);
+  appendVisibilityClauses(whereClauses, params, options.collectionId || null, options.userId || null);
+
+  const row = d
+    .prepare(
+      `SELECT count(*) AS stale FROM chunks c JOIN items i ON c.parent_id = i.id WHERE ${whereClauses.join(' AND ')}`,
+    )
+    .get(...params);
+
+  return row ? row.stale : 0;
+}
+
+function getRecentInternetChunkVectors(limit = 200, model = null) {
+  const d = getDb();
+  const modelClause = model ? ' AND c.model = ?' : '';
   return d
     .prepare(`
       SELECT c.vector
         FROM chunks c JOIN items i ON c.parent_id = i.id
-       WHERE i.collection_id = 'internet' AND c.vector IS NOT NULL
+       WHERE i.collection_id = 'internet' AND c.vector IS NOT NULL${modelClause}
        ORDER BY c.created_at DESC, c.rowid DESC
        LIMIT ?
     `)
-    .all(limit)
+    .all(...(model ? [model, limit] : [limit]))
     .map((row) => row.vector);
 }
 
@@ -1047,6 +1110,7 @@ module.exports = {
   getDb,
   fingerprint,
   backfillInternetCorpus,
+  backfillVectorOrigin,
   insertItem,
   insertItemsBatch,
   getItems,
@@ -1079,6 +1143,7 @@ module.exports = {
   deleteChunksByParent,
   chunksSearch,
   getAllChunksWithVectors,
+  countChunksUnderOtherModel,
   getRecentInternetChunkVectors,
   saveProfile,
   getProfile,

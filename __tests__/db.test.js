@@ -309,6 +309,98 @@ describe('close', () => {
   });
 });
 
+describe('src/db.js vector origin', () => {
+  const PREVIOUS_MODEL = 'Xenova/all-MiniLM-L6-v2';
+  const PREVIOUS_DIMENSIONS = 384;
+
+  function storeChunkAndProfile({ withVector }) {
+    db.insertItem(makeItem());
+    db.insertChunk({
+      id: 'item-001_0',
+      parentId: 'item-001',
+      content: 'Test content about JavaScript',
+      chunkIndex: 0,
+      strategy: 'fixed',
+      vector: withVector ? Buffer.from(new Float32Array(PREVIOUS_DIMENSIONS).fill(0.1).buffer) : null,
+      metadata: {},
+    });
+    db.createUser({ id: 'u-1', email: 'origin@example.com', passwordHash: 'hash' });
+    db.saveProfileForUser('u-1', {
+      keywords: ['javascript'],
+      rawInput: 'javascript and node',
+      vector: withVector ? Buffer.from(new Float32Array(PREVIOUS_DIMENSIONS).fill(0.1).buffer) : null,
+    });
+    db.getDb().prepare('UPDATE chunks SET model = NULL, dimensions = NULL').run();
+    db.getDb().prepare('UPDATE profiles SET model = NULL, dimensions = NULL').run();
+  }
+
+  test('the chunks and the profiles table carry the model and the width of every vector they store', () => {
+    const chunkColumns = db.getDb().prepare('PRAGMA table_info(chunks)').all().map((row) => row.name);
+    const profileColumns = db.getDb().prepare('PRAGMA table_info(profiles)').all().map((row) => row.name);
+
+    expect(chunkColumns).toEqual(expect.arrayContaining(['model', 'dimensions']));
+    expect(profileColumns).toEqual(expect.arrayContaining(['model', 'dimensions']));
+  });
+
+  test('the backfill of migration 016 gives every stored vector the model it was produced by', () => {
+    storeChunkAndProfile({ withVector: true });
+
+    db.backfillVectorOrigin(db.getDb());
+
+    const chunk = db.getChunksByParent('item-001')[0];
+    const profile = db.getProfileByUserId('u-1');
+    expect(chunk.model).toBe(PREVIOUS_MODEL);
+    expect(chunk.dimensions).toBe(PREVIOUS_DIMENSIONS);
+    expect(profile.model).toBe(PREVIOUS_MODEL);
+    expect(profile.dimensions).toBe(PREVIOUS_DIMENSIONS);
+  });
+
+  test('the backfill claims no origin for a row that holds no vector', () => {
+    storeChunkAndProfile({ withVector: false });
+
+    db.backfillVectorOrigin(db.getDb());
+
+    expect(db.getChunksByParent('item-001')[0].model).toBeNull();
+    expect(db.getProfileByUserId('u-1').model).toBeNull();
+  });
+
+  function vectorFilledWith(value) {
+    return Buffer.from(new Float32Array(PREVIOUS_DIMENSIONS).fill(value).buffer);
+  }
+
+  function storeTwoGenerations() {
+    db.insertItem(makeItem({ id: 'net-1', collectionId: 'internet' }));
+
+    db.insertChunk({
+      id: 'net-1_0', parentId: 'net-1', content: 'kept', chunkIndex: 0, strategy: 'fixed',
+      vector: vectorFilledWith(0.1), metadata: {},
+      model: PREVIOUS_MODEL, dimensions: PREVIOUS_DIMENSIONS,
+    });
+    db.insertChunk({
+      id: 'net-1_1', parentId: 'net-1', content: 'excluded', chunkIndex: 1, strategy: 'fixed',
+      vector: vectorFilledWith(0.9), metadata: {},
+      model: 'a-model-this-product-no-longer-runs', dimensions: PREVIOUS_DIMENSIONS,
+    });
+  }
+
+  test('getRecentInternetChunkVectors returns the vectors of one named model only', () => {
+    storeTwoGenerations();
+
+    const recent = db.getRecentInternetChunkVectors(200, PREVIOUS_MODEL);
+
+    expect(recent).toHaveLength(1);
+    expect(recent[0]).toEqual(vectorFilledWith(0.1));
+  });
+
+  test('getAllChunksWithVectors returns the chunks of one named model only', () => {
+    storeTwoGenerations();
+
+    const withVectors = db.getAllChunksWithVectors({ model: PREVIOUS_MODEL });
+
+    expect(withVectors.map((chunk) => chunk.id)).toEqual(['net-1_0']);
+  });
+});
+
 describe('src/db.js profile queries', () => {
   function profileQueries() {
     const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'db.js'), 'utf8');

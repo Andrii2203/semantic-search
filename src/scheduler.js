@@ -7,6 +7,7 @@ const db = require('./db');
 const sources = require('./sources/index');
 const rss = require('./sources/rss');
 const searchEngine = require('./search-engine');
+const constants = require('./search-constants');
 const { validateIRBatch } = require('./validation');
 const fs = require('fs');
 const events = require('./events');
@@ -56,8 +57,13 @@ async function resolveProfileVector(userId, profile) {
   }
 
   const keywords = (profile.keywords || []).join('. ') || 'technology software';
-  const vector = await searchEngine.generateEmbedding(keywords);
-  db.saveProfileForUser(userId, { ...profile, vector: searchEngine.serializeVector(vector) });
+  const vector = await searchEngine.generateEmbedding(keywords, 'query');
+  db.saveProfileForUser(userId, {
+    ...profile,
+    vector: searchEngine.serializeVector(vector),
+    model: constants.embeddingModel,
+    dimensions: vector.length,
+  });
   return vector;
 }
 
@@ -105,6 +111,11 @@ function saveToCorpus(items) {
   return newItems;
 }
 
+function indexedText(item, content) {
+  const title = item.metadata && item.metadata.title ? String(item.metadata.title).trim() : '';
+  return title && !content.startsWith(title) ? `${title}\n\n${content}` : content;
+}
+
 async function buildChunksForItem(item, chunkingConfig, recentVectors) {
   const chunks = await chunker.chunk(item.content, chunkingConfig.strategy, {
     chunkSize: chunkingConfig.chunk_size,
@@ -115,7 +126,8 @@ async function buildChunksForItem(item, chunkingConfig, recentVectors) {
   let nearDuplicates = 0;
 
   for (const piece of chunks) {
-    const vector = await searchEngine.generateEmbedding(piece.content);
+    const content = indexedText(item, piece.content);
+    const vector = await searchEngine.generateEmbedding(content, 'document');
     const isNearDuplicate = recentVectors.some(
       (known) => searchEngine.cosineSimilarity(known, vector) > config.dedupThreshold,
     );
@@ -130,12 +142,14 @@ async function buildChunksForItem(item, chunkingConfig, recentVectors) {
     chunksToSave.push({
       id: `${item.id}_${piece.chunkIndex}`,
       parentId: item.id,
-      content: piece.content,
+      content,
       chunkIndex: piece.chunkIndex,
       level: piece.level || 'section',
       strategy: chunkingConfig.strategy,
       vector: searchEngine.serializeVector(vector),
       metadata: piece.metadata || {},
+      model: constants.embeddingModel,
+      dimensions: vector.length,
     });
   }
 
@@ -145,7 +159,7 @@ async function buildChunksForItem(item, chunkingConfig, recentVectors) {
 async function indexNewItems(newItems) {
   const chunkingConfig = db.getChunkingConfig();
   const recentVectors = db
-    .getRecentInternetChunkVectors(config.dedupWindow)
+    .getRecentInternetChunkVectors(config.dedupWindow, constants.embeddingModel)
     .map((blob) => searchEngine.deserializeVector(blob));
 
   const itemVectors = new Map();
@@ -153,7 +167,10 @@ async function indexNewItems(newItems) {
   let nearDuplicates = 0;
 
   for (const item of newItems) {
-    itemVectors.set(item.id, await searchEngine.generateEmbedding(item.content));
+    itemVectors.set(
+      item.id,
+      await searchEngine.generateEmbedding(indexedText(item, item.content), 'document'),
+    );
 
     const result = await buildChunksForItem(item, chunkingConfig, recentVectors);
     nearDuplicates += result.nearDuplicates;

@@ -49,6 +49,7 @@ describe('SearchEngine Module', () => {
         'cosineSimilarity',
         'deserializeVector',
         'generateEmbedding',
+        'generateEmbeddings',
         'groupByParent',
         'mergeResults',
         'mmrSelect',
@@ -59,12 +60,79 @@ describe('SearchEngine Module', () => {
     });
   });
 
-  test('search-engine.js imports no project module other than search-constants (isolation check)', () => {
+  test('search-engine.js imports no project module other than search-constants and models (isolation check)', () => {
     const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'search-engine.js'), 'utf-8');
     const projectImports = source
       .split('\n')
       .filter((line) => line.includes(`require('./`) || line.includes(`require('../`))
-      .filter((line) => !line.includes(`require('./search-constants')`));
+      .filter((line) => !line.includes(`require('./search-constants')`))
+      .filter((line) => !line.includes(`require('./models')`));
     expect(projectImports).toHaveLength(0);
+  });
+});
+
+describe('src/search-engine.js embedding path', () => {
+  const constants = require('../src/search-constants');
+
+  let realEngine;
+  jest.isolateModules(() => {
+    realEngine = require('../src/search-engine');
+  });
+
+  function encoderReturning(width) {
+    const calls = [];
+    const encode = jest.fn(async (texts, side) => {
+      calls.push({ texts, side });
+      return texts.map(() => new Array(width).fill(1 / Math.sqrt(width)));
+    });
+    return { encode, calls };
+  }
+
+  test('embeds with the model named by embeddingModel and contains no model identifier of its own', () => {
+    const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'search-engine.js'), 'utf-8');
+
+    expect(source).not.toMatch(/Xenova\//);
+    expect(source).not.toMatch(/onnx-community\//);
+    expect(source).toContain('constants.embeddingModel');
+  });
+
+  test('sends a document under the document prefix of the active model and a query under its query prefix, so one text never reaches the encoder as the same string on both sides', async () => {
+    const { encode, calls } = encoderReturning(constants.embeddingDimensions);
+
+    await realEngine.generateEmbedding('a paragraph of text', 'document', { encode });
+    await realEngine.generateEmbedding('a paragraph of text', 'query', { encode });
+
+    expect(calls[0].texts[0]).not.toBe(calls[1].texts[0]);
+    expect(calls[0].texts[0].endsWith('a paragraph of text')).toBe(true);
+    expect(calls[1].texts[0].endsWith('a paragraph of text')).toBe(true);
+  });
+
+  test('embeds as a query when the caller names no side', async () => {
+    const { encode, calls } = encoderReturning(constants.embeddingDimensions);
+
+    await realEngine.generateEmbedding('a paragraph of text', undefined, { encode });
+    await realEngine.generateEmbedding('a paragraph of text', 'query', { encode });
+
+    expect(calls[0].texts[0]).toBe(calls[1].texts[0]);
+  });
+
+  test('returns embeddingDimensions values, renormalised, when the model is wider than that', async () => {
+    const wide = 2 * constants.embeddingDimensions;
+    const { encode } = encoderReturning(wide);
+
+    const vector = await realEngine.generateEmbedding('a paragraph of text', 'document', { encode });
+    const magnitude = Math.sqrt(vector.reduce((total, value) => total + value * value, 0));
+
+    expect(vector).toHaveLength(constants.embeddingDimensions);
+    expect(magnitude).toBeCloseTo(1, 6);
+  });
+
+  test('returns the width of the model when the model is no wider than embeddingDimensions', async () => {
+    const { encode } = encoderReturning(constants.embeddingDimensions);
+
+    const vector = await realEngine.generateEmbedding('a paragraph of text', 'document', { encode });
+
+    expect(vector).toHaveLength(constants.embeddingDimensions);
+    expect(vector[0]).toBeCloseTo(1 / Math.sqrt(constants.embeddingDimensions), 6);
   });
 });

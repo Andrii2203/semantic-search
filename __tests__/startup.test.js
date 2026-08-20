@@ -157,6 +157,37 @@ describe('Startup Diagnostics', () => {
     });
   });
 
+  describe('checkEmbeddingModel against the configured width', () => {
+    const constants = require('../src/search-constants');
+
+    it('passes when the model returns embeddingDimensions values', async () => {
+      searchEngine.generateEmbedding.mockResolvedValue(new Array(constants.embeddingDimensions).fill(0));
+
+      const result = await checkEmbeddingModel();
+
+      expect(result).toEqual({ ok: true, status: 'ok' });
+    });
+
+    it('names the width it got and the width it wanted when they differ', async () => {
+      searchEngine.generateEmbedding.mockResolvedValue(new Array(constants.embeddingDimensions + 1).fill(0));
+
+      const result = await checkEmbeddingModel();
+
+      expect(result.ok).toBe(false);
+      expect(result.error).toContain(String(constants.embeddingDimensions + 1));
+      expect(result.error).toContain(String(constants.embeddingDimensions));
+    });
+
+    it('reads the width it expects from src/search-constants.js rather than from a literal', () => {
+      const fs = require('fs');
+      const path = require('path');
+      const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'startup.js'), 'utf-8');
+
+      expect(source).toContain('embeddingDimensions');
+      expect(source).not.toMatch(/!== 384/);
+    });
+  });
+
   describe('runStartupChecks with a default session secret in production', () => {
     afterEach(() => {
       config.isProduction = false;

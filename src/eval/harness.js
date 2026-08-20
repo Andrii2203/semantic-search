@@ -11,13 +11,14 @@ const {
   CATEGORIES,
 } = require('./categories');
 const { embedMany, embedOne, loadVectors, saveVectors } = require('./embedder');
-const { coversChunk, factsFor, truncateVector } = require('./models');
+const { coversChunk, factsFor, truncateVector } = require('../models');
 const { ndcgAtK, recallAtK } = require('./metrics');
 const { retrieve } = require('./retrieval');
 const { rerankRanking } = require('./rerank');
 
 const LEXICAL_FIELDS = ['title', 'text'];
 const TEXT_ONLY = ['text'];
+const MEASURED_BASELINE_MODEL = 'Xenova/all-MiniLM-L6-v2';
 
 const CONFIGURATIONS = {
   'bm25-beir-baseline': {
@@ -25,11 +26,13 @@ const CONFIGURATIONS = {
     fields: LEXICAL_FIELDS,
     multifield: true,
     branches: ['lexical'],
+    model: MEASURED_BASELINE_MODEL,
   },
   'bm25-repository-defaults': {
     bm25: { k1: constants.bm25K1, b: constants.bm25B },
     fields: LEXICAL_FIELDS,
     multifield: false,
+    model: MEASURED_BASELINE_MODEL,
     branches: ['lexical'],
   },
   'dense-only': {
@@ -37,6 +40,7 @@ const CONFIGURATIONS = {
     fields: LEXICAL_FIELDS,
     multifield: false,
     branches: ['dense'],
+    model: MEASURED_BASELINE_MODEL,
   },
   'sequential-rescore': {
     bm25: { k1: constants.bm25K1, b: constants.bm25B },
@@ -45,6 +49,7 @@ const CONFIGURATIONS = {
     branches: ['lexical', 'dense'],
     mode: 'sequential',
     limit: constants.candidateLimitBm25,
+    model: MEASURED_BASELINE_MODEL,
   },
   'parallel-rrf': {
     bm25: { k1: constants.bm25K1, b: constants.bm25B },
@@ -54,6 +59,7 @@ const CONFIGURATIONS = {
     mode: 'parallel',
     fusion: 'rrf',
     limit: constants.candidateLimitBm25,
+    model: MEASURED_BASELINE_MODEL,
   },
   'parallel-weighted': {
     bm25: { k1: constants.bm25K1, b: constants.bm25B },
@@ -63,6 +69,7 @@ const CONFIGURATIONS = {
     mode: 'parallel',
     fusion: 'weighted',
     limit: constants.candidateLimitBm25,
+    model: MEASURED_BASELINE_MODEL,
   },
 };
 

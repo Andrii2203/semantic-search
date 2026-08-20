@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-17 15:22:26 +0200
+Last change: 2026-08-20 19:15:47 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -70,14 +70,23 @@ Out of scope:
 ## 4. Model facts
 
 These are not tunable. They are properties of the active model that several constants must respect.
+Rewritten at 2026-08-20 19:15:47 +0200 for the model
+`docs/adr/021-embeddinggemma-truncated-to-384.md` chose, under
+`docs/plans/embedding-model-in-the-product.md`. The rows this table held until then described
+`Xenova/all-MiniLM-L6-v2` and were void from the moment axis F picked a winner, which the closing
+paragraph of section 5 had already said.
 
 | Fact | Value | How it was established |
 |---|---|---|
-| Model identifier | `Xenova/all-MiniLM-L6-v2` | `src/search-engine.js` |
-| Vector dimensions | 384 | Model card, and the stored BLOB layout depends on it |
-| Input window | 256 tokens | Model card, confirmed by measurement on 2026-08-13: a 520 word input embeds identically with and without an appended sentence |
-| Languages | English only | Measured on 2026-08-13: a Ukrainian query against a relevant English document scores 0.182, while an unrelated Ukrainian pair scores 0.562 |
-| Score comparability | Not comparable across languages or lengths | Same measurement. One absolute cutoff cannot serve both languages |
+| Model identifier | `onnx-community/embeddinggemma-300m-ONNX` | `embeddingModel` in `src/search-constants.js`, read by `src/search-engine.js` |
+| Parameters | 300 million, against 22 million for the model it replaces | Model card, https://huggingface.co/google/embeddinggemma-300m read at 2026-08-20 19:05 +0200 |
+| Native vector dimensions | 768 | Same card, same read |
+| Stored vector dimensions | 384, the first values renormalised | `embeddingDimensions`. ADR-021 section 4 measured what the truncation costs. The card names 768, 512, 256 and 128 as its Matryoshka widths and does not name 384, which is open question 2 of the shipping document |
+| Input window | 2048 tokens | Same card, same read. Measured on the product path at 2026-08-20 19:14 +0200: a 520 word input and the same input with a decisive sentence appended now score cosine 0.827514, where the previous model scored 1.000000 on 2026-08-13 and therefore never read the sentence |
+| Instruction prefixes | Required, and different per side, both recorded in `src/models.js`: the document side names a title slot and the text, the query side names the task and the query | Same card, same read. Every number in `docs/eval/beir-axis-f.md` was taken with both applied, and ADR-021 section 6 names applying one side only as a silent quality defect |
+| Batch size | 16, not the shared `embeddingBatchSize` of 64 | Measured 2026-08-18 17:30:31 +0200: at 64 the model held 8.7 gigabytes of resident memory, at 16 it holds 5 |
+| Languages | Trained on data in over 100 languages, quoted from the card at the read above. What that is worth here is unmeasured | No measurement in this repository. `docs/plans/retrieval-quality.md` section 5 keeps Ukrainian out of scope and holds it out for a single check against the winner in phase 8. The row that read English only was a measured property of the previous model and does not carry over |
+| Score comparability | Unmeasured across languages, and no cutoff in search depends on it | `docs/adr/011-one-cutoff-one-origin.md` deleted the search cutoff. `semanticCutoffInbox` survives and was tuned on the previous model, so it is a number waiting for the first admission measurement on this one |
 
 ## 5. The constants
 
@@ -119,6 +128,8 @@ point of this table.
 | `rerankContentChars` | removed | nowhere | removed by the same work | It truncated the document at 500 characters before a language model saw it. The cross encoder's own tokeniser truncates at the model's window, and `docs/eval/beir-axis-e.md` measured the axis with no character truncation, so keeping this would ship a configuration nobody measured |
 | `rerankMaxTokens` | removed | nowhere | removed by the same work | The size of the JSON array of scores one Groq batch had to return. There is no JSON and no batch response any more |
 | `rerankTemperature` | removed | nowhere | removed by the same work | A cross encoder is deterministic, so the concern this row recorded, that reranking the same list twice can order it differently, stops existing |
+| `embeddingModel` | `onnx-community/embeddinggemma-300m-ONNX` | `search-engine.js` | measured | The model the product embeds with, chosen by `docs/adr/021-embeddinggemma-truncated-to-384.md` on three collections, each gain above that collection's own resolution. It crossed from section 5.1 into this table at 2026-08-20 under `docs/plans/embedding-model-in-the-product.md`, for the reason the three reranker constants crossed before it: it decides what search returns, so it stopped being an evaluation constant the moment the product read it. It read `Xenova/all-MiniLM-L6-v2` until then |
+| `embeddingDimensions` | 384 | `search-engine.js`, `startup.js` | measured | The width the product stores. The model emits 768, and ADR-021 section 4 measured the truncation to 384 as costing nothing the ranking can see on any of three collections, against about one point of Recall@100 at a depth the product does not show. The stored BLOB layout and every vector already in the database are at 384. Forced by the trigger in that section: reranking on by default, which would make the product's answer depend on a deep candidate list |
 | `crossEncoderModel` | `Xenova/ms-marco-MiniLM-L-6-v2` | `cross-encoder.js` | borrowed, source named | The reranker the product runs, moved into this table from section 5.1 at 2026-08-17 21:43:19 +0200 because it now changes what search returns. A cross encoder trained on MS MARCO, in the ONNX conversion the runtime this repository already depends on can load, so it needs no key and no new dependency. Model card read at https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2 on 2026-08-17 17:06:39 +0200 |
 | `crossEncoderBatchSize` | 16 | `cross-encoder.js` | measured | Moved from section 5.1 with the row above. Throughput on this machine at 2026-08-17 17:12 +0200 was 17.8 pairs per second at batch 8, 18.8 at 16 and 17.6 at 32, so the size sits at the flat top of a curve rather than at a guess |
 | `rerankDepth` | 50 | `reranker.js` | borrowed, loosely, and now measured against | Moved from section 5.1 with the two rows above, and it is the number that made the move necessary: the product used to rerank `resultsReturned`, so it could reorder the answer but never enlarge it, while `docs/eval/beir-axis-e.md` measured every number in ADR-020 at depth 50. Published practice reranks 100 to 150 candidates, quoted in `docs/reference/retrieval-in-industry.md`, and 50 is the half of that this hardware can afford at 18 pairs per second. Forced by a measured gain that is still rising at 50 |
@@ -214,7 +225,6 @@ here corrupts every number the project reports and they belong under the same ru
 | `judgeCallsPerMinute` | 25 | measured | On the tier in use the sixth consecutive raw call returned 429, recorded in `docs/plans/evaluation-corpus.md` section 9.2. The limiter in `src/groq-client.js` is what a judging pass calls through |
 | `gradeMin` | 0 | borrowed | The floor of the graded scale in `docs/plans/evaluation-corpus.md` section 6. A grade outside it is rejected rather than stored |
 | `gradeMax` | 3 | borrowed | The ceiling of the same scale |
-| `embeddingModel` | `Xenova/all-MiniLM-L6-v2` | measured | The model the product runs, so the bench embeds what the product embeds. Changes when axis F picks a winner under `docs/adr/012-embedding-model-context-window.md` |
 | `embeddingBatchSize` | 64 | arbitrary | How many texts go to the encoder at once, for a model that declares no batch of its own. It stopped being the only answer at 2026-08-18 17:30:31 +0200: `src/eval/models.js` lets a model carry its own `batchSize`, and EmbeddingGemma carries 16 because at 64 it held 8.7 gigabytes of resident memory and made the machine unusable. The trigger this row carried has therefore half fired, on memory rather than on throughput. It still stands for throughput, which nobody has measured at another size |
 | `calibrationSampleSize` | 60 | arbitrary | How many pairs the owner labels by hand. Forced when the kappa interval at this size is too wide to decide whether the judge passes its floor |
 | `calibrationMinimumKappa` | 0.4 | borrowed, source named | The floor below which the judge is rejected. Published agreement between language model judges and human assessors is roughly 0.3 to 0.5, and UMBRELA reports 0.418 to 0.499 on TREC deep learning collections, recorded in `docs/plans/evaluation-corpus.md` section 9 |
@@ -247,8 +257,8 @@ here corrupts every number the project reports and they belong under the same ru
    size changes the produced chunks.
 7. Every retrieval default in `src/config.js` is the value exported by `src/search-constants.js`
    under the same concept, so no number in the retrieval path has two origins.
-8. `src/search-engine.js` imports no project module other than `src/search-constants.js`, so the
-   ranking functions reach no database, no configuration and no logger.
+8. `src/search-engine.js` imports no project module other than `src/search-constants.js` and
+   `src/models.js`, so the ranking functions reach no database, no configuration and no logger.
 
 ## 7. Tests
 
@@ -288,6 +298,13 @@ asserted that the module imports nothing from the project at all, and the only p
 ever written down is `docs/archive/reviews/analize1.md`, a review from before this document existed,
 which `CLAUDE.md` section 3 forbids treating as a source of truth. So the check was an orphan test, and
 phase 2 made it fail by giving the ranking functions their defaults by name instead of by literal.
+
+Behaviour 8 widened by one module at 2026-08-20 17:06:14 +0200, before the import that needs it
+exists, under `docs/plans/embedding-model-in-the-product.md`. `src/models.js` holds the facts of each
+embedding model and the pure functions over a vector that follow from them, being the truncation and
+the instruction prefix. It reaches no database, no configuration and no logger, which is the property
+this behaviour protects, and the model facts have to be readable from the module that embeds. The
+alternative considered and rejected is recorded in section 3 of that plan.
 
 The check is kept and narrowed rather than deleted, because what it protects is real: the ranking
 functions must not reach a database, a configuration file or a logger, or they cannot be run against

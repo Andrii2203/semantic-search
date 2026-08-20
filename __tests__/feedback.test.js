@@ -1,6 +1,13 @@
 'use strict';
 
 jest.mock('../src/scheduler');
+jest.mock('../src/logger', () => ({
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+  debug: jest.fn(),
+  fatal: jest.fn(),
+}));
 
 const db = require('../src/db');
 const searchEngine = require('../src/search-engine');
@@ -24,10 +31,12 @@ function setupUserWithProfile(profileVector) {
 }
 
 function insertItemWithVector(itemVector) {
+  const constants = require('../src/search-constants');
   db.insertItem({ id: 'it-1', content: 'Some post about systems programming', type: 'post', source: 'hn', metadata: {} });
   db.insertChunk({
     id: 'it-1_0', parentId: 'it-1', content: 'Some post about systems programming',
     chunkIndex: 0, strategy: 'fixed', vector: searchEngine.serializeVector(itemVector), metadata: {},
+    model: constants.embeddingModel, dimensions: itemVector.length,
   });
 }
 
@@ -110,6 +119,43 @@ describe('Feedback loop — profile vector blending', () => {
 
     const ok = await applyFeedback('u-1', db.getItemById('it-1'), 'open');
     expect(ok).toBe(false);
+  });
+
+  test('leaves the profile unchanged when the item was embedded by another model', async () => {
+    const constants = require('../src/search-constants');
+    setupUserWithProfile(vec([[0, 1]]));
+    db.getDb().prepare('UPDATE profiles SET model = ?, dimensions = 384').run(constants.embeddingModel);
+    insertItemWithVector(vec([[1, 1]]));
+    db.getDb()
+      .prepare('UPDATE chunks SET model = ?, dimensions = 384')
+      .run('a-model-this-product-no-longer-runs');
+
+    const before = db.getProfileByUserId('u-1').vector;
+    const ok = await applyFeedback('u-1', db.getItemById('it-1'), 'star');
+
+    expect(ok).toBe(false);
+    expect(db.getProfileByUserId('u-1').vector).toEqual(before);
+  });
+
+  test('names the model of the profile and the model of the item when it refuses', async () => {
+    const logger = require('../src/logger');
+    const constants = require('../src/search-constants');
+    setupUserWithProfile(vec([[0, 1]]));
+    db.getDb().prepare('UPDATE profiles SET model = ?, dimensions = 384').run(constants.embeddingModel);
+    insertItemWithVector(vec([[1, 1]]));
+    db.getDb()
+      .prepare('UPDATE chunks SET model = ?, dimensions = 384')
+      .run('a-model-this-product-no-longer-runs');
+
+    await applyFeedback('u-1', db.getItemById('it-1'), 'star');
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.objectContaining({
+        profileModel: constants.embeddingModel,
+        itemModel: 'a-model-this-product-no-longer-runs',
+      }),
+      expect.any(String),
+    );
   });
 
   test('profile vector stays normalized after blending', async () => {

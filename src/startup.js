@@ -3,6 +3,7 @@
 const db = require('./db');
 const searchEngine = require('./search-engine');
 const config = require('./config');
+const constants = require('./search-constants');
 const logger = require('./logger');
 
 async function checkDatabase() {
@@ -18,8 +19,12 @@ async function checkDatabase() {
 async function checkEmbeddingModel() {
   try {
     const vector = await searchEngine.generateEmbedding('test connection');
-    if (!vector || vector.length !== 384) {
-      return { ok: false, status: 'error', error: `Invalid vector dimensions: ${vector ? vector.length : 0}` };
+    if (!vector || vector.length !== constants.embeddingDimensions) {
+      return {
+        ok: false,
+        status: 'error',
+        error: `Invalid vector dimensions: ${vector ? vector.length : 0}, expected ${constants.embeddingDimensions}`,
+      };
     }
     return { ok: true, status: 'ok' };
   } catch (err) {

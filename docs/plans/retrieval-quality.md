@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-17 15:45:14 +0200
+Last change: 2026-08-20 19:15:47 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -122,7 +122,8 @@ its own entry in `docs/eval/`.
 | 4 | Axes A, B, D, E as a matrix | `feature/toolchain-upgrade`, see below | 3, 3.5 | The four axes that are pure configuration once phase 2 lands. Measured on the public collection first, where the statistical power is, then on the local bench for the product's own task. Measured 2026-08-17, see sections 6.4 to 6.6. Two axes decided, two corpus dependent, no product code changed |
 | 4.5 | The phase 4 winner shipped | `feature/phase-4-ship-reranker` | 4 | Closed 2026-08-17 21:43:19 +0200 by `docs/plans/local-reranker.md`. The local cross encoder replaces a reranker that could not run, at the depth its numbers were measured on |
 | 5 | Axis C, the indexed text | `feature/phase-5-axis-c` | 4 | Requires reindexing, and its value depends on the retrieval fixed in phase 4. Measured 2026-08-18, see section 6.7 and `docs/eval/beir-axis-c.md` |
-| 6 | Axis F, embedding model | `feature/phase-6-axis-f` | 4 | Requires reindexing and a model version column. Multilingual keeps 384 dimensions, so the stored layout survives |
+| 6 | Axis F, embedding model | `feature/phase-6-axis-f` | 4 | Requires reindexing and a model version column. Measured 2026-08-18 to 2026-08-20, decided by `docs/adr/021-embeddinggemma-truncated-to-384.md`, see section 6.8 |
+| 6.5 | The phase 5 and phase 6 winners shipped | `feature/phase-6-axis-f` | 5, 6 | Closed 2026-08-20 19:15:47 +0200 by `docs/plans/embedding-model-in-the-product.md`. The product embeds with EmbeddingGemma at 384, every stored vector carries the model that produced it, and every chunk carries its title. The reindex the two winners were to share moved nothing, because the corpus of the three retired sources was deleted instead |
 | 7 | Query time chunking | `feature/phase-7-query-chunking` | 5 | The Dropbox shape. Different data lifecycle, measured against phase 5 |
 | 8 | Locked half, once | main | 4 to 7 | Spent once, on the winner, as the evaluation standard requires |
 
@@ -315,6 +316,38 @@ A third result arrives from the same run and belongs to `docs/reference/search-c
 with the model's own tokeniser, SciFact averages 1.54 tokens per word against the `tokensPerWord`
 constant of 1.3, and 629 of 1000 documents exceed the 256 token window on their text alone. The title
 therefore does not add to most documents, it evicts the tail of the body and wins anyway.
+
+## 6.8 Phase 6, axis F, measured 2026-08-18 to 2026-08-20
+
+Full numbers in `docs/eval/beir-axis-f.md`, decision in
+`docs/adr/021-embeddinggemma-truncated-to-384.md`.
+
+`onnx-community/embeddinggemma-300m-ONNX`, stored at its first 384 values and renormalised, beats
+`Xenova/all-MiniLM-L6-v2` by 0.0299 nDCG@10 on SciFact, 0.0290 on NFCorpus and 0.0187 on FiQA, and
+each gain is above that collection's own resolution of 0.022, 0.008 and 0.009.
+`Xenova/bge-small-en-v1.5` and `Xenova/gte-small` were screened on two collections and lost, and the
+reason FiQA was not run for them is recorded in section 4.1 of
+`docs/plans/axis-f-embedding-model.md` rather than left as a gap.
+
+This is the first axis in this project to give one direction. Fusion refused to decide, reranking
+changed sign between collections, the indexed text helped only where titles exist, and the model wins
+on everything measured. Against that, one limit belongs next to it: the four candidates differ in
+window, training data and parameter count at once, so the gain cannot be attributed to the window
+alone, and the pair of models that would settle it is open question 3 of `docs/eval/beir-axis-f.md`.
+
+Two rows of section 6.2 stop being true here. The row that said multilingual keeps 384 dimensions so
+the stored layout survives described a candidate that did not win. The winner is 768 wide and the
+layout survives because ADR-021 section 4 measured the truncation to 384 and found the ranking
+unmoved on all three collections, losing about one point of Recall@100 at a depth the product does
+not show. That is a measurement, not a property of the model that was chosen.
+
+The cost is the uncomfortable half and it is recorded in ADR-021 section 6: thirteen times the
+parameters, 20 hours 33 minutes for FiQA's 57638 documents at batch 16, 5 gigabytes resident, and two
+instruction prefixes that must be applied per side or every number above stops describing the system.
+None of that is felt by an ingest cycle of tens of items. All of it is felt by the first reindex,
+which is why the product change is a document of its own,
+`docs/plans/embedding-model-in-the-product.md`, and why that document also carries the phase 5 title
+correction: both need the same reindex.
 
 ## 7. Axis A note
 

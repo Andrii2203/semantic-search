@@ -201,6 +201,8 @@ describe('POST /api/search', () => {
         chunkIndex: 0,
         strategy: 'fixed',
         vector: MOCK_VECTOR_BUF,
+        model: constants.embeddingModel,
+        dimensions: constants.embeddingDimensions,
       },
     ]);
 
@@ -209,6 +211,80 @@ describe('POST /api/search', () => {
     expect(res.body.stats.mode).toBe('parallel');
     const corpus = SearchEngine.scoreChunksByVector.mock.calls[0][0];
     expect(corpus.map((chunk) => chunk.id)).toContain('silent-chunk');
+  });
+
+  it('scores only the chunks of the active model', async () => {
+    db.insertItem(makeItem({ id: 'two-generation-item' }));
+    db.insertChunksBatch([
+      {
+        id: 'current-chunk',
+        parentId: 'two-generation-item',
+        content: 'A chunk embedded by the model the product runs today',
+        chunkIndex: 0,
+        strategy: 'fixed',
+        vector: MOCK_VECTOR_BUF,
+        model: constants.embeddingModel,
+        dimensions: constants.embeddingDimensions,
+      },
+      {
+        id: 'stale-chunk',
+        parentId: 'two-generation-item',
+        content: 'A chunk embedded by a model the product no longer runs',
+        chunkIndex: 1,
+        strategy: 'fixed',
+        vector: MOCK_VECTOR_BUF,
+        model: 'a-model-this-product-no-longer-runs',
+        dimensions: 384,
+      },
+    ]);
+
+    await request(app).post('/api/search').send({ query: 'javascript' }).expect(200);
+
+    const corpus = SearchEngine.scoreChunksByVector.mock.calls[0][0];
+    expect(corpus.map((chunk) => chunk.id)).toContain('current-chunk');
+    expect(corpus.map((chunk) => chunk.id)).not.toContain('stale-chunk');
+  });
+
+  it('reports how many chunks the corpus holds under another model', async () => {
+    db.insertItem(makeItem({ id: 'two-generation-item' }));
+    db.insertChunksBatch([
+      {
+        id: 'stale-chunk',
+        parentId: 'two-generation-item',
+        content: 'A chunk embedded by a model the product no longer runs',
+        chunkIndex: 0,
+        strategy: 'fixed',
+        vector: MOCK_VECTOR_BUF,
+        model: 'a-model-this-product-no-longer-runs',
+        dimensions: 384,
+      },
+    ]);
+
+    const res = await request(app).post('/api/search').send({ query: 'javascript' }).expect(200);
+
+    expect(res.body.stats.staleVectors).toBe(1);
+  });
+
+  it('stores the model and the width with the profile it saves', async () => {
+    const owned = express();
+    owned.use(express.json());
+    owned.use((req, _res, next) => {
+      req.userId = 'carol';
+      next();
+    });
+    owned.use('/api/search', searchRouter);
+    db.createUser({ id: 'carol', email: 'carol@example.com', passwordHash: 'hash' });
+    ProfileGenerator.fromText.mockResolvedValue({
+      ...MOCK_PROFILE,
+      model: constants.embeddingModel,
+      dimensions: constants.embeddingDimensions,
+    });
+
+    await request(owned).post('/api/search').send({ query: 'javascript tutorial' }).expect(200);
+
+    const stored = db.getProfileByUserId('carol');
+    expect(stored.model).toBe(constants.embeddingModel);
+    expect(stored.dimensions).toBe(constants.embeddingDimensions);
   });
 
   it('uses loadProfile when profileId is provided', async () => {

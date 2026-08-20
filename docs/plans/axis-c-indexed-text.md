@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-18 10:07:45 +0200
+Last change: 2026-08-20 17:06:14 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -124,6 +124,6 @@ the behaviour the cache always had.
 
 | Question | Trigger that forces an answer |
 |---|---|
-| Whether the product prepends the title to every chunk | This measurement returns a gain on the collections that have titles |
+| Answered 2026-08-20 17:06:14 +0200. Whether the product prepends the title to every chunk. It does, under `docs/plans/embedding-model-in-the-product.md` behaviours 7 and 8, shipped in the same reindex as the axis F model because both re-embed every stored chunk | closed, and the trigger below fired on 2026-08-18 with 0.0154 nDCG@10 on SciFact and 0.0056 on NFCorpus, both intervals excluding zero |
 | Whether generated document context is worth one model call per document here | The title option is measured, and a key exists to run the generation |
 | Whether a title helps or hurts once the 256 token window is full, since the title spends part of the same budget | Axis F changes the window |

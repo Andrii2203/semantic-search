@@ -108,6 +108,47 @@ describe('fromText', () => {
 });
 
 // ═══════════════════════════════════════════════════════════════
+// The origin of a profile vector
+// ═══════════════════════════════════════════════════════════════
+
+describe('fromText vector origin', () => {
+  const constants = require('../src/search-constants');
+  const realEngine = jest.requireActual('../src/search-engine');
+
+  it('returns the model that embedded the profile and the width of its vector', async () => {
+    SearchEngine.generateEmbedding.mockResolvedValue(
+      new Array(constants.embeddingDimensions).fill(0.1),
+    );
+
+    const profile = await fromText(LONG_INPUT);
+
+    expect(profile.model).toBe(constants.embeddingModel);
+    expect(profile.dimensions).toBe(constants.embeddingDimensions);
+  });
+
+  it('is embedded as a query', async () => {
+    SearchEngine.serializeVector.mockImplementation(realEngine.serializeVector);
+    SearchEngine.generateEmbedding.mockImplementation(async (_text, side) =>
+      side === 'query' ? [1, 0, 0, 0] : [0, 1, 0, 0],
+    );
+
+    const profile = await fromText(LONG_INPUT);
+
+    expect(realEngine.deserializeVector(profile.vector)).toEqual([1, 0, 0, 0]);
+  });
+
+  it('carries no vector, no model and no width when the embedding failed', async () => {
+    SearchEngine.generateEmbedding.mockRejectedValue(new Error('ONNX fail'));
+
+    const profile = await fromText(LONG_INPUT);
+
+    expect(profile.vector).toBeNull();
+    expect(profile.model).toBeNull();
+    expect(profile.dimensions).toBeNull();
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════
 // loadProfile
 // ═══════════════════════════════════════════════════════════════
 

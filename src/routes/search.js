@@ -60,6 +60,8 @@ async function resolveProfile(request, userId) {
       keywords: profile.keywords,
       rawInput: request.query,
       vector: profile.vector,
+      model: profile.model,
+      dimensions: profile.dimensions,
     });
     scheduler.invalidateProfileCache(userId);
   }
@@ -106,6 +108,7 @@ function retrieveCandidates(request, profile, profileVector, userId) {
           collectionId: request.collectionId,
           userId,
           batchId: request.batchId,
+          model: constants.embeddingModel,
         });
 
   return {
@@ -214,6 +217,11 @@ router.post('/', async (req, res, next) => {
       semanticResults: semanticList.length,
       totalChunks: scoredChunks.length,
       totalDocuments: results.length,
+      staleVectors: db.countChunksUnderOtherModel({
+        collectionId: request.collectionId,
+        userId: req.userId,
+        model: constants.embeddingModel,
+      }),
       duration,
     };
 

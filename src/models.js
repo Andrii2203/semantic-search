@@ -1,6 +1,6 @@
 'use strict';
 
-const constants = require('../search-constants');
+const constants = require('./search-constants');
 
 const MODELS = {
   'Xenova/all-MiniLM-L6-v2': { dimensions: 384, contextTokens: 256, prefixes: null },

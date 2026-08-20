@@ -1,6 +1,7 @@
 'use strict';
 
 const constants = require('./search-constants');
+const { truncateVector, withPrefix } = require('./models');
 
 let pipeline = null;
 
@@ -8,21 +9,38 @@ let pipeline = null;
 async function getModel() {
   if (!pipeline) {
     const { pipeline: createPipeline, env } = await import('@huggingface/transformers');
-    
+
     if (env.backends && env.backends.onnx) {
       env.backends.onnx.wasm.numThreads = 1;
     }
-    
-    pipeline = await createPipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
+
+    pipeline = await createPipeline('feature-extraction', constants.embeddingModel);
   }
   return pipeline;
 }
 
 /* istanbul ignore next */
-async function generateEmbedding(text) {
+async function encodeWithLoadedModel(texts) {
   const model = await getModel();
-  const output = await model(text, { pooling: 'mean', normalize: true });
-  return Array.from(output.data);
+  const output = await model(texts, { pooling: 'mean', normalize: true });
+  const width = output.dims[output.dims.length - 1];
+
+  return texts.map((_text, index) =>
+    Array.from(output.data.slice(index * width, (index + 1) * width)),
+  );
+}
+
+async function generateEmbeddings(texts, side = 'query', options = {}) {
+  const encode = options.encode || encodeWithLoadedModel;
+  const prefixed = texts.map((text) => withPrefix(text, side, constants.embeddingModel));
+  const vectors = await encode(prefixed, side);
+
+  return vectors.map((vector) => truncateVector(vector, constants.embeddingDimensions));
+}
+
+async function generateEmbedding(text, side = 'query', options = {}) {
+  const [vector] = await generateEmbeddings([text], side, options);
+  return vector;
 }
 
 function cosineSimilarity(a, b) {
@@ -245,6 +263,7 @@ function groupByParent(chunks) {
 
 module.exports = {
   generateEmbedding,
+  generateEmbeddings,
   cosineSimilarity,
   serializeVector,
   deserializeVector,

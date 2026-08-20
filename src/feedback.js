@@ -31,14 +31,27 @@ function normalize(vector) {
   return result;
 }
 
-async function getItemVector(item) {
-  const chunkVectors = db
-    .getChunksByParent(item.id)
-    .filter((c) => c.vector)
-    .map((c) => searchEngine.deserializeVector(c.vector));
+function modelOfProfile(profile) {
+  return profile.model || constants.embeddingModel;
+}
 
-  if (chunkVectors.length > 0) {return averageVectors(chunkVectors);}
-  return searchEngine.generateEmbedding(item.content);
+async function getItemVector(item, model) {
+  const chunks = db.getChunksByParent(item.id).filter((c) => c.vector);
+  const ofModel = chunks.filter((c) => c.model === model);
+
+  if (ofModel.length > 0) {
+    return averageVectors(ofModel.map((c) => searchEngine.deserializeVector(c.vector)));
+  }
+
+  if (chunks.length > 0) {
+    logger.warn(
+      { itemId: item.id, profileModel: model, itemModel: chunks[0].model },
+      'Feedback ignored, the item was embedded by another model',
+    );
+    return null;
+  }
+
+  return searchEngine.generateEmbedding(item.content, 'document');
 }
 
 async function applyFeedback(userId, item, action) {
@@ -48,8 +61,9 @@ async function applyFeedback(userId, item, action) {
   const profile = db.getProfileByUserId(userId);
   if (!profile || !profile.vector) {return false;}
 
+  const model = modelOfProfile(profile);
   const current = searchEngine.deserializeVector(profile.vector);
-  const itemVector = await getItemVector(item);
+  const itemVector = await getItemVector(item, model);
   if (!itemVector || itemVector.length !== current.length) {return false;}
 
   const blended = new Float32Array(current.length);
@@ -62,6 +76,8 @@ async function applyFeedback(userId, item, action) {
     keywords: profile.keywords,
     rawInput: profile.raw_input,
     vector: searchEngine.serializeVector(normalize(blended)),
+    model,
+    dimensions: blended.length,
   });
   scheduler.invalidateProfileCache(userId);
 

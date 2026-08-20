@@ -3,6 +3,7 @@
 const crypto = require('crypto');
 const { extractKeywords, extractKeywordsFallback } = require('./keyword-extractor');
 const SearchEngine = require('./search-engine');
+const constants = require('./search-constants');
 const db = require('./db');
 const logger = require('./logger');
 const { AppError, ErrorCodes } = require('./errors');
@@ -24,11 +25,23 @@ async function resolveKeywords(inputText, useAI) {
 
 async function safeEmbedding(inputText) {
   try {
-    return await SearchEngine.generateEmbedding(inputText);
+    return await SearchEngine.generateEmbedding(inputText, 'query');
   } catch (err) {
     logger.warn({ err }, 'Embedding generation failed for profile');
     return null;
   }
+}
+
+function vectorOrigin(vector) {
+  if (!vector) {
+    return { vector: null, model: null, dimensions: null };
+  }
+
+  return {
+    vector: SearchEngine.serializeVector(vector),
+    model: constants.embeddingModel,
+    dimensions: vector.length,
+  };
 }
 
 async function fromText(inputText, options = {}) {
@@ -45,7 +58,7 @@ async function fromText(inputText, options = {}) {
   const profile = {
     id,
     keywords,
-    vector: vector ? SearchEngine.serializeVector(vector) : null,
+    ...vectorOrigin(vector),
     rawInput: inputText,
     createdAt: new Date().toISOString(),
   };

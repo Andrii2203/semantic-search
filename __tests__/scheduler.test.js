@@ -369,6 +369,94 @@ describe('scheduler inbox cutoff', () => {
   });
 });
 
+describe('scheduler vector origin and indexed text', () => {
+  const constants = require('../src/search-constants');
+  const searchEngine = require('../src/search-engine');
+
+  function chunksOf(itemId) {
+    return db.getChunksByParent(itemId);
+  }
+
+  test('every chunk the ingest path writes carries the model that embedded it and the width of the vector it stored', async () => {
+    sources.fetchAll.mockResolvedValue(makeSourceItems(1));
+
+    await scheduler.runCycle();
+
+    const chunks = chunksOf('src-item-1');
+    expect(chunks.length).toBeGreaterThan(0);
+    for (const chunk of chunks) {
+      expect(chunk.model).toBe(constants.embeddingModel);
+      expect(chunk.dimensions).toBe(searchEngine.deserializeVector(chunk.vector).length);
+    }
+  });
+
+  test('a chunk of an item that has a title begins with that title', async () => {
+    sources.fetchAll.mockResolvedValue(makeSourceItems(1));
+
+    await scheduler.runCycle();
+
+    const [first] = chunksOf('src-item-1');
+    expect(first.content.startsWith('Test Item 1')).toBe(true);
+    expect(first.content).toContain('Test content for item 1');
+  });
+
+  test('a chunk of an item that has no title is the text alone', async () => {
+    sources.fetchAll.mockResolvedValue([
+      {
+        id: 'untitled-item',
+        content: 'A paragraph about distributed systems and consensus protocols in practice',
+        type: 'post',
+        source: 'mock-source',
+        metadata: { url: 'https://example.com/untitled' },
+      },
+    ]);
+
+    await scheduler.runCycle();
+
+    const [first] = chunksOf('untitled-item');
+    expect(first.content).toBe(
+      'A paragraph about distributed systems and consensus protocols in practice',
+    );
+  });
+
+  test('an item whose chunk repeats a stored chunk of another model is indexed rather than skipped as a near duplicate', async () => {
+    const repeated = 'A paragraph about distributed systems and consensus protocols in practice';
+
+    db.insertItem({
+      id: 'item-of-an-older-generation',
+      content: 'An unrelated body of text, so this item carries its own fingerprint entirely',
+      type: 'post',
+      source: 'mock-source',
+      metadata: {},
+      collectionId: 'internet',
+    });
+    db.insertChunk({
+      id: 'item-of-an-older-generation_0',
+      parentId: 'item-of-an-older-generation',
+      content: repeated,
+      chunkIndex: 0,
+      strategy: 'fixed',
+      vector: searchEngine.serializeVector(await searchEngine.generateEmbedding(repeated)),
+      metadata: {},
+      model: 'a-model-this-product-no-longer-runs',
+      dimensions: 6,
+    });
+
+    sources.fetchAll.mockResolvedValue([
+      {
+        id: 'incoming-item',
+        content: repeated,
+        type: 'post',
+        source: 'mock-source',
+        metadata: { url: 'https://example.com/incoming' },
+      },
+    ]);
+    await scheduler.runCycle();
+
+    expect(chunksOf('incoming-item')).toHaveLength(1);
+  });
+});
+
 describe('scheduler junk filter', () => {
   test('keyword stuffed items are counted as pre-filtered and never reach the corpus', async () => {
     const stuffed = 'rust async tokio rust async await futures rust concurrency rust async guide rust async tokio rust async tutorial rust async rust async rust';
