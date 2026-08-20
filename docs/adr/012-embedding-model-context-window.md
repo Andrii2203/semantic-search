@@ -1,8 +1,9 @@
 # ADR-012: The embedding model is measured on axis F, because its window truncates the chunks this system produces
 
-Status: accepted
+Status: accepted, and its model question is answered by
+`docs/adr/021-embeddinggemma-truncated-to-384.md` at 2026-08-20 08:48:11 +0200
 Owner: repository owner
-Last change: 2026-08-15 14:51:56 +0200
+Last change: 2026-08-20 08:48:11 +0200
 Supersedes: none
 
 ## 0. What this file said this morning, and why it was wrong

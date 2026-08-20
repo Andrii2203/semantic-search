@@ -101,14 +101,23 @@ seconds rather than another encoding pass.
 | SciFact | Recall@100 | 0.9756 | 0.9633 | 0.0122 | [0.0000, 0.0267] contains zero |
 | NFCorpus | nDCG@10 | 0.3740 | 0.3678 | 0.0062 | [-0.0013, 0.0137] contains zero |
 | NFCorpus | Recall@100 | 0.3596 | 0.3508 | 0.0088 | [0.0002, 0.0174] excludes zero |
+| FiQA | nDCG@10 | 0.3690 | 0.3675 | 0.0014 | [-0.0039, 0.0068] contains zero |
+| FiQA | Recall@100 | 0.7159 | 0.7049 | 0.0110 | [0.0021, 0.0205] excludes zero |
 
-Half the vector is discarded and one number out of four moves measurably, by 0.0088 of Recall@100 on
-NFCorpus. Against the model in use, the truncated winner still gains 0.0299 nDCG@10 on SciFact and
-0.0290 on NFCorpus, both above the resolution.
+Half the vector is discarded and the ranking does not move: 0.0026, 0.0062 and 0.0014 of nDCG@10, all
+three intervals containing zero. Recall@100 does move, by 0.0122, 0.0088 and 0.0110, and two of those
+three intervals exclude zero. The pattern is consistent enough to state as a finding rather than as
+noise: truncation costs about one point of recall at depth 100 and nothing at the top of the ranking.
 
-So open question 1 of ADR-012 is answered: Matryoshka truncation to 384 costs almost nothing, and the
-winner fits the stored layout. The truncated FiQA figure is not taken yet, and the vectors it needs are
-already on disk.
+That distinction decides who should care. A product that shows twenty results is served by the top of
+the ranking. A product that hands a deep candidate list to a reranker is served by recall, and
+`rerankDepth` is 50, which sits well inside the depth this loss appears at.
+
+Against the model in use, the truncated winner still gains 0.0299 nDCG@10 on SciFact, 0.0290 on
+NFCorpus and 0.0187 on FiQA, all three above the resolution.
+
+So open question 1 of ADR-012 is answered on all three collections: Matryoshka truncation to 384 costs
+nothing that this bench can see in ranking quality, and the winner fits the stored layout.
 
 ## 9. What it cost, recorded because the estimate was wrong twice
 
@@ -145,7 +154,7 @@ every configuration above can be re-ranked without encoding anything again.
 | Question | Trigger that forces an answer |
 |---|---|
 | Whether `scripts/compare-beir.js` reports progress and saves vectors incrementally | Answered by the next long run being scheduled, which is now |
-| Whether the truncated winner holds on FiQA as it did on the other two | The vectors are on disk, so this costs seconds and is taken before the ADR |
+| Answered 2026-08-20 08:41 +0200. The truncated winner holds on FiQA: 0.0014 of nDCG@10 with the interval containing zero, and 0.0110 of Recall@100 with the interval excluding it, which is the same shape as the other two collections | closed |
 | Whether the gain belongs to the window or to the training data | A candidate pair differing only in window length exists |
 | Whether the winner needs the instruction prefixes it was measured with, and what dropping them costs | The product embeds without them by accident |
 | Whether bge-small or gte-small would have beaten the winner on FiQA | Someone disputes the staged run, and 5 hours of compute are available |
