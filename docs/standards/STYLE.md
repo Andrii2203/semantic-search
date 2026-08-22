@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-12
+Last change: 2026-08-22 12:37:59 +0200
 
 ## 1. Problem
 
@@ -57,6 +57,27 @@ JSDoc blocks are comments. They are removed with the rest.
 - Functions are verbs, values are nouns, booleans read as a predicate: `hasKeywords`, `isRunning`.
 - No abbreviations that a reader would have to expand: `vector` not `vec`, `request` not `req`, except
   where a framework convention already fixed it, as in Express handler signatures.
+
+## 4.1 Length, and one example per point
+
+A point that fits in one sentence is written in one sentence.
+
+Every point carries one example. The example shows that point and nothing else, and it is short
+enough to read without scrolling: one line, one table row, one command.
+
+A point without an example is a point two people will read two ways.
+
+Before:
+
+> The chunking configuration should be chosen with care, because the value that reaches the
+> strategy is not always the value that was configured, and this has caused confusion before.
+
+After:
+
+> The configured chunk size never reached the default strategy. `CHUNK_SIZE` was 200, the strategy
+> read `maxChunkSize` and used 300.
+
+The second version is shorter, says the same thing, and cannot be misread.
 
 ## 5. Behaviours
 
