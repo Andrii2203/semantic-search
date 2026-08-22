@@ -12,3 +12,6 @@ eval/beir/
 
 # Model weights, downloaded not vendored
 .cache/
+
+# Throwaway probes, never part of the record
+scratch/
