@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-23 10:52:00 +0200
+Last change: 2026-08-23 11:34:00 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -113,9 +113,24 @@ reaches the network, per `docs/standards/TESTING_STANDARD.md` section 3.
 | Question | Trigger that forces an answer |
 |---|---|
 | Whether the euro side gets an outcome at all, and from where | A free source current to the release day is found, or phase 6 prices a paid one |
-| Whether the mapping table grows by hand or is generated | It passes roughly thirty rows and hand editing starts causing mistakes |
+| Whether the mapping table grows by hand or is generated | It passes roughly thirty rows and hand editing starts causing mistakes. At twenty two on 2026-08-23 |
 | Whether the note is printed, stored or pushed | The owner reads a week of them and says which he actually used |
 | Whether the reference period of a FRED observation is matched to the calendar event by rule or by hand | The first release where the two disagree |
+
+## 8.1 A third reason a number is missing, added 2026-08-23
+
+The note began with two reasons for an absent actual, no mapping and no source. A third was measured
+and separated from them: some series are sold by whoever publishes them and no free source carries
+them at all.
+
+ISM Manufacturing and ISM Services were removed from FRED in 2016, and `fredgraph.csv?id=NAPM`
+answered 404 on 2026-08-23. Every S&P Global PMI, flash and final, national and euro area, is the
+same. Those two families are among the strongest movers of this pair, and no amount of mapping work
+reaches them.
+
+The note now says `the publisher sells this series and no free source carries it` rather than
+blaming an absent mapping, because the two call for different work: one is a row to write, the other
+is a purchase to consider in phase 6.
 
 ## 9. The first note
 
