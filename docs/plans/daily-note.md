@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-23 12:47:00 +0200
+Last change: 2026-08-23 16:33:12 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -63,11 +63,11 @@ In scope:
 - A note printed as text, with a source and a read moment against every number.
 
 Out of scope, each with its reason:
-- The movement of the pair around a release, which is behaviour 4 of the phase. It needs intraday
-  quotes, the only free source in reach is a MetaTrader 5 terminal on the owner's own broker account,
-  and no MT5 terminal is installed. Measured 2026-08-22: the machine has FTMO MT4 only, whose stored
-  history for EUR/USD is H4. The behaviour is built when MT5 exists, and nothing here is rewritten
-  when it is.
+- Committing the quotes themselves. They are the broker's data. `calendar-archive/quotes/` is
+  ignored by git, and only what the note derives from them is ever written down.
+- The movement line in the scheduled run. MetaTrader 5 is a desktop terminal on one Windows machine,
+  so the workflow cannot reach it. A day without an exported quote file marks the movement
+  unavailable, and a local run of the same command fills it in.
 - Euro area inflation, whose free sources stopped at 2025-12. Those releases appear with their
   schedule and their consensus, and their outcome marked with that reason.
 - Euro area consumer confidence, because `ei_bsco_m` is current but the confidence indicator code
@@ -79,6 +79,30 @@ Out of scope, each with its reason:
   question about which one the owner used is unchanged.
 - A language model anywhere in the path, per behaviour 6.
 
+## 3.1 The two clocks, measured
+
+MetaTrader 5 stamps its bars in the server's own clock, and the python api reads a naive datetime as
+the local clock of the machine it runs on. Neither is UTC, and neither announces itself. A wrong
+offset does not fail: it returns bars from the wrong hour, and every number built on them is wrong
+while looking ordinary.
+
+Both were measured on 2026-08-23 rather than assumed.
+
+The server runs at UTC+3. Six consecutive weekly boundaries agree: the last bar of each week is
+stamped Friday 23:56 and the first is stamped Monday 00:00, against a market that closes Friday
+20:56 UTC and opens Sunday 21:00 UTC.
+
+The api reads a naive datetime through the local clock, which is UTC+2 here. Asking for 15:00 naive
+returned bars stamped 13:00. Asking for 15:00 with `tzinfo=utc` returned bars stamped 15:00.
+
+The exporter therefore passes aware datetimes, adds the server offset when asking, and subtracts it
+again before writing, so the file it produces is stamped in real UTC and nothing downstream has to
+know any of this.
+
+Checked against a release rather than against arithmetic. Unemployment Claims came out 2026-08-20 at
+12:30 UTC. In the exported file the minute stamped 12:29 has a range of 1.3 pips over 34 ticks and
+the minute stamped 12:30 has 2.8 pips over 88 ticks.
+
 ## 4. Behaviours
 
 The numbering follows `docs/plans/finance-vertical.md` section 5, so that a behaviour keeps one
@@ -88,6 +112,7 @@ number across both documents. Behaviour 4 is absent here by section 3.
 2. A release carries its actual value, the consensus expected of it, and the difference between them.
 3. A release with no consensus in the calendar appears in the note marked as such, rather than being
    dropped.
+4. The note names the movement of the pair in a fixed window around each release.
 5. Every number in the note carries the source it was read from and the moment it was read.
 6. The note is produced with no language model call.
 7. A day with no scheduled release produces a note that says so, rather than an empty page.
@@ -104,6 +129,7 @@ number across both documents. Behaviour 4 is absent here by section 3.
 | 1 | L1 | `backend/src/note/note-builder.spec.ts` |
 | 2 | L1 | `backend/src/note/note-builder.spec.ts` |
 | 3 | L1 | `backend/src/note/note-builder.spec.ts` |
+| 4 | L1 | `backend/src/note/movement.spec.ts` |
 | 5 | L1 | `backend/src/note/note-builder.spec.ts` |
 | 6 | L1 | `backend/src/note/note-builder.spec.ts`, by reading the source the way `__tests__/reachability.test.js` does in the search repository |
 | 7 | L1 | `backend/src/note/note-builder.spec.ts` |
