@@ -43,6 +43,8 @@ In scope:
 - Chunking and embedding at the end of article processing, and a backfill for what is already stored.
 - `GET /api/search`, a hybrid search over one account's chunks.
 - Neighbours by cosine on the article page.
+- A search screen that calls that endpoint, and the model running in the containers rather than only
+  on the machine that wrote it.
 
 Out of scope, each with its reason:
 - pgvector and any approximate index, per ADR-022 section 5, because no latency measurement asks for
@@ -91,6 +93,10 @@ of 200 words with 50 of overlap, reciprocal rank fusion at k 60, weights 0.4 lex
 12. Search over an account whose chunks carry no vector answers from the lexical branch alone.
 13. The copied core files hash to the values in section 3.1.
 14. The article page lists neighbours by cosine, ordered by their score.
+15. An article whose analysis failed is still chunked and embedded.
+16. The search screen sends its query to the search endpoint and lists what comes back.
+17. A result on that screen names the branch that found it and shows the matched text.
+18. A query that matches nothing says so, rather than showing an empty page.
 
 ## 5. Tests
 
@@ -110,6 +116,14 @@ of 200 words with 50 of overlap, reciprocal rank fusion at k 60, weights 0.4 lex
 | 12 | L2 | `backend/tests/retrieval.integration.spec.ts` |
 | 13 | L1 | `backend/src/retrieval/core-checksums.spec.ts` |
 | 14 | L2 | `backend/tests/retrieval.integration.spec.ts` |
+| 15 | live | section 9, because a test of it would fake the language model, the queue and the database at once |
+| 16 | L1 | `frontend/src/pages/SearchPage.test.tsx` |
+| 17 | L1 | `frontend/src/pages/SearchPage.test.tsx` |
+| 18 | L1 | `frontend/src/pages/SearchPage.test.tsx` |
+
+Behaviours 16 to 18 run on the runner added by
+`docs/adr/023-the-hub-frontend-gets-a-test-runner.md`, which is the first test of any kind in the
+Hub's frontend.
 
 No test loads the model. The encoder is an injected function, per
 `docs/standards/TESTING_STANDARD.md` section 3, which keeps the network out of the suite. That the
@@ -118,11 +132,11 @@ real model runs at all is the live check in section 6, not a test.
 ## 6. Definition of done
 
 - Every behaviour in section 4 has a passing test.
-- `npm run lint` and `npm test` are green in `backend`, and the integration specs pass against the
-  running Postgres.
-- One live check: real articles embedded by the real model against the running Postgres, and one
-  search that returns them, with the two log lines of ADR-022 question 5 pasted into section 9. It
-  ran on the host rather than in the worker container, and section 9 says what that leaves untested.
+- `npm run lint` and `npm test` are green in `backend` and in `frontend`, and the integration specs
+  pass against the test database of `docs/plans/hub-test-database.md`.
+- One live check on the host, in section 9, and one in the containers, in section 9.1, each with the
+  two log lines of ADR-022 question 5.
+- The search screen is served by the built frontend image and reaches the endpoint.
 
 ## 7. Rollback
 
@@ -140,7 +154,8 @@ real model runs at all is the live check in section 6, not a test.
 | Whether the article list search switches from `contains` to this endpoint | The endpoint answers a real account and the owner compares the two on the same query |
 | Whether the similar count on the list moves to vectors as well | A corpus where the entity overlap and the cosine disagree on an article the owner cares about |
 | Whether the Hub gets an answer key of its own, so any of this can be called better | Phase 5 of `docs/plans/finance-vertical.md`, which needs to rank explanations rather than list them |
-| Where the model cache lives in production | The first deployment to a host that is not this machine |
+| Answered 2026-08-23 22:00 +0200, section 9.1. The cache is the `model_cache` volume, seeded once. What is still open is how it is filled on a host that has no copy of it, where the choice is a first run that downloads 1.2 GB or an image that carries it | The first deployment to a host that is not this machine |
+| Whether the hundred second model load moves out of the request path | A person waits on the first search after a restart and says so |
 
 ## 9. The live check
 
@@ -177,7 +192,41 @@ The account these numbers came from was deleted at 21:05 +0200 by the integratio
 three commands, and the product database now holds 22 chunks, every one of them carrying a 1536 byte
 vector.
 
-What the live check did not exercise, written down rather than implied. It ran on the host, not in
-the worker container, so the container has never loaded the model and the image carries no model
-cache volume. The trigger is the next deployment, and the open question in section 8 about where the
-cache lives is the same one.
+## 9.1 The same thing in the containers, 2026-08-23 21:47 to 22:00 +0200
+
+The first run was on the host. This one is the product as it is deployed, and three things had to
+change before it worked.
+
+| What broke | Why | Fix |
+|---|---|---|
+| `onnxruntime-node` on Alpine | its prebuilt binaries are built against glibc, and Alpine is musl | the backend, worker and init images move to `node:20-slim` |
+| The copied core missing from `dist` | `tsc` was not told to emit JavaScript files | `allowJs` in `tsconfig.json`, verified by requiring `dist/src/retrieval/core/search-constants.js` |
+| The backend healthcheck | it called `wget`, which Alpine ships and Debian slim does not | the check is `node -e` against the same URL |
+
+The model is a named volume, `model_cache`, mounted at `/models` in the backend and in the worker,
+with `MODEL_CACHE_DIR` pointing at it. It was seeded once from the machine's own cache, 1.2 GB copied
+in 1 minute 35 seconds, so no container ever downloaded the model. Checked inside the worker: the
+files carry their original date, 18 August 13:40.
+
+Measured in the containers:
+
+| Step | Cost |
+|---|---|
+| First embed after a worker starts | 102697 ms, and the second job of the same batch paid 97786 because both waited on the same load |
+| Search, first query after the backend starts | 100599 ms |
+| Search, warm | 84 ms over 22 chunks |
+
+The hundred seconds is the model load, and it is paid once per process. It is twenty times the 5766
+milliseconds the host paid, which is the cost of reading 1.2 GB out of a Docker volume on this
+machine rather than off the disk directly. Nothing in the product waits on it except the first
+request after a restart, and that is recorded rather than hidden.
+
+Behaviour 15 was verified here. Two Ars Technica articles were deleted and the feed pulled again, so
+they arrived as new, and their analysis failed with the placeholder key exactly as
+`docs/plans/hub-audit.md` section 4 recorded. Both were embedded anyway. Before the change they would
+not have been, because the embed step ran after a call that throws.
+
+One thing the containers showed that the host could not. A BBC feed added at the same moment produced
+38 articles and every one of them was `pre_filtered`, because that feed publishes a summary shorter
+than `PREFILTER_MIN_LENGTH`. None of them was embedded, which is behaviour 15 seen from its other
+side, and it is a preview of what phase 4 of `docs/plans/finance-vertical.md` is for.

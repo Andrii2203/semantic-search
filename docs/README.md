@@ -42,6 +42,7 @@ What is being built right now. One active plan at a time.
 | `plans/finance-vertical.md` | The Hub as the single product, and the six phases that give it a measured daily note |
 | `plans/retrieval-in-the-hub.md` | Phase 3: chunks, vectors and hybrid search inside the Hub |
 | `plans/hub-test-database.md` | Why the Hub's integration suite has a database of its own |
+| `plans/calendar-report.md` | Phase 2: how much of the schedule the notes carried, and the command that says so |
 
 ## eval
 
