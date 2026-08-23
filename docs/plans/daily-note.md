@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-23 12:18:00 +0200
+Last change: 2026-08-23 12:47:00 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -73,7 +73,10 @@ Out of scope, each with its reason:
 - Euro area consumer confidence, because `ei_bsco_m` is current but the confidence indicator code
   in it did not resolve on 2026-08-23 and a guessed code is worse than an absent one.
 - Any release whose title is not in the mapping table. Marked the same way, see behaviour 8.
-- Storage. The note is printed, not saved. Phase 2 decides what a report needs to read back.
+- A delivery that reaches the owner anywhere but the archive repository. Behaviours 9 to 11 write
+  the note into `calendar-archive/notes/`, where the schedule already lives and where machine
+  commits already belong. Email, push and a screen in the Hub are all phase 2 or later, and the open
+  question about which one the owner used is unchanged.
 - A language model anywhere in the path, per behaviour 6.
 
 ## 4. Behaviours
@@ -90,6 +93,9 @@ number across both documents. Behaviour 4 is absent here by section 3.
 7. A day with no scheduled release produces a note that says so, rather than an empty page.
 8. A release whose title has no mapped series appears with its actual marked unavailable, naming
    whether the cause is the absent mapping or the absent source.
+9. A note is written as a committed file named after the day it covers.
+10. A day that rebuilds to the text it already holds leaves its file untouched.
+11. A run that produced no note writes no file, and says which of the two reasons applies.
 
 ## 5. Tests
 
@@ -102,6 +108,9 @@ number across both documents. Behaviour 4 is absent here by section 3.
 | 6 | L1 | `backend/src/note/note-builder.spec.ts`, by reading the source the way `__tests__/reachability.test.js` does in the search repository |
 | 7 | L1 | `backend/src/note/note-builder.spec.ts` |
 | 8 | L1 | `backend/src/note/note-builder.spec.ts` |
+| 9 | L1 | `calendar-archive/__tests__/scripts/write-note.test.js` |
+| 10 | L1 | `calendar-archive/__tests__/scripts/write-note.test.js` |
+| 11 | L1 | `calendar-archive/__tests__/scripts/write-note.test.js` |
 
 The builder is a pure function of a calendar snapshot and a set of series observations, so every
 behaviour is L1. The two readers that fetch those inputs are L4 boundaries and carry their own
@@ -133,6 +142,21 @@ reaches the network, per `docs/standards/TESTING_STANDARD.md` section 3.
 | Whether the mapping table grows by hand or is generated | It passes roughly thirty rows and hand editing starts causing mistakes. At twenty two on 2026-08-23 |
 | Whether the note is printed, stored or pushed | The owner reads a week of them and says which he actually used |
 | Whether the reference period of a FRED observation is matched to the calendar event by rule or by hand | The first release where the two disagree |
+
+## 8.2 Why the note is built by the archive repository and not by the Hub
+
+The builder lives in the Hub, `backend/src/note/`, because the plan makes the Hub the trunk. The
+schedule lives in `calendar-archive`, because `calendar-archive/docs/calendar-archive.md` section 7
+already recorded the reason a machine that commits twice a day does not belong in a repository with
+hand written history.
+
+The two meet in `calendar-archive/.github/workflows/note.yml`, which checks out both. That workflow
+needs one secret, `HUB_READ_TOKEN`, a personal access token with read access to the Hub repository,
+because a workflow token reaches only its own repository. Until that secret exists the workflow fails
+at checkout, loudly, which is the behaviour wanted: a silent skip would look like a quiet day.
+
+The note modules import nothing but Node built-ins, checked 2026-08-23, so the workflow runs them
+through `npx tsx` and installs no dependency tree at all.
 
 ## 8.1 A third reason a number is missing, added 2026-08-23
 
