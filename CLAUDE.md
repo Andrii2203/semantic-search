@@ -19,7 +19,9 @@ nothing can be retrieved by meaning from a headline.
 
 Product intent: `docs/product/VISION.md`, `docs/product/STRATEGY.md`.
 Who else solves this, and what they publish: `docs/product/COMPETITORS.md`.
-Current execution plan: `docs/plans/retrieval-quality.md`.
+Current execution plan: `docs/plans/finance-vertical.md`, which made the Hub the single product on
+2026-08-21 and paused phases 7 and 8 of `docs/plans/retrieval-quality.md`.
+How the engine got measured, and what each axis decided: `docs/plans/retrieval-quality.md`.
 What production search systems do, and the six axes this plan measures:
 `docs/reference/retrieval-in-industry.md`.
 Every number in the retrieval path, with its origin: `docs/reference/search-constants.md`.

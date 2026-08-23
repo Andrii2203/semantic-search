@@ -39,6 +39,9 @@ What is being built right now. One active plan at a time.
 | `plans/public-benchmark.md` | The BEIR bench and the control that validates our metrics |
 | `plans/dependency-upgrade.md` | The measured state of every dependency and the order they move in |
 | `plans/production-readiness-fixes.md` | The defects found by running the system, and their fixes |
+| `plans/finance-vertical.md` | The Hub as the single product, and the six phases that give it a measured daily note |
+| `plans/retrieval-in-the-hub.md` | Phase 3: chunks, vectors and hybrid search inside the Hub |
+| `plans/hub-test-database.md` | Why the Hub's integration suite has a database of its own |
 
 ## eval
 
