@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-23 11:34:00 +0200
+Last change: 2026-08-23 12:18:00 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -22,10 +22,25 @@ archive: the six fields are `title`, `country`, `date`, `impact`, `forecast`, `p
 events in the snapshot are dated before the fetch, and none carries an actual value. Recorded in
 `calendar-archive/docs/calendar-archive.md` section 4.
 
-The euro side has no free source that is current. Measured 2026-08-23: Eurostat `prc_hicp_manr` for
-the euro area was last updated 2026-02-06 and holds no 2026 observation, and the ECB data portal
-series `ICP/M.U2.N.000000.4.ANR` ends at 2025-12. FRED, by contrast, answered for nine American
-series with data to 2026-07-01, and to 2026-08-15 for weekly claims.
+The euro side has one stale source, not an absent one. This sentence replaces a wrong one, and the
+wrong one is left described rather than deleted. It read that the euro side has no free source that
+is current, and it was reached by checking Eurostat `prc_hicp_manr`, finding it stale, and spreading
+that across the whole publisher.
+
+Measured 2026-08-23, one dataset at a time:
+
+| Dataset | Last updated | Latest period |
+|---|---|---|
+| `prc_hicp_manr`, `prc_hicp_midx`, inflation | 2026-02-06 | 2025-12 |
+| `une_rt_m`, unemployment | 2026-08-21 | 2026-07 |
+| `sts_inpr_m`, industrial production | 2026-08-22 | 2026-06 |
+| `namq_10_gdp`, GDP | 2026-08-20 | 2026-Q2 |
+| `sts_trtu_m`, retail trade | 2026-08-20 | 2026-06 |
+| `ei_bsco_m`, consumer confidence | 2026-07-30 | 2026-07 |
+
+Five of six are current. Inflation alone is stale, and the ECB data portal agrees with it: series
+`ICP/M.U2.N.000000.4.ANR` also ends at 2025-12. FRED answered for every American series checked,
+to 2026-07-01 monthly and 2026-08-15 for weekly claims.
 
 ## 2. Decision
 
@@ -53,9 +68,10 @@ Out of scope, each with its reason:
   and no MT5 terminal is installed. Measured 2026-08-22: the machine has FTMO MT4 only, whose stored
   history for EUR/USD is H4. The behaviour is built when MT5 exists, and nothing here is rewritten
   when it is.
-- An outcome for euro area releases, for the reason measured in section 1. Those releases appear in
-  the note with their schedule and their consensus, and their outcome is marked unavailable with the
-  reason named.
+- Euro area inflation, whose free sources stopped at 2025-12. Those releases appear with their
+  schedule and their consensus, and their outcome marked with that reason.
+- Euro area consumer confidence, because `ei_bsco_m` is current but the confidence indicator code
+  in it did not resolve on 2026-08-23 and a guessed code is worse than an absent one.
 - Any release whose title is not in the mapping table. Marked the same way, see behaviour 8.
 - Storage. The note is printed, not saved. Phase 2 decides what a report needs to read back.
 - A language model anywhere in the path, per behaviour 6.
@@ -112,7 +128,8 @@ reaches the network, per `docs/standards/TESTING_STANDARD.md` section 3.
 
 | Question | Trigger that forces an answer |
 |---|---|
-| Whether the euro side gets an outcome at all, and from where | A free source current to the release day is found, or phase 6 prices a paid one |
+| Answered 2026-08-23, in section 1. Nine euro area titles resolve through Eurostat. Inflation does not, and its trigger is a free source appearing or phase 6 pricing a paid one | partly closed |
+| Which Eurostat code carries the consumer confidence indicator | The next week whose calendar carries that release |
 | Whether the mapping table grows by hand or is generated | It passes roughly thirty rows and hand editing starts causing mistakes. At twenty two on 2026-08-23 |
 | Whether the note is printed, stored or pushed | The owner reads a week of them and says which he actually used |
 | Whether the reference period of a FRED observation is matched to the calendar event by rule or by hand | The first release where the two disagree |
