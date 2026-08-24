@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-20 19:15:47 +0200
+Last change: 2026-08-24 11:24:00 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -411,7 +411,7 @@ the open question in `docs/reference/search-constants.md` section 10.
 
 | Question | Trigger that forces an answer |
 |---|---|
-| Answered for the product 2026-08-16 11:07:48 +0200. Whether ingestion fetches the linked article body instead of indexing the headline. It does not fetch anything: the three sources that produced headlines were removed by `docs/adr/010-sources-narrowed-to-user-feeds.md`, and RSS carries bodies without a scraper. Measured on a live cycle the same day: an Ars Technica feed saved 20 items with real bodies. It stays open for the bench, whose intents are Hacker News and Reddit posts | closed for the product, open for the bench |
+| Answered for the product 2026-08-16 11:07:48 +0200, and reversed for the Hub 2026-08-24 11:19:40 +0200 by `docs/adr/024-the-body-is-fetched-from-the-page.md`. Whether ingestion fetches the linked article body instead of indexing the headline. The answer here was that it does not fetch anything: the three sources that produced headlines were removed by `docs/adr/010-sources-narrowed-to-user-feeds.md`, and RSS carries bodies without a scraper. Measured on a live cycle the same day: an Ars Technica feed saved 20 items with real bodies. That measurement stands and its reach did not. Measured 2026-08-24 11:13:46 +0200, the ECB press feed carries zero characters of body on all 15 items and the BBC business feed a median of 102 over 51, so the Hub fetches the page. It stays closed here, open for the bench, whose intents are Hacker News and Reddit posts | closed for this repository, reopened and answered for the Hub, open for the bench |
 | Whether the search cutoff and the inbox cutoff become two settings | Phase 4 raises recall and admission volume rises with it |
 | How large the evaluation corpus must be before a difference between two configurations is real rather than noise | Two configurations differ by less than the run to run variation recorded in phase 3 |
 | Partly answered 2026-08-17 18:15:34 +0200. Whether the language model features stay, given that the Groq model named in `src/config.js` no longer exists and no key is configured. Reranking no longer needs one, by ADR-020. Keyword extraction runs on its frequency fallback and axis D measured that fallback as costing almost nothing, so the language model half of it has never been shown to buy anything either. Summarisation in the hierarchical chunker is untouched and belongs to axis C | The remaining half is answered by axis C in phase 5, or by a key appearing and a measurement showing the language model paths win |
