@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-24 13:31:10 +0200
+Last change: 2026-08-24 14:12:30 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -248,3 +248,11 @@ means the copy moved, which is the only thing it was ever supposed to mean.
 Worth recording rather than fixing quietly: the guard was written on 2026-08-23 and passed all day
 without ever having been checked out fresh. A test that only passes in the tree that produced it is
 not a guard yet.
+
+The narrow fix was also wrong, and the reason is worth the paragraph. Pinning only the copied core
+left the rest of the repository converted, and `npm run lint` on the fresh checkout reported 5270
+prettier errors across every file, on a tree nobody had edited. The rule is therefore
+`* text=auto eol=lf` for the whole repository, with the copied core kept at `-text` so its bytes are
+never touched at all. `git add --renormalize .` staged nothing but `.gitattributes` itself, which is
+the proof that every committed blob was already LF and that this changes what lands on disk rather
+than what is stored.
