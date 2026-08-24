@@ -2,7 +2,7 @@
 
 Status: active
 Owner: repository owner
-Last change: 2026-08-23 20:27:55 +0200
+Last change: 2026-08-24 13:31:10 +0200
 Supersedes: none
 
 ## 1. Problem
@@ -230,3 +230,21 @@ One thing the containers showed that the host could not. A BBC feed added at the
 38 articles and every one of them was `pre_filtered`, because that feed publishes a summary shorter
 than `PREFILTER_MIN_LENGTH`. None of them was embedded, which is behaviour 15 seen from its other
 side, and it is a preview of what phase 4 of `docs/plans/finance-vertical.md` is for.
+
+## 9.2 What the checksum guard actually caught first, 2026-08-24 13:30 +0200
+
+Behaviour 13 failed on the first checkout of `main` after phase 4 was merged, and the cause was not
+drift. `core.autocrlf` is true on this machine and the Hub carried no `.gitattributes`, so the
+checkout rewrote the six copied files with CRLF and every hash changed.
+
+The committed bytes were never wrong. `git show <merge>:backend/src/retrieval/core/search-constants.js`
+still hashes to `afee5652ac615df8c91a4c1a6d9fded3ac0ce0ecb980ddd373d2ac23e0ac65b0`, the value in
+section 3.1, and so does `semantic-search/src/search-constants.js` on disk.
+
+The guard now reads what it was written to read. `backend/src/retrieval/core/** -text` in the Hub's
+`.gitattributes` keeps those files out of every line ending conversion, so a failure of behaviour 13
+means the copy moved, which is the only thing it was ever supposed to mean.
+
+Worth recording rather than fixing quietly: the guard was written on 2026-08-23 and passed all day
+without ever having been checked out fresh. A test that only passes in the tree that produced it is
+not a guard yet.
